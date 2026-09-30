@@ -165,13 +165,8 @@
   .hero .photo,.hero .film{position:absolute;inset:0}
   .hero .photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;will-change:transform}
   .hero .film{will-change:clip-path;opacity:0}
-  .hero .film .shot{position:absolute;inset:0;margin:0;opacity:0;overflow:hidden}
-  .hero .film .shot img{position:absolute;inset:-4%;width:108%;height:108%;object-fit:cover;will-change:transform}
-  .hero .cap{position:absolute;right:var(--gut);bottom:calc(var(--u)*40 + 10px);z-index:4;font-family:var(--label);font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:rgba(243,241,239,.75);display:flex;align-items:center;gap:14px;opacity:0}
-  .hero .cap b{font-family:var(--uni);font-weight:600;font-size:18px;letter-spacing:0;text-transform:lowercase;color:var(--ivory)}
-  .hero .cap i{position:relative;width:70px;height:1px;background:rgba(243,241,239,.25)}
-  .hero .cap i::after{content:"";position:absolute;inset:0;background:var(--ivory);transform:scaleX(var(--p,0));transform-origin:left}
-  @media (max-width:809px){.hero .cap{display:none}.hero .grad{background:linear-gradient(180deg,rgba(27,26,23,.4) 0%,rgba(27,26,23,0) 22%,rgba(27,26,23,0) 40%,rgba(10,9,8,.82) 100%)}}
+  .hero .film video,.hero .film img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  @media (max-width:809px){.hero .grad{background:linear-gradient(180deg,rgba(27,26,23,.4) 0%,rgba(27,26,23,0) 22%,rgba(27,26,23,0) 40%,rgba(10,9,8,.82) 100%)}}
   .hero .film::after{content:"";position:absolute;inset:0;background:rgba(20,16,12,.22)}
   .hero .grad{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(27,26,23,.35) 0%,rgba(27,26,23,0) 22%,rgba(27,26,23,0) 55%,rgba(0,0,0,.55) 100%)}
   .hero .intro{position:absolute;left:0;right:0;bottom:calc(var(--u)*46);display:flex;flex-direction:column;align-items:center;gap:14px;font-family:var(--label);font-size:10px;letter-spacing:.5em;text-transform:uppercase;color:rgba(243,241,239,.8)}
@@ -569,20 +564,14 @@
   <div class="cam" data-cam>
     <div class="photo" data-photo><img src="media/d/hero-poster.webp" alt="Entrada de Ozio: arco encalado, puerta de madera y buganvilla" data-photo-img></div>
     <div class="film" data-film>
-      <figure class="shot" data-shot="La sala"><img src="media/d/reel-sala.webp" alt="La sala en Ozio" style="object-position:50% 55%"></figure>
-      <figure class="shot" data-shot="Burrata"><img src="media/d/reel-burrata.webp" alt="Burrata en Ozio" style="object-position:40% 55%"></figure>
-      <figure class="shot" data-shot="Carpaccio"><img src="media/d/reel-carpaccio.webp" alt="Carpaccio en Ozio" style="object-position:45% 55%" loading="lazy"></figure>
-      <figure class="shot" data-shot="Risotto"><img src="media/d/reel-risotto.webp" alt="Risotto en Ozio" style="object-position:40% 60%" loading="lazy"></figure>
-      <figure class="shot" data-shot="Calabacín"><img src="media/d/reel-calabacin.webp" alt="Calabacín en Ozio" style="object-position:50% 60%" loading="lazy"></figure>
-      <figure class="shot" data-shot="Tartaleta"><img src="media/d/reel-tartaleta.webp" alt="Tartaleta en Ozio" style="object-position:42% 58%" loading="lazy"></figure>
-      <figure class="shot" data-shot="La mesa"><img src="media/d/reel-mesa.webp" alt="La mesa en Ozio" style="object-position:50% 50%" loading="lazy"></figure>
+      <img src="media/d/hero-frame.webp" alt="" aria-hidden="true">
+      <video src="media/d/hero.mp4" muted loop playsinline preload="auto" poster="media/d/hero-frame.webp" data-hero-video></video>
     </div>
   </div>
   <div class="grad"></div>
 
   <div class="intro" data-hero-intro><span>Desliza para entrar</span><i></i></div>
 
-  <div class="cap" data-reel-cap-wrap><span>Ozio · en pantalla</span><b data-reel-cap>la sala</b><i data-reel-bar></i></div>
   <div class="dots" data-hero-dots aria-hidden="true"><i></i><i></i><i></i></div>
 
   <div class="stage s1" data-stage="1">
@@ -1034,7 +1023,8 @@ const CONFIG = {
     const v = e.target;
     if (e.isIntersecting) { if (v.preload === 'none') { v.preload = 'auto'; v.load(); } v.play().catch(() => {}); } else v.pause();
   }), { rootMargin: '200px 0px' });
-  $$('[data-lazy-video]').forEach(v => vio.observe(v));
+  const heroVid = $('[data-hero-video]');
+  [heroVid, ...$$('[data-lazy-video]')].forEach(v => vio.observe(v));
 
   /* ---------- botón circle fill: el relleno nace donde entra el cursor ---------- */
   $$('[data-fill]').forEach(b => b.addEventListener('pointerenter', e => {
@@ -1048,7 +1038,7 @@ const CONFIG = {
   const setAcc = i => { aI = i; acc.forEach((c, j) => c.classList.toggle('on', j === i)); };
   acc.forEach((c, i) => { c.addEventListener('click', () => { setAcc(i); aT?.restart(); }); if (fine) c.addEventListener('mouseenter', () => { setAcc(i); aT?.restart(); }); });
 
-  if (reduce) { document.body.classList.remove('is-loading'); $('[data-loader]').remove(); $$('.stage').forEach(s => s.style.opacity = 1); $('[data-film]').style.opacity = 1; $('.hero .shot').style.opacity = 1; $$('.odo i').forEach(i => i.style.transform = `translateY(-${+i.dataset.d}em)`); return; }
+  if (reduce) { document.body.classList.remove('is-loading'); $('[data-loader]').remove(); $$('.stage').forEach(s => s.style.opacity = 1); $('[data-film]').style.opacity = 1; $$('.odo i').forEach(i => i.style.transform = `translateY(-${+i.dataset.d}em)`); return; }
 
   /* =====================================================================
      MOTOR DE MOVIMIENTO
@@ -1148,20 +1138,6 @@ const CONFIG = {
     gsap.to(cam, { x: x * -22, y: y * -14, duration: 1.6, ease: 'power3.out' });
   });
 
-  // tras la puerta: montaje de Ozio real, cada plano con fundido y su propio Ken Burns
-  const shots = $$('[data-film] .shot'), capEl = $('[data-reel-cap]'), rBar = $('[data-reel-bar]'), SHOT = 3.6;
-  const reelTl = gsap.timeline({ repeat: -1, paused: true });
-  shots.forEach((sh, i) => {
-    const img = $('img', sh), dir = i % 2 ? 1 : -1, at = i * SHOT, prev = shots[(i - 1 + shots.length) % shots.length];
-    reelTl.set(shots, { zIndex: 0 }, at).set(prev, { zIndex: 1 }, at).set(sh, { zIndex: 2 }, at)
-      .fromTo(sh, { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.inOut' }, at)
-      .fromTo(img, { scale: 1.16, xPercent: 2 * dir }, { scale: 1.02, xPercent: -2 * dir, duration: SHOT + 1.2, ease: 'none' }, at)
-      .call(() => capEl.textContent = sh.dataset.shot.toLowerCase(), null, at + .4)
-      .fromTo(rBar, { '--p': 0 }, { '--p': 1, duration: SHOT, ease: 'none' }, at);
-  });
-  gsap.set(shots[0], { opacity: 1 });
-  ScrollTrigger.create({ trigger: hero, start: 'top bottom', end: 'bottom top', onToggle: st => st.isActive ? reelTl.play() : reelTl.pause() });
-  hTl.fromTo('[data-reel-cap-wrap]', { opacity: 0 }, { opacity: 1, duration: .4 }, 1.6);
 
   /* ---------- llamar a Ozio: se recoge en un círculo al hacer scroll ---------- */
   const fab = $('.voz-fab');

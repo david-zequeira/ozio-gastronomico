@@ -241,24 +241,28 @@
   .encuentro .head{position:absolute;left:var(--gut);top:calc(var(--u)*96 + 30px);z-index:3}
   .encuentro h2{font-family:var(--uni);font-weight:600;font-size:clamp(42px,calc(var(--u)*55),84px);line-height:.82;letter-spacing:-.02em;text-transform:lowercase;margin-top:20px}
   .encuentro .head p{position:absolute;left:calc(var(--u)*285);top:calc(100% + 12px);width:max(300px,calc(var(--u)*395));font-size:14px;line-height:1.4}
-  .track{--gu:calc(var(--u) * var(--k,1));position:absolute;left:0;bottom:calc(var(--u)*56 + 16px);height:calc(var(--gu)*435);display:flex;align-items:center;gap:calc(var(--gu)*30);will-change:transform}
-  .gcard{position:relative;flex:none;border-radius:10px;overflow:hidden;background:#cfc3b7;box-shadow:0 30px 60px rgba(77,58,33,.18)}
-  .gcard img{position:absolute;top:0;left:-12%;width:124%;height:100%;object-fit:cover;will-change:transform}
+  /* Parallax Gallery: tira infinita a todo lo ancho; scroll, arrastre, inercia y parallax interior */
+  .pg{position:absolute;left:0;right:0;top:calc(var(--u)*220 + 44px);bottom:calc(var(--u)*24 + 40px);overflow:hidden;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-mask:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+  .pg.drag{cursor:grabbing}
+  .track{position:absolute;left:0;top:0;bottom:0;display:flex;align-items:center;gap:clamp(18px,2.4vw,40px);padding-right:clamp(18px,2.4vw,40px);will-change:transform}
+  .gcard{--h:.78;--y:0;position:relative;flex:none;height:calc(var(--h) * 100%);aspect-ratio:var(--ar,.8);transform:translateY(calc(var(--y) * 1%));border-radius:10px;overflow:hidden;background:#cfc3b7;box-shadow:0 30px 60px rgba(77,58,33,.18);cursor:inherit}
+  .gcard .in{position:absolute;inset:0;transition:transform 1.1s var(--ease)}
+  .gcard img{position:absolute;top:0;left:-14%;width:128%;height:100%;object-fit:cover;will-change:transform;pointer-events:none;-webkit-user-drag:none}
+  .gcard:hover .in{transform:scale(1.05)}
   .gcard figcaption{position:absolute;left:14px;bottom:12px;font-family:var(--label);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--ivory);text-shadow:0 2px 12px rgba(0,0,0,.5);opacity:0;transform:translateY(8px);transition:all .6s var(--ease)}
   .gcard:hover figcaption{opacity:1;transform:none}
-  .g1{width:calc(var(--gu)*213);height:calc(var(--gu)*257);border-radius:0 10px 10px 0;margin-top:calc(var(--gu)*100)}
-  .g2{width:calc(var(--gu)*301);height:calc(var(--gu)*299);margin-top:calc(var(--gu)*-60);margin-left:calc(var(--gu)*-113)}
-  .g3{width:calc(var(--gu)*313);height:calc(var(--gu)*435)}
-  .g4{width:calc(var(--gu)*194);height:calc(var(--gu)*268);margin-top:calc(var(--gu)*-50)}
-  .g5{width:calc(var(--gu)*273);height:calc(var(--gu)*335)}
-  .g6{width:calc(var(--gu)*240);height:calc(var(--gu)*300);margin-top:calc(var(--gu)*80)}
-  .g7{width:calc(var(--gu)*320);height:calc(var(--gu)*400);margin-top:calc(var(--gu)*-30)}
+  .lightbox{position:fixed;inset:0;z-index:93;display:grid;place-items:center;padding:6vh 6vw;background:rgba(15,14,12,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:opacity .5s var(--ease),visibility .5s;cursor:zoom-out}
+  .lightbox.on{opacity:1;visibility:visible}
+  .lightbox img{max-width:100%;max-height:82vh;border-radius:12px;box-shadow:0 40px 120px rgba(0,0,0,.5);transform:scale(.94);transition:transform .7s var(--ease)}
+  .lightbox.on img{transform:none}
+  .lightbox p{margin-top:16px;text-align:center;font-family:var(--label);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:rgba(243,241,239,.7)}
   .encuentro .count{position:absolute;right:var(--gut);bottom:calc(var(--u)*40);font-family:var(--label);font-size:11px;letter-spacing:.3em;color:var(--olive)}
   .encuentro .count i{display:inline-block;vertical-align:middle;width:90px;height:1px;background:var(--line-l);margin:0 12px;position:relative;overflow:hidden}
   .encuentro .count i::after{content:"";position:absolute;inset:0;background:var(--charcoal);transform:scaleX(var(--p,0));transform-origin:left}
   @media (max-width:809px){
     .encuentro .head p{position:relative;left:0;top:0;margin-top:14px;width:auto;max-width:34ch}
     .encuentro .head{right:20px}
+    .pg{top:calc(var(--u)*300 + 150px)}
   }
 
   /* ---------- 06 · EVENTOS: momentos especiales ---------- */
@@ -523,16 +527,19 @@
     <h2 class="split" data-enc-title>el encuentro</h2>
     <p data-reveal>Donde la gastronomía, la arquitectura y la hospitalidad se encuentran para crear una experiencia que invita a quedarse.</p>
   </div>
-  <div class="track" data-track>
-    <figure class="gcard g1" data-cursor="Arrastra"><img src="media/d/gal-1.jpg" alt="Terraza con lámparas de mimbre" loading="lazy"><figcaption>La terraza</figcaption></figure>
-    <figure class="gcard g2" data-cursor="Arrastra"><img src="media/d/gal-2.webp" alt="Comensal ante un plato de pasta" loading="lazy"><figcaption>La mesa</figcaption></figure>
-    <figure class="gcard g3" data-cursor="Arrastra"><img src="media/d/gal-3.webp" alt="Comedor bajo un arco frente al mar" loading="lazy"><figcaption>El arco</figcaption></figure>
-    <figure class="gcard g4" data-cursor="Arrastra"><img src="media/d/gal-4.jpg" alt="Carta y cóctel con naranja deshidratada" loading="lazy"><figcaption>La barra</figcaption></figure>
-    <figure class="gcard g5" data-cursor="Arrastra"><img src="media/d/gal-5.jpg" alt="Patio con olivos y arcos" loading="lazy"><figcaption>El patio</figcaption></figure>
-    <figure class="gcard g6" data-cursor="Arrastra"><img src="media/d/eventos-poster.webp" alt="Sala de arcos de piedra" loading="lazy"><figcaption>La sala</figcaption></figure>
-    <figure class="gcard g7" data-cursor="Arrastra"><img src="media/d/reserva-bg.webp" alt="Comedor con vigas de madera y buganvilla" loading="lazy"><figcaption>El comedor</figcaption></figure>
+  <div class="pg" data-pg data-cursor="Arrastra">
+    <div class="track" data-track>
+      <figure class="gcard" style="--ar:0.625;--h:.8;--y:-8"><div class="in"><img src="media/d/gal-1.jpg" alt="Terraza con lámparas de mimbre" loading="lazy" draggable="false"></div><figcaption>La terraza</figcaption></figure>
+      <figure class="gcard" style="--ar:0.750;--h:.97;--y:6"><div class="in"><img src="media/d/gal-2.webp" alt="Comensal ante un plato de pasta" loading="lazy" draggable="false"></div><figcaption>La mesa</figcaption></figure>
+      <figure class="gcard" style="--ar:1.000;--h:.84;--y:-4"><div class="in"><img src="media/d/gal-3.webp" alt="Comedor bajo un arco frente al mar" loading="lazy" draggable="false"></div><figcaption>El arco</figcaption></figure>
+      <figure class="gcard" style="--ar:0.667;--h:.72;--y:10"><div class="in"><img src="media/d/gal-4.jpg" alt="Carta y cóctel con naranja deshidratada" loading="lazy" draggable="false"></div><figcaption>La barra</figcaption></figure>
+      <figure class="gcard" style="--ar:1.250;--h:.88;--y:-6"><div class="in"><img src="media/d/eventos-poster.webp" alt="Sala de arcos de piedra" loading="lazy" draggable="false"></div><figcaption>La sala</figcaption></figure>
+      <figure class="gcard" style="--ar:0.575;--h:1;--y:2"><div class="in"><img src="media/d/gal-5.jpg" alt="Patio con olivos y arcos" loading="lazy" draggable="false"></div><figcaption>El patio</figcaption></figure>
+      <figure class="gcard" style="--ar:1.450;--h:.76;--y:-10"><div class="in"><img src="media/d/reserva-bg.webp" alt="Comedor con vigas de madera y buganvilla" loading="lazy" draggable="false"></div><figcaption>El comedor</figcaption></figure>
+    </div>
   </div>
   <div class="count"><span data-g-n>01</span><i data-g-bar></i><span>07</span></div>
+  <div class="lightbox" data-lightbox><div><img alt="" data-lb-img><p data-lb-cap></p></div></div>
 </section>
 
 <!-- ================= 06 · EVENTOS ================= -->
@@ -1004,19 +1011,57 @@ const CONFIG = {
   acc.forEach((c, i) => aT.call(() => setAcc(i), null, i * 4).fromTo(accBars[i], { '--p': 0 }, { '--p': 1, duration: 4, ease: 'none' }, i * 4));
   ScrollTrigger.create({ trigger: '[data-cocina]', start: 'top 60%', end: 'bottom top', onToggle: st => st.isActive ? aT.play() : aT.pause() });
 
-  /* ---------- 05 · el encuentro: galería horizontal con parallax (Parallax Gallery) ---------- */
-  const track = $('[data-track]'), gcards = $$('.gcard', track), gN = $('[data-g-n]'), gBar = $('[data-g-bar]');
-  const fitTrack = () => { const u = Math.min(1.28, Math.max(.66, innerWidth / 1200)); const head = $('[data-encuentro] .head').getBoundingClientRect().height + u * 126 + 30; track.style.setProperty('--k', Math.max(.5, Math.min(1, (innerHeight - head - u * 56 - 56) / (u * 560)))); };
-  fitTrack(); ScrollTrigger.addEventListener('refreshInit', fitTrack);
-  const travel = () => Math.max(0, track.scrollWidth - innerWidth * .9);
-  const gTl = gsap.timeline({ scrollTrigger: { trigger: '[data-encuentro]', start: 'top top', end: () => '+=' + Math.max(innerHeight * 1.2, travel() * 1.4), scrub: 1, pin: true, anticipatePin: 1, invalidateOnRefresh: true,
-    onUpdate: st => { gBar.style.setProperty('--p', st.progress); gN.textContent = String(Math.min(gcards.length, 1 + Math.floor(st.progress * gcards.length))).padStart(2, '0'); } } });
-  gTl.to(track, { x: () => -travel(), ease: 'none', duration: 1 }, 0);
-  gcards.forEach((c, i) => {
-    gTl.fromTo($('img', c), { xPercent: -9 }, { xPercent: 9, ease: 'none', duration: 1 }, 0)
-       .fromTo(c, { y: (i % 2 ? 1 : -1) * 30 }, { y: (i % 2 ? -1 : 1) * 30, ease: 'none', duration: 1 }, 0);
+  /* ---------- 05 · el encuentro: Parallax Gallery infinita (scroll + arrastre + inercia) ---------- */
+  const pg = $('[data-pg]'), track = $('[data-track]'), gN = $('[data-g-n]'), gBar = $('[data-g-bar]');
+  const base = $$('.gcard', track), nBase = base.length;
+  // se clona la tira hasta cubrir de sobra la pantalla: nunca quedan huecos
+  let setW = 0;
+  const buildLoop = () => {
+    $$('.gcard.clone', track).forEach(c => c.remove());
+    setW = track.scrollWidth;
+    for (let k = 0; track.scrollWidth < setW + innerWidth * 1.5 && k < 6; k++) base.forEach(c => { const d = c.cloneNode(true); d.classList.add('clone'); d.setAttribute('aria-hidden', 'true'); track.append(d); });
+  };
+  buildLoop();
+  let cards = $$('.gcard', track);
+  const G2 = { pos: 0, target: 0, vel: 0, auto: 34, hover: false, drag: null, inView: false, lastP: 0 };
+  const onResize = () => { buildLoop(); cards = $$('.gcard', track); };
+  addEventListener('resize', () => { clearTimeout(G2.rt); G2.rt = setTimeout(onResize, 200); });
+  const pgST = ScrollTrigger.create({ trigger: '[data-encuentro]', start: 'top top', end: '+=160%', pin: true, anticipatePin: 1,
+    onUpdate: st => { G2.target += (st.progress - G2.lastP) * setW * 1.1; G2.lastP = st.progress; } });
+  ScrollTrigger.create({ trigger: '[data-encuentro]', start: 'top bottom', end: 'bottom top', onToggle: st => G2.inView = st.isActive });
+  // arrastre con inercia
+  pg.addEventListener('pointerdown', e => { G2.drag = { x: e.clientX, t: e.timeStamp, moved: 0, v: 0 }; pg.setPointerCapture(e.pointerId); pg.classList.add('drag'); });
+  pg.addEventListener('pointermove', e => { const d = G2.drag; if (!d) return; const dx = e.clientX - d.x; d.moved += Math.abs(dx); d.v = dx / Math.max(1, e.timeStamp - d.t) * 16; d.x = e.clientX; d.t = e.timeStamp; G2.target -= dx * 1.2; });
+  const endDrag = e => { const d = G2.drag; if (!d) return; G2.drag = null; pg.classList.remove('drag'); G2.target -= d.v * 18;
+    if (d.moved < 6) { const c = document.elementFromPoint(e.clientX, e.clientY)?.closest('.gcard'); if (c) openLb(c); } };
+  pg.addEventListener('pointerup', endDrag); pg.addEventListener('pointercancel', endDrag);
+  pg.addEventListener('mouseenter', () => G2.hover = true); pg.addEventListener('mouseleave', () => G2.hover = false);
+  // la rueda horizontal del trackpad también mueve la galería
+  pg.addEventListener('wheel', e => { if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) { G2.target += e.deltaX; e.preventDefault(); } }, { passive: false });
+  const loopX = v => ((v % setW) + setW) % setW;
+  gsap.ticker.add((t, dt) => {
+    if (!G2.inView || !setW) return;
+    if (!G2.drag) G2.target += (G2.hover ? G2.auto * .25 : G2.auto) * dt / 1000;
+    G2.pos += (G2.target - G2.pos) * .075;
+    const x = -loopX(G2.pos);
+    track.style.transform = `translate3d(${x}px,0,0)`;
+    const vw = innerWidth, mid = vw / 2; let best = 0, bestD = 1e9;
+    cards.forEach((c, i) => {
+      const cx = c.offsetLeft + c.offsetWidth / 2 + x;
+      if (cx < -c.offsetWidth || cx > vw + c.offsetWidth) return;
+      const rel = (cx - mid) / vw;                                   // -0.5 … 0.5 a lo ancho
+      c.firstChild.firstChild.style.transform = `translate3d(${rel * -18}%,0,0)`;
+      const d = Math.abs(cx - mid); if (d < bestD) { bestD = d; best = i % nBase; }
+    });
+    gN.textContent = String(best + 1).padStart(2, '0');
+    gBar.style.setProperty('--p', (best + 1) / nBase);
   });
-  gsap.from(gcards, { y: 140, opacity: 0, rotate: i => (i % 2 ? 4 : -4), duration: 1.4, stagger: .08, ease: 'expo.out', scrollTrigger: { trigger: '[data-encuentro]', start: 'top 70%' } });
+  gsap.from(base, { clipPath: 'inset(100% 0% 0% 0% round 10px)', duration: 1.5, stagger: .08, ease: 'expo.inOut', clearProps: 'clipPath', scrollTrigger: { trigger: '[data-encuentro]', start: 'top 65%' } });
+  // visor a pantalla completa
+  const lb = $('[data-lightbox]'), lbImg = $('[data-lb-img]'), lbCap = $('[data-lb-cap]');
+  const openLb = c => { const im = $('img', c); lbImg.src = im.currentSrc || im.src; lbImg.alt = im.alt; lbCap.textContent = $('figcaption', c).textContent; lb.classList.add('on'); lenis.stop(); };
+  const closeLb = () => { lb.classList.remove('on'); lenis.start(); };
+  lb.addEventListener('click', closeLb); addEventListener('keydown', e => { if (e.key === 'Escape' && lb.classList.contains('on')) closeLb(); });
   gsap.fromTo('[data-enc-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .03, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: '[data-encuentro]', start: 'top 70%' } });
 
   /* ---------- 06 · eventos: la foto se abre bajo el titular + aura que sigue al cursor ---------- */

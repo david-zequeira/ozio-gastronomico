@@ -508,7 +508,68 @@
   .voz-actions .hang{background:#b4533e;border-color:#b4533e;color:#fff}
   .voz-actions [aria-pressed="true"]{background:rgba(255,255,255,.1)}
   .voz-legal{font-size:11px;line-height:1.5;color:rgba(243,241,239,.35);max-width:36ch}
+  .voz:not([data-state="error"]):not([data-state="ended"]) [data-chat-open]{display:none}
+
+  /* ---------- CHAT: escribir a Ozio ---------- */
+  .chat-fab{position:fixed;right:20px;bottom:82px;z-index:70;display:grid;place-items:center;width:50px;height:50px;border-radius:50%;border:1px solid rgba(243,241,239,.2);background:rgba(27,26,23,.66);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--ivory);cursor:pointer;box-shadow:0 20px 60px rgba(0,0,0,.35);transition:transform .5s var(--ease),border-color .4s,opacity .4s}
+  .chat-fab:hover{transform:translateY(-2px);border-color:rgba(243,241,239,.45)}
+  .chat-fab svg{width:20px;height:20px}
+  .chat-fab .t{position:absolute;right:calc(100% + 10px);top:50%;padding:8px 12px;border-radius:999px;background:rgba(27,26,23,.8);font:600 10px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;white-space:nowrap;opacity:0;transform:translate(6px,-50%);transition:opacity .3s,transform .4s var(--ease);pointer-events:none}
+  .chat-fab:hover .t,.chat-fab:focus-visible .t{opacity:1;transform:translate(0,-50%)}
+  body.is-loading .chat-fab,html.voz-open .chat-fab,html.carta-open .chat-fab,html.chat-open .chat-fab,body.clean .chat-fab,html.chat-open .voz-fab{opacity:0;pointer-events:none}
+  @media (max-width:560px){.chat-fab{right:14px;bottom:74px}}
+  .chat{position:fixed;right:20px;bottom:20px;z-index:94;width:min(400px,calc(100vw - 40px));height:min(620px,calc(100vh - 40px));height:min(620px,calc(100dvh - 40px));display:flex;flex-direction:column;border-radius:22px;overflow:hidden;border:1px solid rgba(243,241,239,.14);background:radial-gradient(120% 60% at 50% 0%,rgba(192,164,130,.16),transparent 60%),rgba(20,19,17,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 40px 120px rgba(0,0,0,.55);color:var(--ivory);opacity:0;transform:translateY(18px) scale(.98);transform-origin:bottom right;transition:opacity .45s var(--ease),transform .6s var(--ease);cursor:auto}
+  .chat.on{opacity:1;transform:none}
+  .chat *{cursor:auto}.chat button{cursor:pointer}.chat textarea{cursor:text}
+  .chat-head{display:flex;align-items:center;gap:14px;padding:18px 18px 16px 20px;border-bottom:1px solid var(--line-d)}
+  .chat-head .dot{flex:none;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f4e8d4,var(--champagne) 50%,var(--olive));box-shadow:0 0 18px rgba(192,164,130,.45)}
+  .chat-head .who{flex:1;min-width:0}
+  .chat-head .who b{display:block;font-size:20px;letter-spacing:.12em}
+  .chat-head .who small{display:block;margin-top:6px;font:500 10px/1.2 var(--label);letter-spacing:.24em;text-transform:uppercase;color:var(--champagne)}
+  .chat-x{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(243,241,239,.18);background:transparent;color:var(--ivory);transition:border-color .3s,background .3s}
+  .chat-x:hover{border-color:var(--ivory);background:rgba(255,255,255,.05)}
+  .chat-x svg{width:16px;height:16px}
+  .chat-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:20px 18px 8px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;scrollbar-color:rgba(243,241,239,.2) transparent}
+  .chat-msg{max-width:86%;animation:chatIn .5s var(--ease) both}
+  .chat-msg p{padding:12px 15px;border-radius:18px;font:400 15px/1.5 var(--sans);letter-spacing:-.005em;white-space:pre-wrap;overflow-wrap:anywhere}
+  .chat-msg.agent{align-self:flex-start}
+  .chat-msg.agent p{background:rgba(243,241,239,.07);border:1px solid rgba(243,241,239,.08);border-bottom-left-radius:6px}
+  .chat-msg.user{align-self:flex-end}
+  .chat-msg.user p{background:var(--champagne);color:var(--charcoal);border-bottom-right-radius:6px}
+  .chat-typing p{display:flex;gap:5px;align-items:center;height:45px}
+  .chat-typing i{width:6px;height:6px;border-radius:50%;background:var(--champagne);animation:chatDot 1.2s ease-in-out infinite}
+  .chat-typing i:nth-child(2){animation-delay:.15s}.chat-typing i:nth-child(3){animation-delay:.3s}
+  @keyframes chatDot{0%,60%,100%{opacity:.3;transform:none}30%{opacity:1;transform:translateY(-3px)}}
+  @keyframes chatIn{from{opacity:0;transform:translateY(8px)}}
+  .chat-note{align-self:stretch;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px 10px 14px;border-radius:14px;border:1px solid rgba(231,163,143,.3);background:rgba(180,83,62,.1);font-size:14px;line-height:1.45;color:#f0c3b6}
+  .chat-note button{flex:none;border:1px solid rgba(243,241,239,.25);background:transparent;color:var(--ivory);border-radius:999px;padding:9px 14px;font:600 10px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase}
+  .chat-note button:hover{border-color:var(--ivory)}
+  .chat-chips{display:flex;flex-wrap:wrap;gap:8px;padding:6px 18px 12px}
+  .chat-chips button{border:1px solid rgba(192,164,130,.4);background:rgba(192,164,130,.06);color:var(--beige);border-radius:999px;padding:10px 14px;font:500 13px/1.2 var(--sans);text-align:left;transition:border-color .3s,background .3s}
+  .chat-chips button:hover{border-color:var(--champagne);background:rgba(192,164,130,.14)}
+  .chat-form{display:flex;align-items:flex-end;gap:8px;padding:12px 14px 8px;border-top:1px solid var(--line-d)}
+  .chat-form textarea{flex:1;min-width:0;resize:none;max-height:140px;overflow-y:hidden;background:rgba(255,255,255,.06);border:1px solid rgba(243,241,239,.2);border-radius:16px;padding:13px 15px;color:var(--ivory);font:400 16px/1.35 var(--sans)}
+  .chat-form textarea::placeholder{color:rgba(243,241,239,.4)}
+  .chat-form textarea:focus{outline:none;border-color:var(--champagne)}
+  .chat-send{flex:none;width:48px;height:48px;border-radius:50%;border:0;display:grid;place-items:center;background:var(--ivory);color:var(--charcoal);transition:opacity .3s,transform .3s var(--ease)}
+  .chat-send svg{width:20px;height:20px;transform:rotate(-90deg)}
+  .chat-send:disabled{opacity:.35;cursor:default}
+  .chat-send:not(:disabled):hover{transform:scale(1.05)}
+  .chat-legal{padding:4px 18px 12px;font-size:11px;line-height:1.4;color:rgba(243,241,239,.35);text-align:center}
+  @media (max-width:560px){
+    .chat{inset:0;width:auto;height:100%;border-radius:0;border:0;transform:translateY(24px)}
+    .chat-head{padding:14px 16px 12px}
+    .chat-list,.chat-chips{padding-left:16px;padding-right:16px}
+    .chat-form{padding:10px 16px 6px}
+    .chat-legal{padding-bottom:max(12px,env(safe-area-inset-bottom))}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .chat,.chat-msg{transition:none;animation:none}
+    .chat{transform:none}
+    .chat-typing i{animation:none;opacity:.7}
+  }
   [hidden]{display:none!important}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
   /* ---------- CURSOR + extras ---------- */
   .cursor{position:fixed;top:0;left:0;z-index:99;pointer-events:none;display:none}
@@ -760,6 +821,7 @@
       <div class="btns">
         <button class="btn-fill" type="button" data-fill data-book><span class="fill"></span><span>Reservar mesa</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         <button class="btn-pill" type="button" data-voz-open><span class="dot" aria-hidden="true"></span>Hacer llamada</button>
+        <button class="btn-pill" type="button" data-chat-open aria-label="Escribir a Ozio por chat">Escribir</button>
       </div>
       <div class="contact" data-contact></div>
     </div>
@@ -821,11 +883,34 @@
       <button type="button" data-voz-mute aria-pressed="false" hidden><span>Silenciar</span></button>
       <button type="button" class="hang" data-voz-hang hidden>Colgar</button>
       <button type="button" data-voz-retry hidden>Volver a llamar</button>
+      <button type="button" data-chat-open>Escribir</button>
       <button type="button" data-voz-close>Cerrar</button>
     </div>
     <p class="voz-legal">Te atiende una asistente virtual. La llamada se graba para atención al cliente y reservas.</p>
   </div>
 </div>
+
+<!-- ================= CHAT: escribir a Ozio ================= -->
+<button class="chat-fab" type="button" data-chat-open aria-label="Escribir a Ozio: reservas y dudas de la carta por chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12.5a7.5 7.5 0 0 1-11.2 6.5L4 20l1.1-4.3A7.5 7.5 0 1 1 20 12.5Z"/><path d="M9 11.5h6M9 14.5h4"/></svg><span class="t" aria-hidden="true">Escribir</span></button>
+<section class="chat" data-chat role="dialog" aria-modal="false" aria-labelledby="chat-title" data-busy="false" data-lenis-prevent hidden>
+  <header class="chat-head">
+    <span class="dot" aria-hidden="true"></span>
+    <div class="who"><b class="logo" id="chat-title" aria-label="Escribir a Ozio">O<i>Z</i>IO</b><small>Reservas y carta · por escrito</small></div>
+    <button class="chat-x" type="button" data-chat-close aria-label="Cerrar el chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </header>
+  <div class="chat-list" data-chat-list aria-label="Conversación con Ozio"></div>
+  <div class="chat-chips" data-chat-chips>
+    <button type="button">Mesa para 4 el sábado a las 21:30</button>
+    <button type="button">¿Qué me recomiendas?</button>
+    <button type="button">¿Tenéis opciones sin gluten?</button>
+  </div>
+  <form class="chat-form" data-chat-form>
+    <textarea rows="1" maxlength="2000" placeholder="Escribe tu mensaje…" aria-label="Tu mensaje para Ozio" autocomplete="off" enterkeyhint="send" data-chat-input></textarea>
+    <button class="chat-send" type="submit" aria-label="Enviar" data-chat-send disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+  </form>
+  <p class="chat-legal">Te atiende una asistente virtual. Guardamos la conversación para gestionar tu reserva.</p>
+  <p class="sr-only" data-chat-live aria-live="polite"></p>
+</section>
 
 <div class="cursor" data-cursor-el><div class="ring" data-ring></div><div class="dot" data-dot></div></div>
 <div class="grain"></div>
@@ -1394,5 +1479,6 @@ const CONFIG = {
   };
 </script>
 <script type="module" src="voz.js"></script>
+<script type="module" src="chat.js"></script>
 </body>
 </html>

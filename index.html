@@ -204,6 +204,44 @@
     .p5,.p6{display:none}
   }
 
+  /* ---------- 03 · EL PLATO: foto cenital → ingredientes → la mesa → el detalle ---------- */
+  .plato{position:relative;height:100vh;height:100svh;overflow:hidden;color:var(--ivory);background:radial-gradient(60% 60% at 60% 50%,#2a2620 0%,var(--charcoal) 70%)}
+  .plato .glow{position:absolute;left:50%;top:50%;width:80vmin;height:80vmin;margin:-40vmin 0 0 -40vmin;border-radius:50%;background:radial-gradient(circle,rgba(192,164,130,.34),transparent 65%);filter:blur(30px);opacity:0}
+  .dish,.dish-anno{position:absolute;inset:0;will-change:transform}
+  .dish{clip-path:circle(40% at 50% 50%)}
+  .dish-zoom,.dish-rot{position:absolute;inset:0}
+  .dish img{position:absolute;max-width:none;user-select:none}
+  .dish-anno{z-index:3;pointer-events:none}
+  .macro{position:absolute;inset:0;opacity:0;z-index:2}
+  .macro img{width:100%;height:100%;object-fit:cover;object-position:35% 40%}
+  .plato .veil{position:absolute;inset:0;z-index:2;opacity:0;pointer-events:none;background:linear-gradient(180deg,rgba(27,26,23,0) 45%,rgba(27,26,23,.82) 100%),linear-gradient(90deg,rgba(27,26,23,.55),rgba(27,26,23,0) 55%)}
+  .plato-copy{position:absolute;left:var(--gut);top:50%;transform:translateY(-50%);z-index:3;max-width:440px}
+  .plato-copy .eyebrow{color:var(--champagne)}
+  .plato h2,.plato h3{font-family:var(--uni);font-weight:600;text-transform:lowercase;letter-spacing:-.01em}
+  .plato h2{font-size:clamp(52px,6.4vw,110px);line-height:.86;margin-top:22px}
+  .plato em{font-family:var(--dm);font-style:italic;font-weight:400;text-transform:none;color:var(--champagne)}
+  .plato-copy p{margin-top:24px;color:rgba(243,241,239,.72);font-size:16px;line-height:1.6;max-width:34ch}
+  .plato-cap{position:absolute;left:var(--gut);bottom:11vh;z-index:4;max-width:680px;opacity:0}
+  .plato-cap .eyebrow{color:var(--beige)}
+  .plato-cap h3{font-size:clamp(42px,5.2vw,88px);line-height:.9;margin-top:16px;text-shadow:0 10px 50px rgba(0,0,0,.5)}
+  .plato-cap p{margin-top:16px;font-family:var(--label);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:rgba(243,241,239,.82)}
+  .callout{position:absolute;display:flex;align-items:center;gap:14px;opacity:0;white-space:nowrap;transform:translate(-5px,-50%)}
+  .callout.l{transform:translate(5px,-50%);flex-direction:row-reverse}
+  .callout i{display:block;flex:none;width:12px;height:12px;border-radius:50%;background:var(--champagne);border:2px solid var(--ivory);box-shadow:0 0 0 5px rgba(27,26,23,.35),0 0 24px rgba(192,164,130,.85)}
+  .callout .ln{display:block;flex:none;height:1px;width:clamp(40px,6vw,96px);background:var(--ivory);box-shadow:0 0 6px rgba(0,0,0,.6);transform-origin:left}
+  .callout.l .ln{transform-origin:right}
+  .callout .tx{background:rgba(27,26,23,.66);backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);border:1px solid rgba(243,241,239,.14);border-radius:12px;padding:10px 14px}
+  .callout .tx small{display:block;font-family:var(--label);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--champagne);margin-bottom:6px}
+  .callout .tx b{font-family:var(--uni);font-weight:600;text-transform:lowercase;font-size:clamp(20px,1.9vw,30px)}
+  .callout.l .tx{text-align:right}
+  @media (max-width:900px){
+    .plato-copy{top:11vh;transform:none;left:20px;right:20px}
+    .plato-copy p{display:none}
+    .plato-cap{left:20px;right:20px;bottom:7vh}
+    .callout.m-hide{display:none}
+    .callout{gap:6px}.callout .ln{width:10px}.callout .tx{padding:6px 9px;border-radius:9px}.callout .tx b{font-size:14px}.callout .tx small{display:none}
+  }
+
   /* ---------- 04 · LA COCINA: vídeo de fondo + acordeón ---------- */
   .cocina{position:relative;height:100vh;height:100svh;min-height:620px;overflow:hidden;background:var(--charcoal);color:var(--ivory)}
   .cocina .vid{position:absolute;inset:0;clip-path:inset(12% 9% 12% 9% round 28px);will-change:clip-path}
@@ -320,9 +358,18 @@
   @media (max-width:809px){.quote{grid-template-columns:1fr;gap:30px}.quote .ph{aspect-ratio:4/3}.voces{padding:80px 20px}}
 
   /* ---------- 07 · RESERVAS: tu mesa te espera ---------- */
-  .reserva{position:relative;min-height:max(100vh,calc(var(--u)*720));display:grid;place-items:center;padding:calc(var(--u)*110) 20px;overflow:hidden;background:var(--charcoal);color:var(--ivory)}
-  .reserva .bg{position:absolute;inset:-8% 0;opacity:.8}
-  .reserva .bg img{width:100%;height:100%;object-fit:cover}
+  .reserva{position:relative;min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:calc(var(--u)*60) 20px;overflow:hidden;background:var(--charcoal);color:var(--ivory)}
+  /* la foto final nace en un arco (como la puerta del inicio) y la cámara entra hacia el mar */
+  .res-win{position:absolute;inset:0;will-change:clip-path}
+  .res-win img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:48% 42%;will-change:transform}
+  .res-shade{position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 70% at 50% 50%,rgba(27,26,23,.15),rgba(27,26,23,.55));opacity:0}
+  .res-intro{position:absolute;left:var(--gut);top:50%;transform:translateY(-50%);z-index:2;max-width:22vw;pointer-events:none}
+  .res-intro .eyebrow{color:var(--champagne)}
+  .res-intro h2{margin-top:18px;font-family:var(--uni);font-weight:600;font-size:clamp(40px,4.6vw,76px);line-height:.86;text-transform:lowercase;color:var(--beige)}
+  .res-intro h2 em{font-family:var(--dm);font-style:italic;font-weight:400;text-transform:none;color:var(--champagne)}
+  .res-hint{position:absolute;right:var(--gut);top:50%;transform:translateY(-50%);z-index:2;font-family:var(--label);font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:rgba(243,241,239,.55);writing-mode:vertical-rl}
+  .reserva .rcard{z-index:3}
+  @media (max-width:809px){.res-intro{left:20px;right:20px;top:9vh;transform:none;max-width:none;text-align:center}.res-hint{display:none}}
   .rcard{position:relative;width:min(100%,calc(var(--u)*982));min-width:min(100%,760px);border-radius:28px;background:var(--charcoal);border:1px solid var(--charcoal);overflow:hidden;padding:calc(var(--u)*96) calc(var(--u)*97) calc(var(--u)*65);box-shadow:0 60px 140px rgba(0,0,0,.45)}
   .rcard .glow{position:absolute;left:0;right:0;bottom:-40%;height:90%;pointer-events:none;background:radial-gradient(50% 50% at 50% 100%,rgba(201,169,106,.22),rgba(201,169,106,0))}
   .rcard .aura{width:60vmax;height:60vmax;margin:-30vmax 0 0 -30vmax;background:radial-gradient(circle,rgba(192,164,130,.2) 0%,rgba(192,164,130,0) 60%)}
@@ -340,7 +387,7 @@
   .contact{display:flex;gap:calc(var(--u)*56);flex-wrap:wrap}
   .contact small{display:block;font-family:var(--label);font-size:12px;color:var(--champagne);opacity:.8;letter-spacing:-.03em;margin-bottom:6px}
   .contact a,.contact span{font-size:16px;letter-spacing:-.02em}
-  @media (max-width:809px){.rcard{padding:44px 24px 32px;min-width:0}.rcard .grid{grid-template-columns:1fr}.rcard .foot{flex-direction:column;align-items:flex-start}}
+  @media (max-width:809px){.rcard{padding:30px 22px 24px;min-width:0}.rcard .grid{grid-template-columns:1fr;gap:6px}.rcard h2{font-size:40px;margin-top:14px}.rcard .sub{margin-top:12px;font-size:13px}.hours{margin-top:10px}.hours li{padding:10px 0}.rcard .foot{flex-direction:column;align-items:flex-start;gap:18px;margin-top:22px}.rcard .btn-fill{height:54px}.contact{gap:24px}}
 
   /* ---------- FOOTER ---------- */
   footer{position:relative;background:var(--black);color:var(--ivory);padding:64px calc(var(--u)*60 + 12px) 36px;overflow:hidden}
@@ -504,6 +551,43 @@
   </div>
 </section>
 
+<!-- ================= 03 · EL PLATO ================= -->
+<section class="plato" id="plato" data-plato>
+  <div class="glow" data-plate-glow></div>
+  <div class="dish" data-dish>
+    <div class="dish-zoom" data-dish-zoom>
+      <div class="dish-rot" data-dish-rot>
+        <img src="media/tartaleta-cenital.jpg" alt="Tartaleta de frutos rojos sobre plato de cerámica y mesa de azulejo pintado a mano" data-dish-img>
+      </div>
+    </div>
+  </div>
+  <div class="macro" data-macro><img src="media/tartaleta-macro.jpg" alt="Detalle de la tartaleta: fresas, moras, chocolate blanco y coulis de fresa" loading="lazy"></div>
+  <div class="veil" data-veil></div>
+
+  <div class="dish-anno" data-dish-anno>
+    <div class="callout l" data-callout data-at="580,620"><i></i><span class="ln"></span><span class="tx"><small>Hecho en casa</small><b data-short="Coulis">Coulis de fresa</b></span></div>
+    <div class="callout r" data-callout data-at="1060,450"><i></i><span class="ln"></span><span class="tx"><small>De temporada</small><b>Fresas</b></span></div>
+    <div class="callout l" data-callout data-at="820,740"><i></i><span class="ln"></span><span class="tx"><small>Frutos del bosque</small><b data-short="Moras">Moras y arándanos</b></span></div>
+    <div class="callout r m-hide" data-callout data-at="1262,640"><i></i><span class="ln"></span><span class="tx"><small>Recién cortada</small><b>Menta</b></span></div>
+    <div class="callout r" data-callout data-at="982,924"><i></i><span class="ln"></span><span class="tx"><small>Sobre masa sablé</small><b data-short="Chocolate blanco">Crema de chocolate blanco</b></span></div>
+  </div>
+
+  <div class="plato-copy">
+    <div class="eyebrow" data-plate-copy>03 — El plato</div>
+    <h2 class="split" data-plate-title>dulce,<br><em>a mano.</em></h2>
+    <p data-plate-copy>Nuestra tartaleta de frutos rojos. Pequeña, precisa y hecha para compartir… aunque nadie la comparte.</p>
+  </div>
+  <div class="plato-cap" data-cap="mesa">
+    <div class="eyebrow">Cerámica pintada a mano</div>
+    <h3>la casa también<br><em>se sirve en la mesa.</em></h3>
+  </div>
+  <div class="plato-cap" data-cap="detalle">
+    <div class="eyebrow">Postre de la casa</div>
+    <h3>tartaleta de<br><em>frutos rojos.</em></h3>
+    <p>Chocolate blanco · Frutos del bosque · Menta · Coulis de fresa</p>
+  </div>
+</section>
+
 <!-- ================= 04 · LA COCINA ================= -->
 <section class="cocina" id="cocina" data-cocina>
   <div class="vid" data-cocina-vid>
@@ -511,7 +595,7 @@
     <video src="media/d/cocina.mp4" muted loop playsinline preload="none" poster="media/d/cocina-poster.webp" data-lazy-video></video>
   </div>
   <div class="shade"></div>
-  <div class="eyebrow" data-reveal>03 — La cocina</div>
+  <div class="eyebrow" data-reveal>04 — La cocina</div>
   <div class="acc" data-acc>
     <article class="card on"><span class="n">(1)</span><div class="body"><div class="pic"><img src="media/d/ing-1.jpg" alt="Rama de olivo" loading="lazy"></div><div class="txt"><h3>Ingredientes</h3><p>Producto seleccionado por su calidad. Selección diaria &amp; origen cuidado.</p></div></div><i class="bar"></i></article>
     <article class="card"><span class="n">(2)</span><div class="body"><div class="pic"><img src="media/d/ing-2.jpg" alt="Limón con hojas" loading="lazy"></div><div class="txt"><h3>Temporada</h3><p>Cada ingrediente en su mejor momento. Carta viva &amp; cambios estacionales.</p></div></div><i class="bar"></i></article>
@@ -523,7 +607,7 @@
 <!-- ================= 05 · EL ENCUENTRO ================= -->
 <section class="encuentro" id="encuentro" data-encuentro>
   <div class="head">
-    <div class="eyebrow" data-reveal>04 — Galería</div>
+    <div class="eyebrow" data-reveal>05 — Galería</div>
     <h2 class="split" data-enc-title>el encuentro</h2>
     <p data-reveal>Donde la gastronomía, la arquitectura y la hospitalidad se encuentran para crear una experiencia que invita a quedarse.</p>
   </div>
@@ -546,7 +630,7 @@
 <section class="eventos" id="eventos" data-eventos>
   <div class="aura" data-aura></div>
   <div class="top">
-    <div class="eyebrow" data-reveal>05 — Eventos</div>
+    <div class="eyebrow" data-reveal>06 — Eventos</div>
     <p data-reveal>Desde celebraciones íntimas hasta encuentros profesionales, creamos experiencias pensadas para reunir a las personas alrededor de una mesa.</p>
   </div>
   <div class="stage-img" data-ev-img data-cursor="Eventos"><img src="media/d/eventos-poster.webp" alt="Sala de arcos de piedra con mesas vestidas" loading="lazy"></div>
@@ -588,12 +672,15 @@
 
 <!-- ================= 07 · RESERVAS ================= -->
 <section class="reserva" id="reserva" data-reserva>
-  <div class="bg" data-res-bg><img src="media/d/reserva-bg.webp" alt="" aria-hidden="true" loading="lazy"></div>
+  <div class="res-win" data-res-win><img src="media/d/reserva-bg.webp" alt="Terraza de Ozio con un gran arco abierto al mar" loading="lazy"></div>
+  <div class="res-shade" data-res-shade></div>
+  <div class="res-intro" data-res-intro><div class="eyebrow">07 — Reservas</div><h2 class="split" data-res-intro-t>y al final,<br><em>el mar.</em></h2></div>
+  <div class="res-hint" data-res-hint>Entra</div>
   <div class="rcard" data-rcard>
     <div class="glow"></div><div class="aura" data-aura></div>
     <div class="grid">
       <div>
-        <div class="eyebrow">06 — Reservas</div>
+        <div class="eyebrow">07 — Reservas</div>
         <h2 class="split" data-res-title>tu mesa te espera</h2>
         <p class="sub">Reserva y descubre una experiencia donde la gastronomía, la arquitectura y la hospitalidad se encuentran.</p>
       </div>
@@ -1001,6 +1088,58 @@ const CONFIG = {
     plates.forEach(p => { const d = +p.dataset.depth; gsap.to($('img', p), { x: x * -34 * d, y: y * -24 * d, duration: 1.4, ease: 'power3.out', overwrite: 'auto' }); });
   });
 
+  /* ---------- 03 · el plato: foto cenital real → ingredientes → la mesa → el detalle ---------- */
+  const plato = $('[data-plato]');
+  const PL = { w: 2000, h: 1333, cx: 845, cy: 685, r: 500, zoom: [580, 640] }; // plato y punto de zoom en la foto original
+  const dishImg = $('[data-dish-img]'), callouts = $$('[data-callout]');
+  const geo = {};
+  const layoutDish = () => {
+    const W = plato.clientWidth, H = plato.clientHeight;
+    const k = Math.max(W / (PL.cx * 2), H / ((PL.h - PL.cy) * 2), W / ((PL.w - PL.cx) * 2), H / (PL.cy * 2));
+    const X = px => W / 2 + (px - PL.cx) * k, Y = py => H / 2 + (py - PL.cy) * k;
+    Object.assign(dishImg.style, { width: PL.w * k + 'px', height: PL.h * k + 'px', left: X(0) + 'px', top: Y(0) + 'px' });
+    $('[data-dish-zoom]').style.transformOrigin = X(PL.zoom[0]) + 'px ' + Y(PL.zoom[1]) + 'px';
+    callouts.forEach(c => { const [px, py] = c.dataset.at.split(',').map(Number);
+      c.style.top = Y(py) + 'px'; if (c.classList.contains('l')) { c.style.right = (W - X(px)) + 'px'; c.style.left = 'auto'; } else c.style.left = X(px) + 'px'; });
+    Object.assign(geo, { W, H, R: PL.r * k, full: Math.hypot(W, H) / 2 + 20, small: W <= 900 });
+    $$('[data-short]', plato).forEach(b => { b.dataset.full = b.dataset.full || b.textContent; b.textContent = W <= 600 ? b.dataset.short : b.dataset.full; });
+  };
+  layoutDish(); addEventListener('resize', layoutDish); ScrollTrigger.addEventListener('refreshInit', layoutDish);
+  const circleR = r => `circle(${r}px at 50% 50%)`;
+  const both = '[data-dish], [data-dish-anno]';
+  const pTl = gsap.timeline({ scrollTrigger: { trigger: plato, start: 'top top', end: '+=420%', scrub: 1, pin: true, anticipatePin: 1, invalidateOnRefresh: true } });
+  pTl.fromTo('[data-dish]', { clipPath: () => circleR(geo.R) }, { clipPath: () => circleR(geo.R), duration: .01 }, 0)
+    .fromTo(both, { scale: .4, opacity: 0, x: () => geo.small ? 0 : geo.W * .16, y: () => geo.small ? geo.H * .5 : geo.H * .3 },
+                  { scale: () => geo.small ? .62 : .6, opacity: 1, x: () => geo.small ? 0 : geo.W * .16, y: () => geo.small ? geo.H * .1 : 0, duration: 1, ease: 'power3.out' }, 0)
+    .fromTo('[data-dish-rot]', { rotate: -75 }, { rotate: 0, duration: 1.2, ease: 'power3.out' }, 0)
+    .fromTo('[data-plate-glow]', { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: 1 }, 0)
+    .fromTo('[data-plate-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .02, duration: .5, ease: 'power3.out' }, .1)
+    .fromTo('[data-plate-copy]', { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: .1, duration: .4 }, .3)
+    .fromTo('.plato-copy', { opacity: 1, x: 0 }, { opacity: 0, x: -40, duration: .35, immediateRender: false }, 1.25)
+    .to(both, { scale: () => geo.W <= 600 ? .74 : geo.small ? .82 : .86, x: 0, y: 0, duration: .5, ease: 'power2.inOut' }, 1.25);
+  // los ingredientes aparecen uno a uno
+  callouts.forEach((c, i) => {
+    const at = 1.8 + i * .32, left = c.classList.contains('l');
+    pTl.fromTo(c, { opacity: 0 }, { opacity: 1, duration: .15 }, at)
+       .fromTo($('i', c), { scale: 0 }, { scale: 1, duration: .25, ease: 'back.out(3)' }, at)
+       .fromTo($('.ln', c), { scaleX: 0 }, { scaleX: 1, duration: .3 }, at + .05)
+       .fromTo($('.tx', c), { x: left ? 24 : -24, opacity: 0 }, { x: 0, opacity: 1, duration: .3 }, at + .15);
+  });
+  // se abre el círculo: aparece la mesa de azulejo
+  pTl.to(callouts, { opacity: 0, duration: .3, stagger: .03 }, 3.6)
+     .to('[data-dish]', { clipPath: () => circleR(geo.full), duration: .8, ease: 'power2.inOut' }, 3.75)
+     .to(both, { scale: 1, duration: .8, ease: 'power2.inOut' }, 3.75)
+     .to('[data-plate-glow]', { opacity: 0, duration: .4 }, 3.75)
+     .to('[data-veil]', { opacity: 1, duration: .5 }, 4.1)
+     .fromTo('[data-cap="mesa"]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .4 }, 4.3)
+     .to('[data-cap="mesa"]', { opacity: 0, y: -30, duration: .3 }, 5.0)
+  // el plato más cerca: la foto cenital se acerca y se funde con el macro
+     .to('[data-dish-zoom]', { scale: 2.9, duration: 1, ease: 'power2.in' }, 5.0)
+     .fromTo('[data-macro]', { opacity: 0, scale: 1.35, filter: 'blur(8px)' }, { opacity: 1, scale: 1.05, filter: 'blur(0px)', duration: .7, ease: 'power2.out' }, 5.6)
+     .fromTo('[data-cap="detalle"]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .4 }, 6.0)
+     .to('[data-macro]', { scale: 1, duration: .8, ease: 'none' }, 6.3)
+     .to({}, { duration: .2 });
+
   /* ---------- 04 · la cocina: el vídeo se abre a pantalla completa ---------- */
   if (innerWidth > 809) gsap.to('[data-cocina-vid]', { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none', scrollTrigger: { trigger: '[data-cocina]', start: 'top 90%', end: 'top top', scrub: 1 } });
   gsap.fromTo('[data-cocina-vid] > *', { yPercent: -6 }, { yPercent: 6, ease: 'none', scrollTrigger: { trigger: '[data-cocina]', start: 'top bottom', end: 'bottom top', scrub: true } });
@@ -1095,12 +1234,34 @@ const CONFIG = {
   gsap.from('.quote .qt > div > *', { y: 30, opacity: 0, duration: 1.1, stagger: .08, ease: 'expo.out', scrollTrigger: { trigger: '[data-voces]', start: 'top 60%' } });
 
   /* ---------- 07 · reservas ---------- */
-  gsap.fromTo('[data-res-bg]', { yPercent: -8, scale: 1.1 }, { yPercent: 8, scale: 1, ease: 'none', scrollTrigger: { trigger: '[data-reserva]', start: 'top bottom', end: 'bottom top', scrub: true } });
-  const rTl = gsap.timeline({ scrollTrigger: { trigger: '[data-reserva]', start: 'top 65%' } });
-  rTl.from('[data-rcard]', { y: 80, scale: .96, opacity: 0, duration: 1.4, ease: 'expo.out' })
-    .fromTo('[data-res-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .02, duration: 1, ease: 'expo.out' }, .25)
-    .from('[data-hours] li', { x: 30, opacity: 0, stagger: .08, duration: .9, ease: 'expo.out' }, .35)
-    .from('.rcard .sub, .rcard .foot > *', { y: 24, opacity: 0, stagger: .1, duration: 1, ease: 'expo.out' }, .5);
+  const resWin = $('[data-res-win]'), resImg = $('img', resWin), rcard = $('[data-rcard]');
+  const archClip = () => { // ventana en arco centrada, del tamaño de la puerta del inicio
+    const W = innerWidth, H = innerHeight, w = Math.min(W * (W < 810 ? .62 : .34), H * .46), h = Math.min(H * .7, w * 1.55), l = (W - w) / 2, t = (H - h) / 2 + H * .02;
+    return `inset(${t}px ${W - l - w}px ${H - t - h}px ${l}px round ${w / 2}px ${w / 2}px 0px 0px)`;
+  };
+  if (rcard.offsetHeight < innerHeight * .96) {
+    gsap.set(rcard, { opacity: 0 });
+    gsap.fromTo('[data-res-intro-t] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .025, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '[data-reserva]', start: 'top 55%' } });
+    gsap.timeline({ scrollTrigger: { trigger: '[data-reserva]', start: 'top top', end: '+=260%', scrub: 1, pin: true, anticipatePin: 1, invalidateOnRefresh: true } })
+      .fromTo(resWin, { clipPath: archClip }, { clipPath: 'inset(0px 0px 0px 0px round 0px 0px 0px 0px)', duration: 1, ease: 'power2.inOut' }, .25)
+      .fromTo(resImg, { scale: 1.4 }, { scale: 1, duration: 1, ease: 'power2.inOut' }, .25)
+      .fromTo('[data-res-intro], [data-res-hint]', { opacity: 1 }, { opacity: 0, duration: .35 }, .3)
+      // la cámara entra por el arco, hacia el mar
+      .to(resImg, { scale: 1.5, duration: 1.3, ease: 'power1.in' }, 1.25)
+      .fromTo('[data-res-shade]', { opacity: 0 }, { opacity: 1, duration: .6 }, 1.55)
+      .fromTo(rcard, { opacity: 0, y: 140, scale: .92 }, { opacity: 1, y: 0, scale: 1, duration: .8, ease: 'power3.out' }, 1.75)
+      .fromTo('[data-res-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .015, duration: .5, ease: 'power3.out' }, 1.95)
+      .fromTo('[data-hours] li', { x: 30, opacity: 0 }, { x: 0, opacity: 1, stagger: .06, duration: .4 }, 2.05)
+      .fromTo('.rcard .sub, .rcard .foot > *', { y: 24, opacity: 0 }, { y: 0, opacity: 1, stagger: .08, duration: .4 }, 2.15)
+      .to({}, { duration: .5 });
+  } else { // pantallas muy bajas: la tarjeta no cabe fija, se muestra sin fijar la sección
+    gsap.set('[data-res-shade]', { opacity: 1 }); gsap.set('[data-res-intro], [data-res-hint]', { display: 'none' });
+    gsap.fromTo(resImg, { scale: 1.25 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '[data-reserva]', start: 'top bottom', end: 'bottom top', scrub: true } });
+    gsap.timeline({ scrollTrigger: { trigger: '[data-reserva]', start: 'top 65%' } })
+      .from(rcard, { y: 80, scale: .96, opacity: 0, duration: 1.4, ease: 'expo.out' })
+      .fromTo('[data-res-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .02, duration: 1, ease: 'expo.out' }, .25)
+      .from('[data-hours] li', { x: 30, opacity: 0, stagger: .08, duration: .9, ease: 'expo.out' }, .35);
+  }
 
   /* ---------- pie ---------- */
   gsap.from('[data-footer-big]', { yPercent: 50, opacity: 0, ease: 'none', scrollTrigger: { trigger: '[data-footer]', start: 'top bottom', end: 'bottom bottom', scrub: 1 } });

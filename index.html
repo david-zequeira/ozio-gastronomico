@@ -245,6 +245,7 @@
   .plate{position:absolute;width:19.4%;aspect-ratio:1;will-change:transform;filter:drop-shadow(0 28px 22px rgba(70,50,30,.34))}
   .plate img{width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
   .p1{left:7.3%;top:33.5%}.p2{left:28.3%;top:19.5%}.p3{left:50.5%;top:19.5%}.p4{left:73.3%;top:33.5%}.p5{left:-6.5%;top:66%}.p6{left:87.5%;top:66%}
+  .p7{left:-7%;top:-5%}.p8{left:88%;top:-5%}.p9{left:39.4%;top:-9%}
   .menu-s .copy{position:absolute;left:50%;top:54%;transform:translate(-50%,0);text-align:center;width:min(92%,620px);z-index:3}
   .menu-s h2{font-family:var(--uni);font-weight:700;font-size:clamp(44px,calc(var(--u)*64),92px);line-height:1;letter-spacing:-.045em;text-transform:none;margin-top:calc(var(--u)*30)}
   .menu-s p{margin-top:calc(var(--u)*14);font-size:max(16px,calc(var(--u)*19));line-height:1.5;color:var(--brown)}
@@ -253,7 +254,7 @@
     .menu-s{height:auto;min-height:100vh;padding:60vh 0 12vh}
     .menu-s .board{top:0;transform:translateX(-50%);width:150vw}
     .menu-s .copy{position:relative;left:auto;top:auto;transform:none;margin:0 auto}
-    .p5,.p6{display:none}
+    .p5,.p6,.p7,.p8,.p9{display:none}
   }
 
   /* ---------- 03 · EL PLATO: foto cenital → ingredientes → la mesa → el detalle ---------- */
@@ -420,20 +421,12 @@
 
   /* ---------- 07 · RESERVAS: tu mesa te espera ---------- */
   .reserva{position:relative;min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:calc(var(--u)*60) 20px;overflow:hidden;background:var(--charcoal);color:var(--ivory)}
-  /* la foto final nace en un arco (como la puerta del inicio) y la cámara entra por el arco de la barra */
-  .res-win{position:absolute;inset:0;will-change:clip-path}
-  .res-cam{position:absolute;inset:0;transform-origin:50% 31%;will-change:transform}
-  .res-win img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  .res-win .blur{filter:blur(46px) brightness(.5) saturate(1.3);transform:scale(1.25)}
-  @media (min-aspect-ratio:1/1){.res-win .main{object-fit:contain;object-position:50% 50%}}
-  .res-shade{position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 70% at 50% 50%,rgba(27,26,23,.15),rgba(27,26,23,.55));opacity:0}
-  .res-intro{position:absolute;left:var(--gut);top:50%;transform:translateY(-50%);z-index:2;max-width:22vw;pointer-events:none}
-  .res-intro .eyebrow{color:var(--champagne)}
-  .res-intro h2{margin-top:18px;font-family:var(--uni);font-weight:500;font-size:clamp(40px,4.4vw,72px);line-height:1;letter-spacing:-.04em;text-transform:none;color:var(--beige)}
-  .res-intro h2 em{font-family:var(--dm);font-style:italic;font-weight:400;text-transform:none;color:var(--champagne)}
-  .res-hint{position:absolute;right:var(--gut);top:50%;transform:translateY(-50%);z-index:2;font-family:var(--label);font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:rgba(243,241,239,.55);writing-mode:vertical-rl}
+  /* la foto de la barra a sangre, oscurecida, y la tarjeta encima, como en Framer */
+  .res-win{position:absolute;inset:0;overflow:hidden}
+  .res-cam{position:absolute;inset:0;will-change:transform}
+  .res-win img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.8) saturate(1.05)}
+  .res-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(27,26,23,.55),rgba(27,26,23,.3) 45%,rgba(27,26,23,.75))}
   .reserva .rcard{z-index:3}
-  @media (max-width:809px){.res-intro{left:20px;right:20px;top:9vh;transform:none;max-width:none;text-align:center}.res-hint{display:none}}
   .rcard{position:relative;width:min(100%,calc(var(--u)*1040));min-width:min(100%,760px);border-radius:40px;background:var(--charcoal);border:1px solid rgba(243,241,239,.06);overflow:hidden;padding:calc(var(--u)*76) calc(var(--u)*80) calc(var(--u)*64);box-shadow:0 60px 140px rgba(0,0,0,.45)}
   .rcard .glow{position:absolute;left:0;right:0;bottom:-40%;height:90%;pointer-events:none;background:radial-gradient(50% 50% at 50% 100%,rgba(201,169,106,.22),rgba(201,169,106,0))}
   .rcard .aura{width:60vmax;height:60vmax;margin:-30vmax 0 0 -30vmax;background:radial-gradient(circle,rgba(192,164,130,.2) 0%,rgba(192,164,130,0) 60%)}
@@ -688,6 +681,9 @@
     <div class="plate p4" data-plate data-depth="1.3"><img src="media/d/plato-margherita.webp" alt="Pizza margherita con tomate, mozzarella y albahaca" loading="lazy"></div>
     <div class="plate p5" data-plate data-depth="1.6"><img src="media/d/plato-pizza-porcion.webp" alt="" loading="lazy"></div>
     <div class="plate p6" data-plate data-depth="1.5"><img src="media/d/plato-halloumi.webp" alt="" loading="lazy"></div>
+    <div class="plate p7" data-plate data-depth="1.4"><img src="media/d/plato-penne.webp" alt="" loading="lazy"></div>
+    <div class="plate p8" data-plate data-depth="1.4"><img src="media/d/plato-caprese.webp" alt="" loading="lazy"></div>
+    <div class="plate p9" data-plate data-depth="1.1"><img src="media/d/plato-tarta-pina.webp" alt="" loading="lazy"></div>
   </div>
   <div class="copy">
     <div class="eyebrow" data-menu-copy>02 — Menú</div>
@@ -823,10 +819,8 @@
 
 <!-- ================= 07 · RESERVAS ================= -->
 <section class="reserva" id="reserva" data-reserva data-bg="#1b1a17">
-  <div class="res-win" data-res-win><div class="res-cam" data-res-cam><img class="blur" src="media/d/sala-bar.webp" alt="" aria-hidden="true" loading="lazy"><img class="main" src="media/d/sala-bar.webp" alt="La barra de Ozio bajo un arco iluminado lleno de botellas" loading="lazy"></div></div>
+  <div class="res-win" data-res-win><div class="res-cam" data-res-cam><img src="media/d/sala-bar.webp" alt="La barra de Ozio bajo un arco iluminado lleno de botellas" loading="lazy"></div></div>
   <div class="res-shade" data-res-shade></div>
-  <div class="res-intro" data-res-intro><div class="eyebrow">08 — Reservas</div><h2 class="split" data-res-intro-t>Y al final,<br><em>tu mesa.</em></h2></div>
-  <div class="res-hint" data-res-hint>Entra</div>
   <div class="rcard" data-rcard>
     <div class="glow"></div><div class="aura" data-aura></div>
     <div class="grid">
@@ -1257,7 +1251,7 @@ const CONFIG = {
 
   /* ---------- 02 · menú: los platos vuelan a la mesa; un solo scroll con la sección fija los hace girar y se pasa a la siguiente vista ---------- */
   const plates = $$('[data-plate]'), plateImgs = plates.map(p => $('img', p));
-  const from = [[-.7, -.3, -120], [-.2, -.9, 90], [.2, -.9, -90], [.7, -.3, 120], [-.6, .6, -160], [.6, .6, 160]];
+  const from = [[-.7, -.3, -120], [-.2, -.9, 90], [.2, -.9, -90], [.7, -.3, 120], [-.6, .6, -160], [.6, .6, 160], [-.6, -.8, -140], [.6, -.8, 140], [0, -1, 100]];
   const menuPin = innerWidth > 809;
   const mTl = gsap.timeline({ scrollTrigger: { trigger: '[data-menu]', start: menuPin ? 'top 92%' : 'top 85%', end: menuPin ? 'top top' : 'center center', scrub: 1 } });
   plates.forEach((p, i) => mTl.fromTo(p, { xPercent: from[i][0] * 260, yPercent: from[i][1] * 260, rotate: from[i][2], scale: .7 }, { xPercent: 0, yPercent: 0, rotate: 0, scale: 1, ease: 'power3.out', duration: 1 }, i * .06));
@@ -1416,35 +1410,14 @@ const CONFIG = {
   gsap.fromTo('[data-q-img]', { scale: 1.3 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '[data-voces]', start: 'top bottom', end: 'bottom top', scrub: true } });
   gsap.from('.quote .qt > div > *', { y: 30, opacity: 0, duration: 1.1, stagger: .08, ease: 'expo.out', scrollTrigger: { trigger: '[data-voces]', start: 'top 60%' } });
 
-  /* ---------- 07 · reservas ---------- */
-  const resWin = $('[data-res-win]'), resImg = $('[data-res-cam]'), rcard = $('[data-rcard]');
-  const archClip = () => { // ventana en arco centrada, del tamaño de la puerta del inicio
-    const W = innerWidth, H = innerHeight, w = Math.min(W * (W < 810 ? .62 : .34), H * .46), h = Math.min(H * .7, w * 1.55), l = (W - w) / 2, t = (H - h) / 2 + H * .02;
-    return `inset(${t}px ${W - l - w}px ${H - t - h}px ${l}px round ${w / 2}px ${w / 2}px 0px 0px)`;
-  };
-  if (rcard.offsetHeight < innerHeight * .96) {
-    gsap.set(rcard, { opacity: 0 });
-    gsap.fromTo('[data-res-intro-t] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .025, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '[data-reserva]', start: 'top 55%' } });
-    gsap.timeline({ scrollTrigger: { trigger: '[data-reserva]', start: 'top top', end: '+=260%', scrub: 1, pin: true, anticipatePin: 1, invalidateOnRefresh: true } })
-      .fromTo(resWin, { clipPath: archClip }, { clipPath: 'inset(0px 0px 0px 0px round 0px 0px 0px 0px)', duration: 1, ease: 'power2.inOut' }, .25)
-      .fromTo(resImg, { scale: 1.4 }, { scale: 1, duration: 1, ease: 'power2.inOut' }, .25)
-      .fromTo('[data-res-intro], [data-res-hint]', { opacity: 1 }, { opacity: 0, duration: .35 }, .3)
-      // la cámara entra por el arco iluminado de la barra
-      .to(resImg, { scale: 2.4, duration: 1.3, ease: 'power1.in' }, 1.25)
-      .fromTo('[data-res-shade]', { opacity: 0 }, { opacity: 1, duration: .6 }, 1.55)
-      .fromTo(rcard, { opacity: 0, y: 140, scale: .92 }, { opacity: 1, y: 0, scale: 1, duration: .8, ease: 'power3.out' }, 1.75)
-      .fromTo('[data-res-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .015, duration: .5, ease: 'power3.out' }, 1.95)
-      .fromTo('[data-hours] li', { x: 30, opacity: 0 }, { x: 0, opacity: 1, stagger: .06, duration: .4 }, 2.05)
-      .fromTo('.rcard .sub, .rcard .btns > *, .rcard .contact > *', { y: 24, opacity: 0 }, { y: 0, opacity: 1, stagger: .08, duration: .4 }, 2.15)
-      .to({}, { duration: .5 });
-  } else { // pantallas muy bajas: la tarjeta no cabe fija, se muestra sin fijar la sección
-    gsap.set('[data-res-shade]', { opacity: 1 }); gsap.set('[data-res-intro], [data-res-hint]', { display: 'none' });
-    gsap.fromTo(resImg, { scale: 1.25 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '[data-reserva]', start: 'top bottom', end: 'bottom top', scrub: true } });
-    gsap.timeline({ scrollTrigger: { trigger: '[data-reserva]', start: 'top 65%' } })
-      .from(rcard, { y: 80, scale: .96, opacity: 0, duration: 1.4, ease: 'expo.out' })
-      .fromTo('[data-res-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .02, duration: 1, ease: 'expo.out' }, .25)
-      .from('[data-hours] li', { x: 30, opacity: 0, stagger: .08, duration: .9, ease: 'expo.out' }, .35);
-  }
+  /* ---------- 08 · reservas: la foto respira al pasar y la tarjeta se presenta ---------- */
+  const resImg = $('[data-res-cam]'), rcard = $('[data-rcard]');
+  gsap.fromTo(resImg, { scale: 1.22, yPercent: -4 }, { scale: 1.05, yPercent: 4, ease: 'none', scrollTrigger: { trigger: '[data-reserva]', start: 'top bottom', end: 'bottom top', scrub: true } });
+  gsap.timeline({ scrollTrigger: { trigger: '[data-reserva]', start: 'top 60%' } })
+    .from(rcard, { y: 90, scale: .96, opacity: 0, duration: 1.4, ease: 'expo.out' })
+    .fromTo('[data-res-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .02, duration: 1, ease: 'expo.out' }, .25)
+    .from('[data-hours] li', { x: 30, opacity: 0, stagger: .08, duration: .9, ease: 'expo.out' }, .35)
+    .from('.rcard .sub, .rcard .btns > *, .rcard .contact > *', { y: 24, opacity: 0, stagger: .08, duration: .9, ease: 'expo.out' }, .4);
 
   /* ---------- el fondo cambia de color entre secciones: sin cortes, como una sola pieza ---------- */
   const bgm = $('[data-bgm]'), bgSecs = $$('[data-bg]');

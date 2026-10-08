@@ -363,20 +363,21 @@
   }
 
   /* ---------- 06 · EVENTOS: el vídeo en un arco, como en Framer ---------- */
-  .eventos{position:relative;background:transparent;color:var(--ivory);min-height:max(100vh,calc(var(--u)*640));overflow:hidden;padding:calc(var(--u)*54 + 20px) var(--gut) calc(var(--u)*60);display:flex;flex-direction:column}
+  .eventos{position:relative;background:transparent;color:var(--ivory);overflow:hidden;padding:calc(var(--u)*45 + 16px) var(--gut) calc(var(--u)*90);display:flex;flex-direction:column}
   .aura{position:absolute;width:70vmax;height:70vmax;left:0;top:0;margin:-35vmax 0 0 -35vmax;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(192,164,130,.34) 0%,rgba(192,164,130,.12) 30%,rgba(192,164,130,0) 62%);filter:blur(20px);mix-blend-mode:screen;will-change:transform}
-  .eventos .eyebrow{color:var(--champagne)}
+  .eventos .eyebrow{color:var(--champagne);font-size:clamp(10px,calc(var(--u)*9),11px);letter-spacing:.42em;font-weight:600}
   .eventos .top{position:relative;z-index:4;max-width:max(260px,calc(var(--u)*290))}
-  .eventos .top p{margin-top:calc(var(--u)*24);font-weight:300;font-size:max(14px,calc(var(--u)*14));line-height:1.6}
-  .ev-stage{position:relative;flex:1;display:grid;place-items:center;margin-top:calc(var(--u)*-70)}
+  .eventos .top p{margin-top:calc(var(--u)*28);font-weight:300;font-size:max(14px,calc(var(--u)*12.3));line-height:1.6}
+  /* el arco sube hasta la altura del texto (como en el diseño) y marca la altura del escenario */
+  .ev-stage{position:relative;display:grid;place-items:center;margin-top:calc(var(--u)*-64)}
   .ev-stage>*{grid-area:1/1}
-  .eventos .arch{position:relative;width:max(230px,calc(var(--u)*330));aspect-ratio:309/375;border-radius:9999px 9999px 0 0;overflow:hidden;background:#2a2722;will-change:clip-path}
+  .eventos .arch{position:relative;width:max(230px,calc(var(--u)*315));aspect-ratio:309/375;border-radius:9999px 9999px 0 0;overflow:hidden;background:#2a2722;will-change:clip-path}
   .eventos .arch video,.eventos .arch img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .eventos .arch::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(27,26,23,0) 50%,rgba(27,26,23,.45))}
-  .eventos h2{position:relative;z-index:3;text-align:center;font-family:var(--uni);font-weight:500;font-size:clamp(40px,calc(var(--u)*56),88px);line-height:1.02;letter-spacing:-.02em;text-transform:none;pointer-events:none;text-shadow:0 8px 40px rgba(0,0,0,.35)}
-  .eventos ul{position:relative;z-index:3;align-self:end;margin-bottom:calc(var(--u)*56);width:min(100%,calc(var(--u)*720));display:flex;justify-content:space-between;gap:20px;list-style:none}
-  .eventos li{display:flex;align-items:center;gap:10px;font-size:max(14px,calc(var(--u)*15));font-weight:500;color:var(--beige)}
-  .eventos li svg{width:15px;height:15px;color:var(--champagne);transition:transform .5s var(--ease)}
+  .eventos h2{position:relative;z-index:3;text-align:center;font-family:var(--uni);font-weight:500;font-size:clamp(36px,calc(var(--u)*48),72px);line-height:1.02;letter-spacing:-.02em;text-transform:none;pointer-events:none;text-shadow:0 8px 40px rgba(0,0,0,.35)}
+  .eventos ul{position:relative;z-index:3;align-self:end;margin-bottom:calc(var(--u)*31);width:min(100%,calc(var(--u)*773));display:flex;justify-content:space-between;gap:20px;list-style:none}
+  .eventos li{display:flex;align-items:center;gap:calc(var(--u)*12);font-size:max(14px,calc(var(--u)*14));font-weight:500;color:var(--beige)}
+  .eventos li svg{width:clamp(15px,calc(var(--u)*14),19px);height:clamp(15px,calc(var(--u)*14),19px);color:var(--champagne);transition:transform .5s var(--ease)}
   .eventos li:hover svg{transform:translateX(4px)}
   @media (max-width:809px){
     .eventos{padding:90px 20px 70px;min-height:0}

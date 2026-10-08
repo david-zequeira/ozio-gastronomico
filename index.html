@@ -472,23 +472,23 @@
   /* versión compacta (700u), centrada sobre el vídeo, con las proporciones del diseño:
      a la izquierda etiqueta, título, texto y los dos botones; a la derecha el horario (desde el 59 % del contenido);
      abajo una fila de contacto — Dirección, Email (alineado con el horario) y Teléfono */
-  .ev-card .rcard{width:min(100%,calc(var(--u)*700));min-width:min(100%,600px);border-radius:28px;padding:calc(var(--u)*46) calc(var(--u)*43) calc(var(--u)*39) calc(var(--u)*52)}
+  .ev-card .rcard{width:min(100%,calc(var(--u)*840));min-width:min(100%,680px);border-radius:28px;padding:calc(var(--u)*36) calc(var(--u)*48) calc(var(--u)*30) calc(var(--u)*58)}
   .ev-card .rcard .grid{grid-template-columns:58.8% 1fr;grid-template-areas:"head hours" "btns hours" "contact contact";gap:0;align-items:start}
   .ev-card .rcard .head{grid-area:head;padding-right:calc(var(--u)*30)}
   .ev-card .rcard .eyebrow{font-size:clamp(10px,calc(var(--u)*9),11px);letter-spacing:.42em;font-weight:600}
   .ev-card .rcard h2{margin-top:calc(var(--u)*16);font-size:clamp(28px,calc(var(--u)*32),42px)}
-  .ev-card .rcard .sub{margin-top:calc(var(--u)*14);font-size:max(14px,calc(var(--u)*13));max-width:26em}
+  .ev-card .rcard .sub{margin-top:calc(var(--u)*12);font-size:max(14px,calc(var(--u)*13));max-width:34em}
   .ev-card .hours{grid-area:hours;margin-top:-4px}
-  .ev-card .hours li{padding:calc(var(--u)*10.5) 2px;font-size:12px;gap:12px}
+  .ev-card .hours li{padding:calc(var(--u)*8.5) 2px;font-size:12px;gap:12px}
   .ev-card .hours li b{font-size:14px}
-  .ev-card .rcard .btns{grid-area:btns;align-self:start;gap:10px;margin-top:calc(var(--u)*30)}
+  .ev-card .rcard .btns{grid-area:btns;align-self:start;gap:10px;margin-top:calc(var(--u)*24)}
   .ev-card .rcard .btn-fill,.ev-card .rcard .btn-ghost{height:clamp(46px,calc(var(--u)*48),54px);font-size:max(14px,calc(var(--u)*14))}
   .ev-card .rcard .btn-fill{padding:0 20px 0 24px;gap:12px}
   .ev-card .rcard .btn-fill svg{width:18px;height:18px}
   .ev-card .rcard .btn-ghost{padding:0 6px 0 20px;gap:10px}
   .ev-card .rcard .btn-ghost .o{width:36px;height:36px}
   /* contacto: dirección y teléfono, uno al lado del otro, alineados a la derecha (con el borde del horario) */
-  .ev-card .contact{grid-area:contact;align-self:start;display:flex;justify-content:flex-end;align-items:flex-start;gap:calc(var(--u)*56);margin-top:calc(var(--u)*38)}
+  .ev-card .contact{grid-area:contact;align-self:start;display:flex;justify-content:flex-end;align-items:flex-start;gap:calc(var(--u)*56);margin-top:calc(var(--u)*22)}
   .ev-card .contact small{font-size:12px;margin-bottom:6px;color:rgba(243,241,239,.45)}
   .ev-card .contact a,.ev-card .contact span{display:block;white-space:nowrap;font-size:max(14px,calc(var(--u)*12.2));line-height:1.35;color:var(--ivory)}
   @media (max-width:809px){

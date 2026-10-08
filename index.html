@@ -154,6 +154,8 @@
   .hero{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden;background:var(--charcoal);color:var(--ivory)}
   .hero .cam{position:absolute;inset:0;will-change:transform;transform-origin:50% 40%}
   .hero .cam video,.hero .cam img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  /* prueba ?fotogramas: la portada se dibuja con una secuencia de imágenes en un lienzo */
+  .hero .cam canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
   .hero .grad{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(20,18,16,.55) 0%,rgba(20,18,16,.18) 16%,rgba(27,26,23,.08) 40%,rgba(27,26,23,.2) 62%,rgba(0,0,0,.6) 100%),radial-gradient(60% 50% at 50% 52%,rgba(15,13,11,.38),rgba(15,13,11,0) 70%)}
   @media (max-width:809px){.hero .grad{background:linear-gradient(180deg,rgba(27,26,23,.45) 0%,rgba(27,26,23,.1) 22%,rgba(27,26,23,.2) 45%,rgba(10,9,8,.8) 100%)}}
   /* las tres escenas ocupan el mismo sitio; el titular arranca siempre a la misma altura */
@@ -1087,6 +1089,19 @@ const CONFIG = {
   const qs = new URLSearchParams(location.search);
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fine = matchMedia('(pointer:fine)').matches;
+
+  /* ---------- PRUEBA (?fotogramas): portada con secuencia de fotogramas en lugar del vídeo ----------
+     El vídeo se sustituye por un lienzo donde se dibujan 182 imágenes (media/seq/hero, 1280×720, un fotograma
+     de cada dos del vídeo) según la posición del scroll, como en las webs «scroll-video»: avanza lo que avanzas,
+     se para cuando paras y retrocede al subir, igual de fluido en los dos sentidos. Sin el parámetro, todo sigue
+     como siempre. El lienzo hereda data-hero-video para que la entrada y el paralaje del ratón le afecten igual. */
+  const SEQ = qs.has('fotogramas') && !reduce;
+  if (SEQ) {
+    const vid = $('[data-hero-video]'), cv = document.createElement('canvas');
+    cv.setAttribute('aria-hidden', 'true');
+    vid.removeAttribute('data-hero-video'); vid.preload = 'none'; vid.removeAttribute('src'); vid.load(); vid.hidden = true;
+    cv.setAttribute('data-hero-video', ''); vid.after(cv);
+  }
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 
@@ -1390,13 +1405,52 @@ const CONFIG = {
 
   /* ---------- presentación: el vídeo de la casa respira al bajar y el titular se despide ---------- */
   const hero = $('[data-hero]'), cam = $('[data-cam]'), heroVidEl = $('[data-hero-video]');
-  gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } })
+
+  /* ---------- PRUEBA (?fotogramas): la portada se fija y el scroll recorre los fotogramas ---------- */
+  let seqST = null;
+  if (SEQ) {
+    const cv = heroVidEl, ctx = cv.getContext('2d');
+    const N = 182, FPS = 15;                                     // 182 imágenes = 12,1 s de vídeo a 15 por segundo
+    const SCROLL = 3.2;                                          // recorrido: 3,2 pantallas de scroll
+    const src = i => `media/seq/hero/hs-${String(i).padStart(3, '0')}.webp`;
+    const imgs = new Array(N), ok = new Uint8Array(N);
+    let cur = 0, want = 0, shown = -1, sc = -1;
+    const nearest = i => { for (let d = 0; d < N; d++) { if (ok[i - d]) return i - d; if (ok[i + d]) return i + d; } return -1; };
+    const draw = () => {
+      const i = nearest(Math.max(0, Math.min(N - 1, Math.round(cur))));
+      if (i < 0 || i === shown) return; shown = i;
+      const im = imgs[i], s = Math.max(cv.width / im.naturalWidth, cv.height / im.naturalHeight);
+      const w = im.naturalWidth * s, h = im.naturalHeight * s;
+      ctx.drawImage(im, (cv.width - w) / 2, (cv.height - h) / 2, w, h);
+    };
+    // el lienzo no necesita más resolución que las imágenes (1280 px de ancho): hasta ~1,4× de ellas
+    const size = () => { const d = Math.min(devicePixelRatio || 1, 1800 / Math.max(1, cv.clientWidth), 2);
+      cv.width = Math.round(cv.clientWidth * d); cv.height = Math.round(cv.clientHeight * d); shown = -1; draw(); };
+    // carga: primero la imagen 0 y una de cada 8 (para tener siempre algo cerca que mostrar), luego el resto
+    const order = [0, ...Array.from({ length: N }, (_, i) => i).filter(i => i && i % 8 === 0), ...Array.from({ length: N }, (_, i) => i).filter(i => i % 8)];
+    order.forEach(i => { const im = new Image(); im.decoding = 'async'; im.src = src(i); imgs[i] = im;
+      im.decode().then(() => { ok[i] = 1; if (Math.abs(i - cur) < 10 || shown < 0) { shown = -1; draw(); } }).catch(() => {}); });
+    size(); addEventListener('resize', size);
+    // un texto por escena, a mitad de cada una (escenas: 0–3,93 s, 3,93–7,93 s y 7,93–12,1 s). Al empezar, sin texto
+    const sceneFor = t => t >= 8.8 ? 2 : (t >= 4.8 && t < 7.6) ? 1 : (t >= .9 && t < 3.6) ? 0 : -1;
+    seqST = ScrollTrigger.create({ trigger: hero, start: 'top top', end: () => '+=' + innerHeight * SCROLL, pin: true, anticipatePin: 1,
+      onUpdate: st => { want = st.progress * (N - 1); } });
+    gsap.ticker.add((t, dt) => {
+      if (Math.abs(want - cur) < .01) return;
+      cur += (want - cur) * (1 - Math.exp(-dt / 90));          // suavizado extra sobre el de Lenis
+      draw();
+      const s = sceneFor(cur / FPS);
+      if (s !== sc) { sc = s; if (s < 0) leaveScene(); else showScene(s, true); }
+    });
+  }
+
+  gsap.timeline({ scrollTrigger: { trigger: hero, start: () => seqST ? seqST.end : 'top top', end: () => seqST ? seqST.end + hero.offsetHeight : 'bottom top', scrub: true } })
     .to(cam, { scale: 1.12, yPercent: 10, ease: 'none', duration: 1 }, 0)
     // el último texto (con los botones) se queda un poco más al bajar y se despide en la segunda mitad
     .fromTo('[data-hero-copy]', { yPercent: 0, opacity: 1 }, { yPercent: -22, opacity: 0, ease: 'power1.in', duration: .55, immediateRender: false }, .4)
     .to('[data-hero-intro]', { opacity: 0, ease: 'none', duration: .3 }, 0);
   // pasado el hero el nav lleva fondo oscuro para leerse sobre las secciones claras
-  ScrollTrigger.create({ start: () => hero.offsetHeight - 70, end: 'max', onToggle: st => nav.classList.toggle('scrolled', st.isActive) });
+  ScrollTrigger.create({ start: () => (seqST ? seqST.end : 0) + hero.offsetHeight - 70, end: 'max', onToggle: st => nav.classList.toggle('scrolled', st.isActive) });
   if (fine) { gsap.set(heroVidEl, { scale: 1.05 }); hero.addEventListener('mousemove', e => {
     const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5;
     gsap.to(heroVidEl, { x: x * -20, y: y * -12, duration: 1.6, ease: 'power3.out' });
@@ -1416,7 +1470,7 @@ const CONFIG = {
        original; la aceleración y la frenada se hacen variando poco a poco la velocidad de reproducción.
      · Hacia atrás el navegador no sabe reproducir: se recorre con saltos cortos de currentTime (el mp4 lleva un
        fotograma clave cada 8, cada salto tarda ~15 ms), también con arranque y frenada suaves. */
-  (() => {
+  if (!SEQ) (() => {                                                     // (en la prueba ?fotogramas no se usa)
     const v = heroVidEl;
     // Escenas: 1 (0–3,93 s), 2 (3,93–7,93 s), 3 (7,93–12,1 s). Paradas en el segundo tercio de cada escena:
     // así cada gesto atraviesa deprisa el final de la escena y el corte, y la nueva entra con velocidad.

@@ -363,27 +363,42 @@
   }
 
   /* ---------- 06 · EVENTOS: el vídeo en un arco, como en Framer ---------- */
-  .eventos{position:relative;background:transparent;color:var(--ivory);overflow:hidden;padding:calc(var(--u)*45 + 16px) var(--gut) calc(var(--u)*90);display:flex;flex-direction:column}
+  .eventos{position:relative;background:transparent;color:var(--ivory);overflow:hidden;min-height:100vh;min-height:100svh;padding:calc(var(--u)*45 + 16px) var(--gut) calc(var(--u)*90);display:flex;flex-direction:column}
+  /* El vídeo vive en una capa a pantalla completa recortada con la forma del arco; al hacer scroll el recorte
+     se abre hasta ocupar toda la pantalla (solo con animaciones: .ev-live; sin ellas el arco muestra el póster) */
+  .ev-full{position:absolute;inset:0;z-index:0;display:none;overflow:hidden;background:#2a2722}
+  .ev-live .ev-full{display:block}
+  .ev-full video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;will-change:transform}
+  .ev-full::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(27,26,23,0) 50%,rgba(27,26,23,.45));pointer-events:none}
+  .ev-shade{position:absolute;inset:0;z-index:1;background:rgba(15,14,12,.5);opacity:0;pointer-events:none}
+  .eventos.ev-live .arch{background:transparent}
+  .eventos.ev-live .arch img,.eventos.ev-live .arch::after{display:none}
+  /* la tarjeta de reserva: sin animaciones va debajo del arco; con ellas, centrada sobre el vídeo */
+  .ev-card{position:relative;z-index:6;display:flex;justify-content:center;margin-top:calc(var(--u)*40)}
+  .ev-live .ev-card{position:absolute;left:0;right:0;top:0;height:100vh;height:100svh;margin:0;align-items:center;padding:max(64px,calc(var(--u)*70)) 20px 20px;pointer-events:none}
+  .ev-live .ev-card .rcard{visibility:hidden;opacity:0}
+  .ev-card .rcard{pointer-events:auto}
+  #reserva{position:relative;height:0}
   .aura{position:absolute;width:70vmax;height:70vmax;left:0;top:0;margin:-35vmax 0 0 -35vmax;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(192,164,130,.34) 0%,rgba(192,164,130,.12) 30%,rgba(192,164,130,0) 62%);filter:blur(20px);mix-blend-mode:screen;will-change:transform}
   .eventos .eyebrow{color:var(--champagne);font-size:clamp(10px,calc(var(--u)*9),11px);letter-spacing:.42em;font-weight:600}
   .eventos .top{position:relative;z-index:4;max-width:max(260px,calc(var(--u)*290))}
   .eventos .top p{margin-top:calc(var(--u)*28);font-weight:300;font-size:max(14px,calc(var(--u)*12.3));line-height:1.6}
   /* el arco sube hasta la altura del texto (como en el diseño) y marca la altura del escenario */
-  .ev-stage{position:relative;display:grid;place-items:center;margin-top:calc(var(--u)*-64)}
+  .ev-stage{position:relative;flex:1;display:grid;place-items:center;margin-top:calc(var(--u)*-64)}
   .ev-stage>*{grid-area:1/1}
   .eventos .arch{position:relative;width:max(230px,calc(var(--u)*315));aspect-ratio:309/375;border-radius:9999px 9999px 0 0;overflow:hidden;background:#2a2722;will-change:clip-path}
   .eventos .arch video,.eventos .arch img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .eventos .arch::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(27,26,23,0) 50%,rgba(27,26,23,.45))}
   .eventos h2{position:relative;z-index:3;text-align:center;font-family:var(--uni);font-weight:500;font-size:clamp(36px,calc(var(--u)*48),72px);line-height:1.02;letter-spacing:-.02em;text-transform:none;pointer-events:none;text-shadow:0 8px 40px rgba(0,0,0,.35)}
-  .eventos ul{position:relative;z-index:3;align-self:end;margin-bottom:calc(var(--u)*31);width:min(100%,calc(var(--u)*773));display:flex;justify-content:space-between;gap:20px;list-style:none}
-  .eventos li{display:flex;align-items:center;gap:calc(var(--u)*12);font-size:max(14px,calc(var(--u)*14));font-weight:500;color:var(--beige)}
-  .eventos li svg{width:clamp(15px,calc(var(--u)*14),19px);height:clamp(15px,calc(var(--u)*14),19px);color:var(--champagne);transition:transform .5s var(--ease)}
-  .eventos li:hover svg{transform:translateX(4px)}
+  .ev-stage ul{position:relative;z-index:3;align-self:end;margin-bottom:calc(var(--u)*31);width:min(100%,calc(var(--u)*773));display:flex;justify-content:space-between;gap:20px;list-style:none}
+  .ev-stage li{display:flex;align-items:center;gap:calc(var(--u)*12);font-size:max(14px,calc(var(--u)*14));font-weight:500;color:var(--beige)}
+  .ev-stage li svg{width:clamp(15px,calc(var(--u)*14),19px);height:clamp(15px,calc(var(--u)*14),19px);color:var(--champagne);transition:transform .5s var(--ease)}
+  .ev-stage li:hover svg{transform:translateX(4px)}
   @media (max-width:809px){
-    .eventos{padding:90px 20px 70px;min-height:0}
-    .ev-stage{margin-top:36px}
+    .eventos{padding:90px 20px 70px}
+    .ev-stage{margin-top:36px;flex:none}
     .eventos .arch{width:min(78vw,320px)}
-    .eventos ul{grid-area:2/1;align-self:start;margin:28px 0 0;flex-direction:column;gap:12px;width:100%}
+    .ev-stage ul{grid-area:2/1;align-self:start;margin:28px 0 0;flex-direction:column;gap:12px;width:100%}
   }
 
   /* ---------- CIFRAS (odómetro) en banda champán ---------- */
@@ -429,14 +444,7 @@
   .quote .ctrl svg{width:18px;height:18px}
   @media (max-width:809px){.voces{padding:80px 20px}.quote{grid-template-columns:1fr;gap:30px;margin-top:30px}.quote .ph{aspect-ratio:4/3}.quote blockquote{font-size:24px;min-height:0}}
 
-  /* ---------- 07 · RESERVAS: tu mesa te espera ---------- */
-  .reserva{position:relative;min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:calc(var(--u)*60) 20px;overflow:hidden;background:var(--charcoal);color:var(--ivory)}
-  /* la foto de la barra a sangre, oscurecida, y la tarjeta encima, como en Framer */
-  .res-win{position:absolute;inset:0;overflow:hidden}
-  .res-cam{position:absolute;inset:0;will-change:transform}
-  .res-win img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.8) saturate(1.05)}
-  .res-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(27,26,23,.55),rgba(27,26,23,.3) 45%,rgba(27,26,23,.75))}
-  .reserva .rcard{z-index:3}
+  /* ---------- 07 · RESERVA: la tarjeta negra, ahora dentro de eventos (sobre el vídeo a pantalla completa) ---------- */
   .rcard{position:relative;width:min(100%,calc(var(--u)*1040));min-width:min(100%,760px);border-radius:40px;background:var(--charcoal);border:1px solid rgba(243,241,239,.06);overflow:hidden;padding:calc(var(--u)*76) calc(var(--u)*80) calc(var(--u)*64);box-shadow:0 60px 140px rgba(0,0,0,.45)}
   .rcard .glow{position:absolute;left:0;right:0;bottom:-40%;height:90%;pointer-events:none;background:radial-gradient(50% 50% at 50% 100%,rgba(201,169,106,.22),rgba(201,169,106,0))}
   .rcard .aura{width:60vmax;height:60vmax;margin:-30vmax 0 0 -30vmax;background:radial-gradient(circle,rgba(192,164,130,.2) 0%,rgba(192,164,130,0) 60%)}
@@ -461,6 +469,34 @@
   .contact{display:flex;gap:calc(var(--u)*64);flex-wrap:wrap}
   .contact small{display:block;font-family:var(--label);font-size:14px;color:rgba(243,241,239,.5);letter-spacing:-.01em;margin-bottom:8px}
   .contact a,.contact span{font-size:max(16px,calc(var(--u)*18));letter-spacing:-.02em;font-weight:500}
+  /* versión compacta, centrada sobre el vídeo */
+  .ev-card .rcard{width:min(100%,calc(var(--u)*700));min-width:min(100%,600px);border-radius:28px;padding:calc(var(--u)*44) calc(var(--u)*48) calc(var(--u)*40)}
+  .ev-card .rcard .grid{grid-template-columns:1fr minmax(210px,calc(var(--u)*240));column-gap:calc(var(--u)*44);row-gap:calc(var(--u)*30)}
+  .ev-card .rcard .eyebrow{font-size:clamp(10px,calc(var(--u)*9),11px);letter-spacing:.42em;font-weight:600}
+  .ev-card .rcard h2{margin-top:calc(var(--u)*14);font-size:clamp(28px,calc(var(--u)*32),42px)}
+  .ev-card .rcard .sub{margin-top:calc(var(--u)*12);font-size:max(14px,calc(var(--u)*13.5));max-width:26em}
+  .ev-card .hours{margin-top:4px}
+  .ev-card .hours li{padding:calc(var(--u)*10) 0;font-size:12px;gap:12px}
+  .ev-card .hours li b{font-size:14px}
+  .ev-card .rcard .btns{gap:10px}
+  .ev-card .rcard .btn-fill,.ev-card .rcard .btn-ghost{height:clamp(46px,calc(var(--u)*48),54px);font-size:max(14px,calc(var(--u)*14))}
+  .ev-card .rcard .btn-fill{padding:0 20px 0 24px;gap:12px}
+  .ev-card .rcard .btn-fill svg{width:18px;height:18px}
+  .ev-card .rcard .btn-ghost{padding:0 6px 0 20px;gap:10px}
+  .ev-card .rcard .btn-ghost .o{width:36px;height:36px}
+  .ev-card .rcard .btns .alt{margin-top:2px;font-size:13px}
+  .ev-card .rcard .btn-link{font-size:13px}
+  .ev-card .contact{gap:calc(var(--u)*28)}
+  .ev-card .contact small{font-size:12px;margin-bottom:5px}
+  .ev-card .contact a,.ev-card .contact span{font-size:max(14px,calc(var(--u)*14))}
+  @media (max-width:809px){
+    .ev-live .ev-card{padding:70px 14px 14px}
+    .ev-card .rcard{padding:24px 20px 22px;min-width:0;border-radius:24px}
+    .ev-card .rcard .grid{grid-template-columns:1fr;gap:16px}
+    .ev-card .rcard h2{font-size:30px;margin-top:10px;white-space:normal}
+    .ev-card .hours li{padding:8px 0}
+    .ev-card .rcard .btn-fill,.ev-card .rcard .btn-ghost{height:46px}
+  }
   @media (max-width:809px){.rcard{padding:30px 22px 26px;min-width:0;border-radius:28px}.rcard .grid{grid-template-columns:1fr;gap:22px}.rcard h2{font-size:40px;margin-top:14px}.rcard .sub{margin-top:12px;font-size:15px}.hours{margin-top:0}.hours li{padding:12px 0;font-size:13px}.hours li b{font-size:14px}.rcard h2{white-space:normal}.rcard .btns{gap:10px}.rcard .btn-fill,.rcard .btn-ghost{height:54px}.contact{gap:24px}}
 
   /* ---------- FOOTER ---------- */
@@ -790,13 +826,14 @@
 
 <!-- ================= 06 · EVENTOS ================= -->
 <section class="eventos" id="eventos" data-eventos data-bg="#1b1a17">
+  <div class="ev-full" data-ev-full aria-hidden="true"><video src="media/f/opt/eventos.mp4" muted playsinline preload="none" poster="media/f/opt/eventos-poster.webp" data-ev-video></video><i class="ev-shade" data-ev-shade></i></div>
   <div class="aura" data-aura></div>
   <div class="top">
     <div class="eyebrow" data-reveal>06 — Eventos</div>
     <p data-reveal>Desde celebraciones íntimas hasta encuentros profesionales, creamos experiencias pensadas para reunir a las personas alrededor de una mesa.</p>
   </div>
   <div class="ev-stage">
-    <div class="arch" data-ev-img data-cursor="Eventos"><video src="media/f/opt/eventos.mp4" muted loop playsinline preload="none" poster="media/f/opt/eventos-poster.webp" aria-hidden="true" data-lazy-video></video></div>
+    <div class="arch" data-ev-img data-cursor="Eventos"><img src="media/f/opt/eventos-poster.webp" alt="" loading="lazy"></div>
     <h2 class="split" data-ev-title>momentos especiales</h2>
     <ul data-ev-list>
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Celebraciones privadas</li>
@@ -804,13 +841,9 @@
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Experiencias privadas</li>
     </ul>
   </div>
-</section>
-
-<!-- ================= 07 · RESERVAS ================= -->
-<section class="reserva" id="reserva" data-reserva data-bg="#1b1a17">
-  <div class="res-win" data-res-win><div class="res-cam" data-res-cam><img src="media/f/opt/reserva.webp" alt="La sala de Ozio: barra curva, taburetes de mimbre y banco iluminado" loading="lazy"></div></div>
-  <div class="res-shade" data-res-shade></div>
-  <div class="rcard" data-rcard>
+  <!-- 07 · RESERVA: al terminar el vídeo a pantalla completa, la tarjeta aparece centrada encima -->
+  <div class="ev-card" data-ev-card>
+  <div class="rcard" data-rcard role="region" aria-label="Reserva">
     <div class="glow"></div><div class="aura" data-aura></div>
     <div class="grid">
       <div>
@@ -827,7 +860,9 @@
       <div class="contact" data-contact></div>
     </div>
   </div>
+  </div>
 </section>
+<div id="reserva" aria-hidden="true"></div>
 </main>
 
 <footer data-footer>
@@ -1213,7 +1248,9 @@ const CONFIG = {
   document.addEventListener('click', e => {
     const a = e.target.closest('a[href^="#"]'); if (!a || a.hasAttribute('data-carta-open') || a.hasAttribute('data-carta-close') || a.hasAttribute('data-voz-open') || a.hasAttribute('data-cs-open')) return;
     const id = a.getAttribute('href'); if (id.length < 2 && id !== '#') return; e.preventDefault();
-    lenis.scrollTo(id === '#top' || id === '#' ? 0 : id, { duration: 2.2, easing: t => 1 - Math.pow(1 - t, 4) });
+    // «#reserva» lleva al punto de la escena de eventos donde ya se ve la tarjeta
+    const to = id === '#top' || id === '#' ? 0 : id === '#reserva' && window.ozioReserveY ? window.ozioReserveY() : id;
+    lenis.scrollTo(to, { duration: 2.2, easing: t => 1 - Math.pow(1 - t, 4) });
   });
 
   /* ---------- nav + progreso ---------- */
@@ -1506,12 +1543,57 @@ const CONFIG = {
   lb.addEventListener('click', closeLb); addEventListener('keydown', e => { if (e.key === 'Escape' && lb.classList.contains('on')) closeLb(); });
   gsap.fromTo('[data-enc-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .03, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: '[data-encuentro]', start: 'top 70%' } });
 
-  /* ---------- 06 · eventos: el arco se abre con el vídeo dentro + aura que sigue al cursor ---------- */
-  gsap.timeline({ scrollTrigger: { trigger: '[data-eventos]', start: 'top 75%', end: 'center center', scrub: 1 } })
-    .fromTo('[data-ev-img]', { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'power2.out' }, 0)
-    .fromTo('[data-ev-img] video', { scale: 1.25 }, { scale: 1, ease: 'power2.out' }, 0)
-    .fromTo('[data-ev-title] .ch', { yPercent: 115, opacity: 0 }, { yPercent: 0, opacity: 1, stagger: .02, ease: 'power3.out' }, .2);
+  /* ---------- 06 · eventos + 07 · reserva ----------
+     1) Al llegar, el arco se descubre de abajo arriba con el vídeo dentro.
+     2) La sección se fija y, con el scroll, el arco se abre hasta ocupar toda la pantalla mientras los textos se van.
+     3) A pantalla completa el vídeo se reproduce desde el principio; al terminar (o si se sigue bajando) se queda
+        quieto y aparece encima la tarjeta negra de reserva, más pequeña y centrada. Hacia arriba, todo se deshace. */
+  const evSec = $('[data-eventos]'), evFull = $('[data-ev-full]'), evVid = $('[data-ev-video]'), evArch = $('[data-ev-img]'), evShade = $('[data-ev-shade]');
+  evSec.classList.add('ev-live'); evVid.loop = true;
+  const EV = { r: 0, e: 0, a: null, full: false, card: false };
+  const evMeasure = () => { const s = evSec.getBoundingClientRect(), a = evArch.getBoundingClientRect();
+    EV.a = { l: a.left - s.left, t: a.top - s.top, w: a.width, h: a.height, W: evFull.clientWidth, H: evFull.clientHeight }; };
+  const lerp = (a, b, t) => a + (b - a) * t;
+  // el vídeo se ve a través de un recorte con la forma del arco (rect. con la parte de arriba en semicírculo)
+  const evDraw = () => {
+    const A = EV.a; if (!A) return; const e = EV.e, r = EV.r;
+    const top0 = A.t + A.h * (1 - r), rad0 = Math.min(A.w / 2, A.h * r);
+    const T = lerp(top0, 0, e), L = lerp(A.l, 0, e), R = lerp(A.W - A.l - A.w, 0, e), B = lerp(A.H - A.t - A.h, 0, e), rad = lerp(rad0, 0, e);
+    evFull.style.clipPath = `inset(${T.toFixed(1)}px ${R.toFixed(1)}px ${B.toFixed(1)}px ${L.toFixed(1)}px round ${rad.toFixed(1)}px ${rad.toFixed(1)}px 0px 0px)`;
+    evVid.style.transform = `scale(${(1.25 - .25 * r).toFixed(4)})`;
+    evArch.style.pointerEvents = e > .05 ? 'none' : '';
+  };
+  evMeasure(); evDraw();
+  ScrollTrigger.addEventListener('refresh', () => { evMeasure(); evDraw(); });
+  gsap.to(EV, { r: 1, ease: 'power2.out', onUpdate: evDraw, scrollTrigger: { trigger: evSec, start: 'top 75%', end: 'top top', scrub: 1 } });
+  gsap.fromTo('[data-ev-title] .ch', { yPercent: 115, opacity: 0 }, { yPercent: 0, opacity: 1, stagger: .02, ease: 'power3.out', scrollTrigger: { trigger: evSec, start: 'top 55%', end: 'top 5%', scrub: 1 } });
   gsap.from('[data-ev-list] li', { y: 36, opacity: 0, duration: 1.1, stagger: .1, ease: 'expo.out', scrollTrigger: { trigger: '[data-ev-list]', start: 'top 92%' } });
+  // la tarjeta de reserva: entra sobre el vídeo ya quieto, con una sombra que lo oscurece un poco
+  const cardTL = gsap.timeline({ paused: true })
+    .to(evShade, { opacity: 1, duration: .8, ease: 'power2.out' }, 0)
+    .fromTo('[data-rcard]', { autoAlpha: 0, y: 50, scale: .96 }, { autoAlpha: 1, y: 0, scale: 1, duration: 1.1, ease: 'expo.out' }, .1)
+    .fromTo('[data-res-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .02, duration: .9, ease: 'expo.out' }, .3)
+    .fromTo('[data-hours] li', { x: 24, opacity: 0 }, { x: 0, opacity: 1, stagger: .06, duration: .8, ease: 'expo.out' }, .35)
+    .fromTo('.rcard .sub, .rcard .btns > *, .rcard .contact > *', { y: 18, opacity: 0 }, { y: 0, opacity: 1, stagger: .05, duration: .8, ease: 'expo.out' }, .4);
+  const showCard = () => { if (EV.card) return; EV.card = true; evVid.pause(); cardTL.timeScale(1).play(); };
+  const hideCard = () => { if (!EV.card) return; EV.card = false; cardTL.timeScale(1.8).reverse(); };
+  const startFull = () => { if (EV.full) return; EV.full = true; evVid.loop = false; try { evVid.currentTime = 0; } catch (_) {} evVid.play().catch(() => {}); };
+  const resetFull = () => { if (!EV.full) return; EV.full = false; hideCard(); evVid.loop = true; evVid.play().catch(() => {}); };
+  evVid.addEventListener('ended', () => { if (EV.full) showCard(); });
+  const evPhase = p => {
+    if (p >= .56) startFull(); else if (p < .45) resetFull();
+    if (p >= .88) showCard();                                                     // si se sigue bajando, no hace falta esperar
+    else if (p < .8 && EV.card && !evVid.ended) { hideCard(); evVid.play().catch(() => {}); }
+  };
+  const evTL = gsap.timeline({ scrollTrigger: { trigger: evSec, start: 'top top', end: '+=220%', pin: true, scrub: 1, anticipatePin: 1, onUpdate: st => evPhase(st.progress) } })
+    .to(['.eventos .top', '[data-ev-title]', '[data-ev-list]'], { autoAlpha: 0, y: -30, duration: .2, stagger: .03, ease: 'power1.in' }, 0)
+    .to('.eventos > .aura', { autoAlpha: 0, duration: .2 }, 0)
+    .to(EV, { e: 1, duration: .45, ease: 'power2.inOut', onUpdate: evDraw }, .08)
+    .to({}, { duration: .47 });                                                   // a pantalla completa mientras corre el vídeo
+  window.ozioReserveY = () => evTL.scrollTrigger.end - 4;
+  // el vídeo solo se carga y corre cerca de la pantalla (y no se reanuda si ya está la tarjeta)
+  ScrollTrigger.create({ trigger: evSec, start: 'top bottom+=400', end: 'bottom top', onToggle: st => {
+    if (st.isActive) { if (evVid.preload === 'none') { evVid.preload = 'auto'; evVid.load(); } if (!EV.card) evVid.play().catch(() => {}); } else evVid.pause(); } });
   $$('[data-aura]').forEach(a => {
     const host = a.parentElement; const ax = gsap.quickTo(a, 'x', { duration: 1.1, ease: 'power3' }), ay = gsap.quickTo(a, 'y', { duration: 1.1, ease: 'power3' });
     gsap.set(a, { x: host.clientWidth * .5, y: host.clientHeight * .3 });
@@ -1534,15 +1616,6 @@ const CONFIG = {
   gsap.fromTo('[data-q-ph]', { clipPath: 'inset(0 0 100% 0 round 24px)' }, { clipPath: 'inset(0 0 0% 0 round 24px)', duration: 1.6, ease: 'expo.inOut', scrollTrigger: { trigger: '[data-voces]', start: 'top 70%' } });
   gsap.fromTo('[data-q-img]', { scale: 1.3 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '[data-voces]', start: 'top bottom', end: 'bottom top', scrub: true } });
   gsap.from('.quote .qt > div > *', { y: 30, opacity: 0, duration: 1.1, stagger: .08, ease: 'expo.out', scrollTrigger: { trigger: '[data-voces]', start: 'top 60%' } });
-
-  /* ---------- 08 · reservas: la foto respira al pasar y la tarjeta se presenta ---------- */
-  const resImg = $('[data-res-cam]'), rcard = $('[data-rcard]');
-  gsap.fromTo(resImg, { scale: 1.22, yPercent: -4 }, { scale: 1.05, yPercent: 4, ease: 'none', scrollTrigger: { trigger: '[data-reserva]', start: 'top bottom', end: 'bottom top', scrub: true } });
-  gsap.timeline({ scrollTrigger: { trigger: '[data-reserva]', start: 'top 60%' } })
-    .from(rcard, { y: 90, scale: .96, opacity: 0, duration: 1.4, ease: 'expo.out' })
-    .fromTo('[data-res-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .02, duration: 1, ease: 'expo.out' }, .25)
-    .from('[data-hours] li', { x: 30, opacity: 0, stagger: .08, duration: .9, ease: 'expo.out' }, .35)
-    .from('.rcard .sub, .rcard .btns > *, .rcard .contact > *', { y: 24, opacity: 0, stagger: .08, duration: .9, ease: 'expo.out' }, .4);
 
   /* ---------- el fondo cambia de color entre secciones: sin cortes, como una sola pieza ---------- */
   const bgm = $('[data-bgm]'), bgSecs = $$('[data-bg]');

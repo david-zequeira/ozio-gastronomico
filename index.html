@@ -104,7 +104,7 @@
   .loader .bar{position:absolute;left:0;bottom:0;height:1px;width:100%;background:var(--champagne);transform:scaleX(0);transform-origin:left;z-index:2}
 
   /* ---------- NAV ---------- */
-  .nav{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:calc(var(--u)*32) var(--gut) calc(var(--u)*20);color:var(--ivory);transition:background .6s,backdrop-filter .6s,padding .6s,color .6s}
+  .nav{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:max(16px,calc(var(--u)*18)) var(--gut) max(14px,calc(var(--u)*16));color:var(--ivory);transition:background .6s,backdrop-filter .6s,padding .6s,color .6s}
   .nav:not(.scrolled) .logo,.nav:not(.scrolled) ul{filter:drop-shadow(0 1px 14px rgba(0,0,0,.4))}
   .nav.scrolled{background:rgba(27,26,23,.62);backdrop-filter:saturate(1.3) blur(18px);-webkit-backdrop-filter:saturate(1.3) blur(18px);padding-top:16px;padding-bottom:16px}
   .nav .logo{font-size:clamp(36px,calc(var(--u)*46),56px)}

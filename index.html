@@ -17,7 +17,8 @@
 <meta property="og:url" content="https://david-zequeira.github.io/ozio-gastronomico/">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" as="font" type="font/woff2" href="fonts/Manrope-normal-300_800.woff2" crossorigin>
-<link rel="preload" as="image" href="media/d/hero-poster.webp">
+<link rel="preload" as="image" href="media/f/opt/hero-poster.webp">
+<link rel="preload" as="image" href="media/logo-ozio.png">
 <style>
 @font-face {
   font-family: 'DM Serif Text';
@@ -85,7 +86,8 @@
   .logo{display:inline-flex;align-items:center;line-height:0}
   .logo svg{display:block;height:1em;width:auto;overflow:visible}
   .logo .lg{aspect-ratio:247.4/63.32}.logo .mk{aspect-ratio:1}.logo .st{aspect-ratio:138.77/98.55}
-  .nav .logo .mk{display:none}
+  .nav .logo img{display:block;height:1em;width:auto}
+  .nav .logo .nav-mk{display:none}
   .loader .word{display:flex;align-items:center;gap:.18em;line-height:0}
   .loader .word .mk{height:.92em}
   .loader .word .wd{height:.47em;aspect-ratio:173.25/29.4}
@@ -115,7 +117,7 @@
   .uline{position:relative;padding-bottom:5px}
   .uline::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform-origin:right;transition:transform .6s var(--ease)}
   .uline:hover::after{transform:scaleX(0)}
-    @media (max-width:809px){.nav{padding:16px 20px}.nav .logo{font-size:34px}.nav .logo .lg{display:none}.nav .logo .mk{display:block!important}.nav ul{gap:20px}.nav ul small{display:none}.nav ul a,.nav ul button{font-size:15px}}
+    @media (max-width:809px){.nav{padding:16px 20px}.nav .logo{font-size:34px}.nav .logo .nav-lg{display:none}.nav .logo .nav-mk{display:block!important}.nav ul{gap:20px}.nav ul small{display:none}.nav ul a,.nav ul button{font-size:15px}}
   .progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:51;background:var(--champagne);transform:scaleX(0);transform-origin:left}
 
   /* ---------- BOTONES ---------- */
@@ -145,34 +147,20 @@
   .btn-pill .dot{width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#efe2cc,var(--champagne) 55%,var(--olive));box-shadow:0 0 0 0 rgba(192,164,130,.6);animation:pulse 2.2s infinite}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(192,164,130,.55)}70%{box-shadow:0 0 0 10px rgba(192,164,130,0)}100%{box-shadow:0 0 0 0 rgba(192,164,130,0)}}
 
-  /* ---------- 01 · PRESENTACIÓN: la puerta se abre al vídeo en tres scrolls ---------- */
-  .hero{position:relative;height:100vh;height:100svh;overflow:hidden;background:var(--charcoal);color:var(--ivory)}
-  .hero .cam{position:absolute;inset:-2%;will-change:transform}
-  .hero .photo,.hero .film{position:absolute;inset:0}
-  .hero .photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;will-change:transform}
-  .hero .film{will-change:clip-path;opacity:0}
-  .hero .film video,.hero .film img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  @media (max-width:809px){.hero .grad{background:linear-gradient(180deg,rgba(27,26,23,.4) 0%,rgba(27,26,23,0) 22%,rgba(27,26,23,0) 40%,rgba(10,9,8,.82) 100%)}}
-  .hero .film::after{content:"";position:absolute;inset:0;background:radial-gradient(70% 60% at 50% 52%,rgba(15,13,11,.5),rgba(15,13,11,.22))}
-  .hero .grad{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(20,18,16,.62) 0%,rgba(20,18,16,.28) 12%,rgba(27,26,23,0) 26%,rgba(27,26,23,0) 55%,rgba(0,0,0,.55) 100%)}
-  .hero .intro{position:absolute;left:0;right:0;bottom:calc(var(--u)*46);display:flex;flex-direction:column;align-items:center;gap:14px;font-family:var(--label);font-size:10px;letter-spacing:.5em;text-transform:uppercase;color:rgba(243,241,239,.8)}
+  /* ---------- 01 · PRESENTACIÓN: el vídeo de la casa (diseño Framer) ---------- */
+  .hero{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden;background:var(--charcoal);color:var(--ivory)}
+  .hero .cam{position:absolute;inset:0;will-change:transform;transform-origin:50% 40%}
+  .hero .cam video,.hero .cam img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .hero .grad{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(20,18,16,.55) 0%,rgba(20,18,16,.18) 16%,rgba(27,26,23,.08) 40%,rgba(27,26,23,.2) 62%,rgba(0,0,0,.6) 100%),radial-gradient(60% 50% at 50% 52%,rgba(15,13,11,.38),rgba(15,13,11,0) 70%)}
+  @media (max-width:809px){.hero .grad{background:linear-gradient(180deg,rgba(27,26,23,.45) 0%,rgba(27,26,23,.1) 22%,rgba(27,26,23,.2) 45%,rgba(10,9,8,.8) 100%)}}
+  .hero-copy{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 20px;will-change:transform}
+  .hero-copy h1{font-family:var(--uni);font-weight:600;font-size:clamp(46px,calc(var(--u)*64),96px);line-height:1.06;letter-spacing:-.025em;max-width:7.5em;text-wrap:balance;text-shadow:0 6px 40px rgba(0,0,0,.3)}
+  .hero-copy .lead{margin-top:calc(var(--u)*18);font-size:clamp(16px,calc(var(--u)*20),24px);line-height:1.45;color:rgba(243,241,239,.92);text-shadow:0 2px 24px rgba(0,0,0,.4)}
+  .hero-copy .ctas{display:flex;gap:calc(var(--u)*22);margin-top:calc(var(--u)*46);align-items:center;flex-wrap:wrap;justify-content:center}
+  .hero .intro{position:absolute;left:0;right:0;bottom:calc(var(--u)*40);z-index:3;display:flex;flex-direction:column;align-items:center;gap:14px;font-family:var(--label);font-size:10px;letter-spacing:.5em;text-transform:uppercase;color:rgba(243,241,239,.8)}
   .hero .intro i{display:block;width:1px;height:46px;background:linear-gradient(180deg,var(--ivory),transparent);animation:hint 2.4s var(--ease) infinite}
   @keyframes hint{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
-  .stage{position:absolute;z-index:3;opacity:0;pointer-events:none}
-  .stage h2{font-family:var(--uni);font-weight:500;font-size:clamp(38px,calc(var(--u)*60),84px);line-height:1.02;letter-spacing:-.035em;text-transform:none}
-  .stage p{margin:calc(var(--u)*22) auto 0;font-size:clamp(16px,calc(var(--u)*20),24px);line-height:1.5;max-width:36ch;color:rgba(243,241,239,.9);text-shadow:0 2px 24px rgba(0,0,0,.35);text-wrap:balance}
-  .stage .num{display:block;margin-bottom:calc(var(--u)*22);font-family:var(--label);font-size:12px;letter-spacing:.4em;color:var(--beige)}
-  .stage.s1,.stage.s2,.stage.s3{inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 20px}
-  .stage h2,.stage h1{text-shadow:0 6px 40px rgba(0,0,0,.25)}
-  .stage.s3 h1{font-family:var(--uni);font-weight:500;font-size:clamp(54px,calc(var(--u)*100),136px);line-height:1;letter-spacing:-.04em;text-transform:none;max-width:12ch}
-    .stage.s3 .ctas{display:flex;gap:calc(var(--u)*24);margin-top:calc(var(--u)*48);align-items:center;flex-wrap:wrap;justify-content:center}
-  .hero .dots{position:absolute;left:var(--gut);top:50%;transform:translateY(-50%);z-index:4;display:flex;flex-direction:column;gap:10px}
-  .hero .dots i{display:block;width:2px;height:22px;background:rgba(243,241,239,.28);border-radius:2px;overflow:hidden;position:relative}
-  .hero .dots i::after{content:"";position:absolute;inset:0;background:var(--ivory);transform:scaleY(var(--p,0));transform-origin:top}
-  @media (max-width:809px){
-    .stage.s3 .ctas{flex-direction:column;gap:12px}
-    .hero .dots{left:14px}
-  }
+  @media (max-width:809px){.hero-copy .ctas{flex-direction:column;gap:12px}.hero .intro{display:none}}
 
   /* ---------- LA CARTA (segunda vista, se abre con "Ver menú"): las hojas del menú real ---------- */
   .carta{position:fixed;inset:0;z-index:92;background:var(--charcoal);color:var(--ivory);visibility:hidden;clip-path:circle(0px at var(--cx,50%) var(--cy,50%));overflow:hidden}
@@ -235,64 +223,59 @@
   .intro-s h2 .w{color:rgba(27,26,23,.12)}
   .intro-s p{margin-top:calc(var(--u)*22);max-width:30em;font-family:var(--label);font-weight:400;font-size:max(17px,calc(var(--u)*20));line-height:1.45;color:var(--brown)}
   .intro-s .rule{position:absolute;left:50%;bottom:52px;width:1px;height:calc(var(--u)*147);min-height:90px;background:var(--olive);border-radius:2px;transform-origin:top}
-  .intro-s .rule::after{content:"";position:absolute;left:-3px;bottom:-3px;width:7px;height:7px;border-radius:50%;background:var(--olive)}
+  .intro-s .rule::after{content:"";position:absolute;left:-4px;bottom:1px;width:8px;height:8px;border-right:1px solid var(--olive);border-bottom:1px solid var(--olive);transform:rotate(45deg)}
 
-  /* ---------- 03 · MENÚ: platos que vuelan a la mesa ---------- */
+  /* ---------- 02 · MENÚ: platos que vuelan a la mesa (seis platos, como en Framer) ---------- */
   .menu-s{position:relative;background:transparent;height:100vh;height:100svh;min-height:600px;overflow:hidden}
-  /* el tablero ocupa todo el ancho: los platos de los extremos se cortan con el borde de la pantalla, como en la referencia */
-  .menu-s .board{position:absolute;left:50%;top:50%;width:100vw;aspect-ratio:1200/834;transform:translate(-50%,-50%)}
+  /* el tablero ocupa todo el ancho: los platos de los extremos se cortan con el borde de la pantalla */
+  .menu-s .board{position:absolute;left:50%;top:50%;width:100vw;aspect-ratio:1200/555;transform:translate(-50%,-50%)}
   /* la sombra va en el contenedor (no en la foto que gira) para que caiga siempre hacia abajo */
-  .plate{position:absolute;width:19.4%;aspect-ratio:1;will-change:transform;filter:drop-shadow(0 28px 22px rgba(70,50,30,.34))}
+  .plate{position:absolute;width:17.7%;aspect-ratio:1;will-change:transform;filter:drop-shadow(0 24px 20px rgba(70,50,30,.3))}
   .plate img{width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
-  .p1{left:7.3%;top:33.5%}.p2{left:28.3%;top:19.5%}.p3{left:50.5%;top:19.5%}.p4{left:73.3%;top:33.5%}.p5{left:-6.5%;top:66%}.p6{left:87.5%;top:66%}
-  .p7{left:-7%;top:-5%}.p8{left:88%;top:-5%}.p9{left:39.4%;top:-9%}
-  .menu-s .copy{position:absolute;left:50%;top:54%;transform:translate(-50%,0);text-align:center;width:min(92%,620px);z-index:3}
-  .menu-s h2{font-family:var(--uni);font-weight:700;font-size:clamp(44px,calc(var(--u)*64),92px);line-height:1;letter-spacing:-.045em;text-transform:none;margin-top:calc(var(--u)*30)}
-  .menu-s p{margin-top:calc(var(--u)*14);font-size:max(16px,calc(var(--u)*19));line-height:1.5;color:var(--brown)}
-  .menu-s .btn-fill{--bg:var(--champagne);--fill:var(--charcoal);--tx:var(--ivory);margin-top:calc(var(--u)*40)}
+  .p1{left:10.4%;top:36.4%}.p2{left:30.5%;top:17.8%}.p3{left:51.8%;top:17.8%}.p4{left:72.5%;top:36.4%}.p5{left:-4.1%;top:74.1%}.p6{left:86.3%;top:74.1%}
+  .menu-s .copy{position:absolute;left:50%;top:calc(50% + 100vw * 555 / 1200 * .08);transform:translate(-50%,0);text-align:center;width:min(92%,620px);z-index:3}
+  .menu-s h2{font-family:var(--uni);font-weight:600;font-size:clamp(40px,calc(var(--u)*56),84px);line-height:1;letter-spacing:-.035em;text-transform:none;margin-top:calc(var(--u)*22)}
+  .menu-s p{margin-top:calc(var(--u)*12);font-size:max(15px,calc(var(--u)*17));line-height:1.5;color:var(--charcoal)}
+  .menu-s .btn-fill{--bg:var(--champagne);--fill:var(--charcoal);--tx:var(--charcoal);--tx-h:var(--ivory);height:clamp(48px,calc(var(--u)*52),60px);padding:0 22px 0 26px;font-size:max(16px,calc(var(--u)*17));margin-top:calc(var(--u)*30)}
   @media (max-width:809px){
-    .menu-s{height:auto;min-height:100vh;padding:60vh 0 12vh}
-    .menu-s .board{top:0;transform:translateX(-50%);width:150vw}
+    .menu-s{height:auto;min-height:0;padding:calc(56px + 190vw * 555 / 1200 * .64) 0 80px}
+    .menu-s .board{top:56px;transform:translateX(-50%);width:190vw}
     .menu-s .copy{position:relative;left:auto;top:auto;transform:none;margin:0 auto}
-    .p5,.p6,.p7,.p8,.p9{display:none}
+    .p5,.p6{display:none}
   }
 
-  /* ---------- 03 · EL PLATO: foto cenital → ingredientes → la mesa → el detalle ---------- */
-  .plato{position:relative;height:100vh;height:100svh;overflow:hidden;color:var(--ivory);background:radial-gradient(60% 60% at 60% 50%,rgba(70,62,50,.55) 0%,rgba(27,26,23,0) 70%)}
-  .plato .glow{position:absolute;left:50%;top:50%;width:80vmin;height:80vmin;margin:-40vmin 0 0 -40vmin;border-radius:50%;background:radial-gradient(circle,rgba(192,164,130,.34),transparent 65%);filter:blur(30px);opacity:0}
-  .dish,.dish-anno{position:absolute;inset:0;will-change:transform}
-  .dish{clip-path:circle(40% at 50% 50%)}
-  .dish-zoom,.dish-rot{position:absolute;inset:0}
-  .dish img{position:absolute;max-width:none;user-select:none}
-  .dish-anno{z-index:3;pointer-events:none}
-  .macro{position:absolute;inset:0;opacity:0;z-index:2}
-  .macro img{width:100%;height:100%;object-fit:cover;object-position:35% 40%}
-  .plato .veil{position:absolute;inset:0;z-index:2;opacity:0;pointer-events:none;background:linear-gradient(180deg,rgba(27,26,23,0) 45%,rgba(27,26,23,.82) 100%),linear-gradient(90deg,rgba(27,26,23,.55),rgba(27,26,23,0) 55%)}
-  .plato-copy{position:absolute;left:var(--gut);top:50%;transform:translateY(-50%);z-index:3;max-width:440px}
-  .plato-copy .eyebrow{color:var(--champagne)}
-  .plato h2,.plato h3{font-family:var(--uni);font-weight:500;text-transform:none;letter-spacing:-.04em}
-  .plato h2{font-size:clamp(50px,6vw,100px);line-height:1;margin-top:22px}
-  .plato em{font-family:var(--dm);font-style:italic;font-weight:400;text-transform:none;color:var(--champagne)}
-  .plato-copy p{margin-top:24px;color:rgba(243,241,239,.72);font-size:16px;line-height:1.6;max-width:34ch}
-  .plato-cap{position:absolute;left:var(--gut);bottom:11vh;z-index:4;max-width:680px;opacity:0}
-  .plato-cap .eyebrow{color:var(--beige)}
-  .plato-cap h3{font-size:clamp(40px,5vw,84px);line-height:1;margin-top:16px;text-shadow:0 10px 50px rgba(0,0,0,.5)}
-  .plato-cap p{margin-top:16px;font-family:var(--label);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:rgba(243,241,239,.82)}
-  .callout{position:absolute;display:flex;align-items:center;gap:14px;opacity:0;white-space:nowrap;transform:translate(-5px,-50%)}
-  .callout.l{transform:translate(5px,-50%);flex-direction:row-reverse}
-  .callout i{display:block;flex:none;width:12px;height:12px;border-radius:50%;background:var(--champagne);border:2px solid var(--ivory);box-shadow:0 0 0 5px rgba(27,26,23,.35),0 0 24px rgba(192,164,130,.85)}
-  .callout .ln{display:block;flex:none;height:1px;width:clamp(40px,6vw,96px);background:var(--ivory);box-shadow:0 0 6px rgba(0,0,0,.6);transform-origin:left}
-  .callout.l .ln{transform-origin:right}
-  .callout .tx{background:rgba(27,26,23,.66);backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);border:1px solid rgba(243,241,239,.14);border-radius:12px;padding:10px 14px}
-  .callout .tx small{display:block;font-family:var(--label);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--champagne);margin-bottom:6px}
-  .callout .tx b{font-family:var(--uni);font-weight:600;letter-spacing:-.02em;text-transform:none;font-size:clamp(20px,1.9vw,30px)}
-  .callout.l .tx{text-align:right}
+  /* ---------- LA CARTA en la página: foto de la sala, la hoja y el índice (diseño Framer) ---------- */
+  .carta-s{position:relative;height:100vh;height:100svh;min-height:600px;overflow:hidden;background:var(--charcoal);color:var(--ivory)}
+  .carta-s .bg{position:absolute;inset:-4% 0;will-change:transform}
+  .carta-s .bg img{width:100%;height:100%;object-fit:cover}
+  .carta-s .bg::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 70% at 50% 50%,rgba(27,26,23,.12),rgba(27,26,23,.55)),linear-gradient(90deg,rgba(27,26,23,0) 60%,rgba(27,26,23,.45))}
+  .carta-s .in{position:relative;height:100%;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:clamp(24px,5vw,90px);padding:calc(var(--u)*44 + 20px) var(--gut)}
+  .cs-arrows{justify-self:end;display:flex;flex-direction:column;gap:12px}
+  .cs-arrows button{width:clamp(48px,calc(var(--u)*58),64px);aspect-ratio:1;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer;background:rgba(243,241,239,.32);color:rgba(27,26,23,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background .3s,color .3s,transform .5s var(--ease)}
+  .cs-arrows button[data-cs-next]{background:var(--ivory);color:var(--charcoal);box-shadow:0 18px 40px rgba(0,0,0,.3)}
+  .cs-arrows button:hover{background:var(--ivory);color:var(--charcoal);transform:scale(1.05)}
+  .cs-arrows svg{width:20px;height:20px}
+  .cs-page{position:relative;height:min(84vh,calc(var(--u)*465 + 160px));aspect-ratio:1414/2000;border-radius:10px;overflow:hidden;background:var(--ivory);box-shadow:0 40px 100px rgba(0,0,0,.45);cursor:zoom-in}
+  .cs-page img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;clip-path:inset(100% 0 0 0)}
+  .cs-page .lupa{position:absolute;right:12px;bottom:12px;z-index:5;display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:rgba(27,26,23,.8);color:var(--ivory);font:600 10px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;opacity:0;transform:translateY(6px);transition:opacity .35s,transform .5s var(--ease);pointer-events:none}
+  .cs-page:hover .lupa,.cs-page:focus-visible .lupa{opacity:1;transform:none}
+  .cs-page .lupa svg{width:14px;height:14px}
+  .cs-thumbs{justify-self:start;display:flex;flex-direction:column;gap:10px;max-height:100%}
+  .cs-th{display:flex;align-items:center;gap:clamp(18px,calc(var(--u)*64),70px);padding:0;border:0;background:none;color:var(--ivory);cursor:pointer;text-align:left}
+  .cs-th img{width:clamp(44px,calc(var(--u)*56),62px);aspect-ratio:56/77;height:auto;object-fit:cover;border-radius:2px;opacity:.55;box-shadow:0 8px 24px rgba(0,0,0,.35);transition:opacity .4s,transform .5s var(--ease)}
+  .cs-th span{font-family:var(--sans);font-size:15px;letter-spacing:-.02em;opacity:.7;transition:opacity .4s}
+  .cs-th:hover img,.cs-th:hover span,.cs-th[aria-pressed="true"] img,.cs-th[aria-pressed="true"] span{opacity:1}
+  .cs-th[aria-pressed="true"] img{transform:scale(1.08)}
+  @media (max-height:700px){.cs-thumbs{gap:6px}.cs-th img{width:40px}}
   @media (max-width:900px){
-    .plato-copy{top:11vh;transform:none;left:20px;right:20px}
-    .plato-copy p{display:none}
-    .plato-cap{left:20px;right:20px;bottom:7vh}
-    .callout.m-hide{display:none}
-    .callout{gap:6px}.callout .ln{width:10px}.callout .tx{padding:6px 9px;border-radius:9px}.callout .tx b{font-size:14px}.callout .tx small{display:none}
+    .carta-s{height:auto;min-height:0}
+    .carta-s .in{grid-template-columns:1fr;gap:18px;padding:80px 16px 56px;justify-items:center}
+    .cs-arrows{display:none}
+    .cs-page{height:auto;width:min(100%,460px)}
+    .cs-thumbs{order:-1;flex-direction:row;gap:8px;max-width:100%;overflow-x:auto;padding-bottom:4px;justify-self:stretch}
+    .cs-th{flex:none;gap:10px;padding:6px 12px 6px 6px;border-radius:12px;background:rgba(27,26,23,.45)}
+    .cs-th img{width:28px}
+    .cs-th span{font-size:14px}
   }
 
   /* ---------- 04 · LA COCINA: vídeo de fondo + acordeón ---------- */
@@ -300,13 +283,12 @@
   .cocina .vid{position:absolute;inset:0;clip-path:inset(12% 9% 12% 9% round 28px);will-change:clip-path}
   .cocina .vid video,.cocina .vid img{position:absolute;inset:0;width:100%;height:112%;top:-6%;object-fit:cover}
   .cocina .shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,var(--charcoal) 0%,rgba(32,31,28,.02) 55%),linear-gradient(90deg,rgba(27,26,23,.35),rgba(27,26,23,0) 40%)}
-  .cocina .eyebrow{position:absolute;left:var(--gut);top:calc(var(--u)*98 + 40px);color:rgba(243,241,239,.85)}
-  .cocina h2{position:absolute;left:var(--gut);top:calc(var(--u)*130 + 40px);font-family:var(--uni);font-weight:600;font-size:clamp(40px,calc(var(--u)*55),80px);line-height:.85;text-transform:none;max-width:8em}
-  .acc{position:absolute;left:50%;bottom:calc(var(--u)*44);transform:translateX(-50%);display:flex;gap:calc(var(--u)*12);width:calc(var(--u)*940);min-width:760px;height:calc(var(--u)*210);min-height:190px}
+  .cocina .eyebrow{position:absolute;left:var(--gut);top:calc(var(--u)*69 + 30px);color:var(--ivory)}
+  .acc{position:absolute;left:50%;bottom:calc(var(--u)*72);transform:translateX(-50%);display:flex;gap:calc(var(--u)*8);width:calc(var(--u)*660);min-width:600px;height:calc(var(--u)*150);min-height:146px}
   .acc .card{position:relative;flex:1 1 0;min-width:0;display:flex;flex-direction:column;cursor:pointer;transition:flex-grow .8s var(--ease-io)}
-  .acc .card.on{flex-grow:2.05}
-  .acc .n{align-self:flex-end;font-size:15px;margin-bottom:8px;color:var(--ivory)}
-  .acc .body{position:relative;flex:1;display:flex;gap:16px;overflow:hidden}
+  .acc .card.on{flex-grow:2.1}
+  .acc .n{align-self:flex-end;font-size:14px;margin-bottom:8px;color:var(--ivory)}
+  .acc .body{position:relative;flex:1;display:flex;gap:12px;overflow:hidden}
   .acc .pic{flex:none;height:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;background:#222}
   .acc .card:not(.on) .pic{flex:1 1 auto;aspect-ratio:auto}
   .acc .pic img{width:100%;height:100%;object-fit:cover;transform:scale(1.08);transition:transform 1.2s var(--ease)}
@@ -314,8 +296,8 @@
   .acc .txt{flex:1;min-width:0;align-self:center;opacity:0;transform:translateX(-14px);transition:opacity .4s,transform .8s var(--ease)}
   .acc .card.on .txt{opacity:1;transform:none;transition-delay:.35s}
   .acc .card:not(.on) .txt{position:absolute;pointer-events:none}
-  .acc h3{font-size:19px;font-weight:600;letter-spacing:-.01em;margin-bottom:8px;white-space:nowrap}
-  .acc p{font-size:15px;line-height:1.4;color:rgba(243,241,239,.86)}
+  .acc h3{font-size:16px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px;white-space:nowrap}
+  .acc p{font-size:13px;line-height:1.45;color:rgba(243,241,239,.88)}
   .acc .bar{position:absolute;left:0;right:0;bottom:-14px;height:1px;background:rgba(243,241,239,.18);overflow:hidden}
   .acc .bar::after{content:"";position:absolute;inset:0;background:var(--champagne);transform:scaleX(var(--p,0));transform-origin:left}
   @media (max-width:809px){
@@ -358,30 +340,31 @@
     .pg{top:calc(var(--u)*300 + 150px)}
   }
 
-  /* ---------- 06 · EVENTOS: momentos especiales ---------- */
-  .eventos{position:relative;background:transparent;color:var(--ivory);min-height:max(100vh,calc(var(--u)*720));overflow:hidden;padding:calc(var(--u)*96) var(--gut) calc(var(--u)*90)}
+  /* ---------- 06 · EVENTOS: el vídeo en un arco, como en Framer ---------- */
+  .eventos{position:relative;background:transparent;color:var(--ivory);min-height:max(100vh,calc(var(--u)*640));overflow:hidden;padding:calc(var(--u)*54 + 20px) var(--gut) calc(var(--u)*60);display:flex;flex-direction:column}
   .aura{position:absolute;width:70vmax;height:70vmax;left:0;top:0;margin:-35vmax 0 0 -35vmax;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(192,164,130,.34) 0%,rgba(192,164,130,.12) 30%,rgba(192,164,130,0) 62%);filter:blur(20px);mix-blend-mode:screen;will-change:transform}
-  .eventos .top{position:relative;z-index:2}
-  .eventos .top p{margin-top:14px;max-width:36em;font-weight:300;font-size:max(15px,calc(var(--u)*16));line-height:1.4}
-  .eventos .stage-img{position:relative;margin:calc(var(--u)*40) auto 0;width:min(100%,calc(var(--u)*790));aspect-ratio:790/355;border-radius:20px;overflow:hidden;clip-path:inset(18% 26% 18% 26% round 20px);will-change:clip-path}
-  .eventos .stage-img img{width:100%;height:100%;object-fit:cover;transform:scale(1.3);will-change:transform}
-  .eventos h2{position:relative;z-index:3;margin-top:calc(var(--u)*-352 - .2em);text-align:center;font-family:var(--uni);font-weight:500;font-size:clamp(46px,calc(var(--u)*88),140px);line-height:.98;letter-spacing:-.045em;text-transform:none;pointer-events:none}
-  .eventos .row{position:relative;z-index:2;margin-top:calc(var(--u)*300);display:flex;align-items:flex-end;justify-content:space-between;gap:30px;flex-wrap:wrap}
-  .eventos ul{display:flex;gap:calc(var(--u)*40);list-style:none;flex-wrap:wrap}
-  .eventos li{display:flex;align-items:center;gap:8px;font-size:18px;color:var(--beige)}
-  .eventos li svg{width:17px;height:17px;color:var(--olive);transition:transform .5s var(--ease)}
+  .eventos .eyebrow{color:var(--champagne)}
+  .eventos .top{position:relative;z-index:4;max-width:max(260px,calc(var(--u)*290))}
+  .eventos .top p{margin-top:calc(var(--u)*24);font-weight:300;font-size:max(14px,calc(var(--u)*14));line-height:1.6}
+  .ev-stage{position:relative;flex:1;display:grid;place-items:center;margin-top:calc(var(--u)*-70)}
+  .ev-stage>*{grid-area:1/1}
+  .eventos .arch{position:relative;width:max(230px,calc(var(--u)*330));aspect-ratio:309/375;border-radius:9999px 9999px 0 0;overflow:hidden;background:#2a2722;will-change:clip-path}
+  .eventos .arch video,.eventos .arch img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .eventos .arch::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(27,26,23,0) 50%,rgba(27,26,23,.45))}
+  .eventos h2{position:relative;z-index:3;text-align:center;font-family:var(--uni);font-weight:500;font-size:clamp(40px,calc(var(--u)*56),88px);line-height:1.02;letter-spacing:-.02em;text-transform:none;pointer-events:none;text-shadow:0 8px 40px rgba(0,0,0,.35)}
+  .eventos ul{position:relative;z-index:3;align-self:end;margin-bottom:calc(var(--u)*56);width:min(100%,calc(var(--u)*720));display:flex;justify-content:space-between;gap:20px;list-style:none}
+  .eventos li{display:flex;align-items:center;gap:10px;font-size:max(14px,calc(var(--u)*15));font-weight:500;color:var(--beige)}
+  .eventos li svg{width:15px;height:15px;color:var(--champagne);transition:transform .5s var(--ease)}
   .eventos li:hover svg{transform:translateX(4px)}
-  .eventos .row>p{max-width:280px;font-weight:300;font-size:13px;line-height:1.4}
   @media (max-width:809px){
-    .eventos{padding:90px 20px 80px}
-    .eventos h2{margin-top:24px}
-    .eventos .stage-img{margin-top:24px}
-    .eventos .row{margin-top:36px;flex-direction:column;align-items:flex-start}
-    .eventos ul{flex-direction:column;gap:12px}
+    .eventos{padding:90px 20px 70px;min-height:0}
+    .ev-stage{margin-top:36px}
+    .eventos .arch{width:min(78vw,320px)}
+    .eventos ul{grid-area:2/1;align-self:start;margin:28px 0 0;flex-direction:column;gap:12px;width:100%}
   }
 
-  /* ---------- CIFRAS (odómetro) ---------- */
-  .stats{background:var(--olive-deep);color:var(--ivory);padding:calc(var(--u)*80) 48px}
+  /* ---------- CIFRAS (odómetro) en banda champán ---------- */
+  .stats{background:var(--champagne);color:var(--ivory);padding:calc(var(--u)*96) 48px}
   .stats .grid{max-width:916px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:52px;text-align:center}
   .stat b{display:flex;justify-content:center;font:800 max(36px,calc(var(--u)*46))/1 var(--sans);font-variant-numeric:tabular-nums}
   .stat span{display:block;margin-top:10px;font-size:16px}
@@ -433,7 +416,7 @@
   .rcard .grid{position:relative;display:grid;grid-template-columns:1fr minmax(280px,calc(var(--u)*370));column-gap:calc(var(--u)*80);row-gap:calc(var(--u)*44);align-items:start}
   .rcard .btns,.rcard .contact{align-self:end}
   .rcard .eyebrow{letter-spacing:.42em;font-size:12px;color:var(--beige);opacity:.85}
-  .rcard h2{margin-top:calc(var(--u)*22);font-family:var(--uni);font-weight:400;font-size:clamp(38px,calc(var(--u)*46),62px);line-height:1.05;letter-spacing:-.035em;text-transform:none;color:#e9ddcf;white-space:nowrap}
+  .rcard h2{margin-top:calc(var(--u)*22);font-family:var(--uni);font-weight:500;font-size:clamp(36px,calc(var(--u)*44),60px);line-height:1.08;letter-spacing:-.02em;text-transform:none;color:var(--ivory);white-space:nowrap}
   .rcard .sub{margin-top:calc(var(--u)*20);max-width:30em;font-size:max(15px,calc(var(--u)*17));line-height:1.55;letter-spacing:-.015em;color:rgba(233,221,207,.85)}
   .hours{list-style:none;margin-top:calc(var(--u)*10);border-top:1px solid rgba(243,241,239,.12)}
   .hours li{position:relative;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:calc(var(--u)*17) 0;font-size:15px;font-weight:500;letter-spacing:.02em;text-transform:uppercase;color:rgba(243,241,239,.9)}
@@ -443,11 +426,11 @@
   .rcard .btns .alt{flex-basis:100%;margin-top:6px;font-size:14px;color:rgba(233,221,207,.6)}
   .rcard .btn-link{background:none;border:0;padding:0;color:#e9ddcf;font:500 14px/1 var(--sans);text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(233,221,207,.5);cursor:pointer;transition:text-decoration-color .3s}
   .rcard .btn-link:hover{text-decoration-color:#e9ddcf}
-  .rcard .btn-fill{--bg:#d8c3a5;--fill:var(--ivory);--tx:var(--charcoal);--tx-h:var(--charcoal);height:clamp(56px,calc(var(--u)*62),68px);padding:0 26px 0 30px;font-size:max(16px,calc(var(--u)*17))}
-  .rcard .btn-ghost{height:clamp(56px,calc(var(--u)*62),68px);min-width:0;padding:0 8px 0 26px;gap:14px;border-color:rgba(233,221,207,.6);background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;color:#e9ddcf;font-weight:500;font-size:max(16px,calc(var(--u)*17))}
-  .rcard .btn-ghost .o{width:44px;height:44px;background:transparent;border:1px solid rgba(233,221,207,.6);color:#e9ddcf;transition:transform .6s var(--ease),background .4s,color .4s}
-  .rcard .btn-ghost:hover{background:rgba(233,221,207,.06)}
-  .rcard .btn-ghost:hover .o{background:#e9ddcf;color:var(--charcoal)}
+  .rcard .btn-fill{--bg:#c9a96a;--fill:var(--ivory);--tx:var(--charcoal);--tx-h:var(--charcoal);height:clamp(56px,calc(var(--u)*62),68px);padding:0 26px 0 30px;font-size:max(16px,calc(var(--u)*17))}
+  .rcard .btn-ghost{height:clamp(56px,calc(var(--u)*62),68px);min-width:0;padding:0 8px 0 26px;gap:14px;border-color:transparent;background:#ebe5de;backdrop-filter:none;-webkit-backdrop-filter:none;color:var(--charcoal);font-weight:500;font-size:max(16px,calc(var(--u)*17))}
+  .rcard .btn-ghost .o{width:44px;height:44px;background:#6b6258;border:0;color:var(--ivory);transition:transform .6s var(--ease),background .4s,color .4s}
+  .rcard .btn-ghost:hover{background:var(--ivory)}
+  .rcard .btn-ghost:hover .o{background:var(--charcoal);color:var(--ivory)}
   .contact{display:flex;gap:calc(var(--u)*64);flex-wrap:wrap}
   .contact small{display:block;font-family:var(--label);font-size:14px;color:rgba(243,241,239,.5);letter-spacing:-.01em;margin-bottom:8px}
   .contact a,.contact span{font-size:max(16px,calc(var(--u)*18));letter-spacing:-.02em;font-weight:500}
@@ -457,6 +440,7 @@
   footer{position:relative;background:var(--black);color:var(--ivory);padding:calc(var(--u)*72) calc(var(--u)*60 + 12px) calc(var(--u)*44);overflow:hidden}
   footer .cols{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr;gap:30px}
   footer .logo{font-size:44px}
+  footer .logo img{display:block;height:1em;width:auto}
   footer h4{font-size:max(16px,calc(var(--u)*18));font-weight:500;color:rgba(243,241,239,.5);margin-bottom:calc(var(--u)*24)}
   footer ul{list-style:none;display:flex;flex-direction:column;gap:12px;font-size:max(15px,calc(var(--u)*17));font-weight:500}
   footer ul a{position:relative;display:inline-block}
@@ -591,11 +575,8 @@
   @media (prefers-reduced-motion:reduce){
     .grain,.hero .intro i,.btn-pill .dot{animation:none}
     .loader{display:none}
-    .stage{opacity:1;position:relative}
-    .hero .film{opacity:1;clip-path:none}
     .intro-s h2 .w{color:inherit}
-    .cocina .vid,.eventos .stage-img{clip-path:none}
-    .eventos .stage-img img{transform:none}
+    .cocina .vid,.eventos .arch{clip-path:none}
   }
 </style>
 </head>
@@ -620,51 +601,33 @@
 <div class="progress" data-progress></div>
 
 <nav class="nav" data-nav>
-  <a class="logo" href="#top" data-cursor="Inicio" aria-label="Ozio Gastronomico, inicio"><svg class="lg" aria-hidden="true"><use href="#ozio-logo"/></svg><svg class="mk" aria-hidden="true"><use href="#ozio-mark"/></svg></a>
+  <a class="logo" href="#top" data-cursor="Inicio" aria-label="Ozio Gastronomico, inicio"><img class="nav-lg" src="media/logo-ozio.png" width="1031" height="265" alt="" aria-hidden="true"><img class="nav-mk" src="media/logo-ozio-simbolo.png" width="241" height="240" alt="" aria-hidden="true"></a>
   <ul>
-    <li><button type="button" data-carta-open><small>01</small>menú</button></li>
+    <li><a href="#carta"><small>01</small>menú</a></li>
     <li><a href="#eventos"><small>02</small>eventos</a></li>
     <li><a href="#reserva"><small>03</small>contáctanos</a></li>
   </ul>
 </nav>
 
 <main>
-<!-- ================= 01 · PRESENTACIÓN ================= -->
+<!-- ================= PRESENTACIÓN: el vídeo de la casa ================= -->
 <section class="hero" id="top" data-hero data-bg="#1b1a17">
   <div class="cam" data-cam>
-    <div class="photo" data-photo><img src="media/d/hero-poster.webp" alt="Entrada de Ozio: arco encalado, puerta de madera y buganvilla" data-photo-img></div>
-    <div class="film" data-film>
-      <img src="media/d/hero-frame.webp" alt="" aria-hidden="true">
-      <video src="media/d/hero.mp4" muted loop playsinline preload="auto" poster="media/d/hero-frame.webp" data-hero-video></video>
-    </div>
+    <video src="media/f/opt/hero.mp4" muted loop playsinline autoplay preload="auto" poster="media/f/opt/hero-poster.webp" aria-hidden="true" data-hero-video></video>
   </div>
   <div class="grad"></div>
-
-  <div class="intro" data-hero-intro><span>Desliza para entrar</span><i></i></div>
-
-  <div class="dots" data-hero-dots aria-hidden="true"><i></i><i></i><i></i></div>
-
-  <div class="stage s1" data-stage="1">
-    <span class="num">01 / 03</span>
-    <h2 class="split">Cocina italiana,<br>alma siciliana</h2>
-    <p>Una mirada contemporánea a los sabores, productos y tradiciones de Sicilia.</p>
-  </div>
-  <div class="stage s2" data-stage="2">
-    <span class="num">02 / 03</span>
-    <h2 class="split">El tiempo de disfrutar</h2>
-    <p>Una cocina que invita a detenerse, descubrir y disfrutar. Porque en Ozio, el tiempo también forma parte de la experiencia.</p>
-  </div>
-  <div class="stage s3" data-stage="3">
-    <h1 class="split" data-s3-title>Benvenuti a Ozio</h1>
-    <p data-s3-lead>Una experiencia italiana para disfrutar sin prisa.</p>
-    <div class="ctas" data-s3-ctas>
-      <a class="btn-split" href="#reserva" data-magnetic><span class="l"><span>Reservar mesa</span><span>Reservar mesa</span></span></a>
-      <button class="btn-ghost" type="button" data-carta-open data-magnetic>Ver menú <span class="o"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+  <div class="hero-copy" data-hero-copy>
+    <h1 class="split" data-hero-title>Benvenuti a Ozio</h1>
+    <p class="lead" data-hero-lead>Un espacio para compartir</p>
+    <div class="ctas" data-hero-ctas>
+      <a class="btn-split" href="#reserva" data-magnetic><span class="l"><span>Reservar</span><span>Tu mesa</span></span></a>
+      <a class="btn-ghost" href="#carta" data-magnetic>Ver menú <span class="o"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
     </div>
   </div>
+  <div class="intro" data-hero-intro><span>Desliza</span><i></i></div>
 </section>
 
-<!-- ================= 02 · INTRODUCCIÓN ================= -->
+<!-- ================= 01 · OZIO ================= -->
 <section class="intro-s" id="ozio" data-intro data-bg="#e0d6cc">
   <div class="eyebrow" data-reveal>01 — Ozio</div>
   <h2 data-intro-title>El tiempo dedicado a lo esencial.</h2>
@@ -672,120 +635,71 @@
   <span class="rule" data-rule></span>
 </section>
 
-<!-- ================= 03 · MENÚ ================= -->
-<section class="menu-s" id="menu" data-menu data-bg="#eae2d9">
+<!-- ================= 02 · MENÚ ================= -->
+<section class="menu-s" id="menu" data-menu data-bg="#f3f1ef">
   <div class="board" data-board>
-    <div class="plate p1" data-plate data-depth="1.2"><img src="media/d/plato-gnocchi.webp" alt="Gnocchi con tomate cherry, albahaca y parmesano" loading="lazy"></div>
-    <div class="plate p2" data-plate data-depth=".8"><img src="media/d/plato-tiramisu.webp" alt="Tiramisú con granos de café" loading="lazy"></div>
-    <div class="plate p3" data-plate data-depth="1"><img src="media/d/plato-salmon-caviar.webp" alt="Salmón con caviar, flores y brotes" loading="lazy"></div>
-    <div class="plate p4" data-plate data-depth="1.3"><img src="media/d/plato-margherita.webp" alt="Pizza margherita con tomate, mozzarella y albahaca" loading="lazy"></div>
-    <div class="plate p5" data-plate data-depth="1.6"><img src="media/d/plato-pizza-porcion.webp" alt="" loading="lazy"></div>
-    <div class="plate p6" data-plate data-depth="1.5"><img src="media/d/plato-halloumi.webp" alt="" loading="lazy"></div>
-    <div class="plate p7" data-plate data-depth="1.4"><img src="media/d/plato-penne.webp" alt="" loading="lazy"></div>
-    <div class="plate p8" data-plate data-depth="1.4"><img src="media/d/plato-caprese.webp" alt="" loading="lazy"></div>
-    <div class="plate p9" data-plate data-depth="1.1"><img src="media/d/plato-tarta-pina.webp" alt="" loading="lazy"></div>
+    <div class="plate p1" data-plate data-depth="1.2"><img src="media/f/opt/plato-1.webp" alt="Penne con tomate cherry y romero" loading="lazy"></div>
+    <div class="plate p2" data-plate data-depth=".8"><img src="media/f/opt/plato-2.webp" alt="Tiramisú con granos de café" loading="lazy"></div>
+    <div class="plate p3" data-plate data-depth="1"><img src="media/f/opt/plato-3.webp" alt="Carne a la brasa con patatas asadas" loading="lazy"></div>
+    <div class="plate p4" data-plate data-depth="1.3"><img src="media/f/opt/plato-4.webp" alt="Pizza con jamón, rúcula y parmesano" loading="lazy"></div>
+    <div class="plate p5" data-plate data-depth="1.6"><img src="media/f/opt/plato-5.webp" alt="" loading="lazy"></div>
+    <div class="plate p6" data-plate data-depth="1.5"><img src="media/f/opt/plato-6.webp" alt="" loading="lazy"></div>
   </div>
   <div class="copy">
     <div class="eyebrow" data-menu-copy>02 — Menú</div>
-    <h2 class="split" data-menu-title>Descubrir la Carta</h2>
+    <h2 class="split" data-menu-title>Descubrir la carta</h2>
     <p data-menu-copy>Una experiencia gastronómica que cambia con la temporada.</p>
-    <button class="btn-fill" type="button" data-carta-open data-fill data-menu-copy><span class="fill"></span><span>Ver menú</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    <a class="btn-fill" href="#carta" data-fill data-menu-copy><span class="fill"></span><span>Ver menú</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
   </div>
 </section>
 
-<!-- ================= 03 · EL PLATO ================= -->
-<section class="plato" id="plato" data-plato data-bg="#1b1a17">
-  <div class="glow" data-plate-glow></div>
-  <div class="dish" data-dish>
-    <div class="dish-zoom" data-dish-zoom>
-      <div class="dish-rot" data-dish-rot>
-        <img src="media/d/tartaleta-cenital.webp" alt="Tartaleta de frutos rojos sobre plato de cerámica y mesa de azulejo pintado a mano" data-dish-img>
-      </div>
+<!-- ================= LA CARTA: las hojas del menú, en la página ================= -->
+<section class="carta-s" id="carta" data-cs data-bg="#1b1a17" aria-label="La carta de Ozio">
+  <div class="bg" data-cs-bg><img src="media/f/opt/carta-fondo.webp" alt="" aria-hidden="true" loading="lazy"></div>
+  <div class="in">
+    <div class="cs-arrows">
+      <button type="button" data-cs-prev aria-label="Hoja anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+      <button type="button" data-cs-next aria-label="Hoja siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button>
     </div>
-  </div>
-  <div class="macro" data-macro><img src="media/d/tartaleta-macro.webp" alt="Detalle de la tartaleta: fresas, moras, chocolate blanco y coulis de fresa" loading="lazy"></div>
-  <div class="veil" data-veil></div>
-
-  <div class="dish-anno" data-dish-anno>
-    <div class="callout l" data-callout data-at="580,620"><i></i><span class="ln"></span><span class="tx"><small>Hecho en casa</small><b data-short="Coulis">Coulis de fresa</b></span></div>
-    <div class="callout r" data-callout data-at="1060,450"><i></i><span class="ln"></span><span class="tx"><small>De temporada</small><b>Fresas</b></span></div>
-    <div class="callout l" data-callout data-at="820,740"><i></i><span class="ln"></span><span class="tx"><small>Frutos del bosque</small><b data-short="Moras">Moras y arándanos</b></span></div>
-    <div class="callout r m-hide" data-callout data-at="1262,640"><i></i><span class="ln"></span><span class="tx"><small>Recién cortada</small><b>Menta</b></span></div>
-    <div class="callout r" data-callout data-at="982,924"><i></i><span class="ln"></span><span class="tx"><small>Sobre masa sablé</small><b data-short="Chocolate blanco">Crema de chocolate blanco</b></span></div>
-  </div>
-
-  <div class="plato-copy">
-    <div class="eyebrow" data-plate-copy>03 — El plato</div>
-    <h2 class="split" data-plate-title>Dulce,<br><em>a mano.</em></h2>
-    <p data-plate-copy>Nuestra tartaleta de frutos rojos. Pequeña, precisa y hecha para compartir… aunque nadie la comparte.</p>
-  </div>
-  <div class="plato-cap" data-cap="mesa">
-    <div class="eyebrow">Cerámica pintada a mano</div>
-    <h3>La casa también<br><em>se sirve en la mesa.</em></h3>
-  </div>
-  <div class="plato-cap" data-cap="detalle">
-    <div class="eyebrow">Postre de la casa</div>
-    <h3>Tartaleta de<br><em>frutos rojos.</em></h3>
-    <p>Chocolate blanco · Frutos del bosque · Menta · Coulis de fresa</p>
+    <div class="cs-page" data-cs-page role="button" tabindex="0" aria-label="Abrir la carta para leerla"></div>
+    <nav class="cs-thumbs" data-cs-thumbs aria-label="Hojas de la carta"></nav>
   </div>
 </section>
 
-<!-- ================= 04 · LA COCINA ================= -->
+<!-- ================= 03 · LA COCINA ================= -->
 <section class="cocina" id="cocina" data-cocina data-bg="#1b1a17">
   <div class="vid" data-cocina-vid>
     <img src="media/d/cocina-poster.webp" alt="" aria-hidden="true">
     <video src="media/d/cocina.mp4" muted loop playsinline preload="none" poster="media/d/cocina-poster.webp" data-lazy-video></video>
   </div>
   <div class="shade"></div>
-  <div class="eyebrow" data-reveal>04 — La cocina</div>
+  <div class="eyebrow" data-reveal>03 — La cocina</div>
   <div class="acc" data-acc>
-    <article class="card on"><span class="n">(1)</span><div class="body"><div class="pic"><img src="media/d/ing-1.jpg" alt="Rama de olivo" loading="lazy"></div><div class="txt"><h3>Ingredientes</h3><p>Producto seleccionado por su calidad. Selección diaria &amp; origen cuidado.</p></div></div><i class="bar"></i></article>
-    <article class="card"><span class="n">(2)</span><div class="body"><div class="pic"><img src="media/d/ing-2.jpg" alt="Limón con hojas" loading="lazy"></div><div class="txt"><h3>Temporada</h3><p>Cada ingrediente en su mejor momento. Carta viva &amp; cambios estacionales.</p></div></div><i class="bar"></i></article>
-    <article class="card"><span class="n">(3)</span><div class="body"><div class="pic"><img src="media/d/ing-3.jpg" alt="Copa de vino tinto" loading="lazy"></div><div class="txt"><h3>Mediterráneo</h3><p>Una cocina pensada para compartir. Tradición, luz &amp; mar.</p></div></div><i class="bar"></i></article>
-    <article class="card"><span class="n">(4)</span><div class="body"><div class="pic"><img src="media/d/ing-4.jpg" alt="Gambas al ajillo en cazuela de barro" loading="lazy"></div><div class="txt"><h3>Técnica</h3><p>Precisión al servicio del sabor. Elaboración cuidada &amp; procesos refinados.</p></div></div><i class="bar"></i></article>
+    <article class="card on"><span class="n">(1)</span><div class="body"><div class="pic"><img src="media/f/opt/cocina-1.webp" alt="Limón siciliano con hojas" loading="lazy"></div><div class="txt"><h3>Sicilia</h3><p>La inspiración detrás de nuestra cocina, nuestra cultura y nuestra forma de recibir.</p></div></div><i class="bar"></i></article>
+    <article class="card"><span class="n">(2)</span><div class="body"><div class="pic"><img src="media/f/opt/cocina-2.webp" alt="Rama de olivo" loading="lazy"></div><div class="txt"><h3>Ingredientes</h3><p>Producto seleccionado por su calidad. Selección diaria &amp; origen cuidado.</p></div></div><i class="bar"></i></article>
+    <article class="card"><span class="n">(3)</span><div class="body"><div class="pic"><img src="media/f/opt/cocina-3.webp" alt="Plato de pasta fresca" loading="lazy"></div><div class="txt"><h3>Técnica</h3><p>Precisión al servicio del sabor. Elaboración cuidada &amp; procesos refinados.</p></div></div><i class="bar"></i></article>
+    <article class="card"><span class="n">(4)</span><div class="body"><div class="pic"><img src="media/f/opt/cocina-4.webp" alt="Copa de vino tinto" loading="lazy"></div><div class="txt"><h3>Mediterráneo</h3><p>Una cocina pensada para compartir. Tradición, luz &amp; mar.</p></div></div><i class="bar"></i></article>
   </div>
 </section>
 
-<!-- ================= 05 · EL ENCUENTRO ================= -->
+<!-- ================= 04 · GALERÍA ================= -->
 <section class="encuentro" id="encuentro" data-encuentro data-bg="#e0d6cc">
   <div class="head">
-    <div class="eyebrow" data-reveal>05 — Galería</div>
+    <div class="eyebrow" data-reveal>04 — Galería</div>
     <h2 class="split" data-enc-title>El encuentro</h2>
     <p data-reveal>Donde la gastronomía, la arquitectura y la hospitalidad se encuentran para crear una experiencia que invita a quedarse.</p>
   </div>
   <div class="pg" data-pg data-cursor="Arrastra">
     <div class="track" data-track>
-      <figure class="gcard" style="--ar:1.000;--h:.62;--y:-6"><div class="in"><img src="media/d/reel-burrata.webp" alt="Burrata sobre la mesa de cerámica y el azulejo siciliano" loading="lazy" draggable="false"></div><figcaption>La burrata</figcaption></figure>
-      <figure class="gcard" style="--ar:0.750;--h:.90;--y:4"><div class="in"><img src="media/d/gal-1.jpg" alt="Terraza con lámparas de mimbre" loading="lazy" draggable="false"></div><figcaption>La terraza</figcaption></figure>
-      <figure class="gcard" style="--ar:1.000;--h:.66;--y:10"><div class="in"><img src="media/d/mesa-centro.webp" alt="Carpaccio, crema verde y tartar sobre la mesa de cerámica azul" loading="lazy" draggable="false"></div><figcaption>La mesa</figcaption></figure>
-      <figure class="gcard" style="--ar:0.750;--h:.84;--y:-4"><div class="in"><img src="media/d/gal-4.jpg" alt="Carta y cóctel con naranja deshidratada" loading="lazy" draggable="false"></div><figcaption>El cóctel</figcaption></figure>
-      <figure class="gcard" style="--ar:1.000;--h:.70;--y:6"><div class="in"><img src="media/d/reel-sala.webp" alt="La sala de Ozio: lámpara de sol dorada y banco mostaza" loading="lazy" draggable="false"></div><figcaption>La sala</figcaption></figure>
-      <figure class="gcard" style="--ar:1.000;--h:.60;--y:-8"><div class="in"><img src="media/d/azulejo.webp" alt="Azulejo siciliano de las paredes de Ozio" loading="lazy" draggable="false"></div><figcaption>El azulejo</figcaption></figure>
-      <figure class="gcard" style="--ar:0.750;--h:.92;--y:2"><div class="in"><img src="media/d/gal-2.webp" alt="Comensal ante un plato de pasta" loading="lazy" draggable="false"></div><figcaption>La sobremesa</figcaption></figure>
-      <figure class="gcard" style="--ar:1.000;--h:.64;--y:8"><div class="in"><img src="media/d/carpaccio-azulejo.webp" alt="Carpaccio sobre la mesa de cerámica, con el azulejo al fondo" loading="lazy" draggable="false"></div><figcaption>La cerámica</figcaption></figure>
+      <figure class="gcard" style="--ar:0.830;--h:.58;--y:12"><div class="in"><img src="media/f/opt/gal-1.webp" alt="Spaghetti con sardinas y pan rallado" loading="lazy" draggable="false"></div><figcaption>La pasta</figcaption></figure>
+      <figure class="gcard" style="--ar:1.000;--h:.70;--y:0"><div class="in"><img src="media/f/opt/gal-2.webp" alt="Pizza recién salida del horno con mozzarella y tomate" loading="lazy" draggable="false"></div><figcaption>La pizza</figcaption></figure>
+      <figure class="gcard" style="--ar:0.720;--h:.92;--y:-2"><div class="in"><img src="media/f/opt/carta-fondo.webp" alt="La barra de Ozio con su arco de botellas" loading="lazy" draggable="false"></div><figcaption>La barra</figcaption></figure>
+      <figure class="gcard" style="--ar:0.720;--h:.60;--y:6"><div class="in"><img src="media/f/opt/gal-4.webp" alt="Rallando trufa sobre un plato de la casa" loading="lazy" draggable="false"></div><figcaption>El detalle</figcaption></figure>
+      <figure class="gcard" style="--ar:0.520;--h:.76;--y:-4"><div class="in"><img src="media/f/opt/gal-5.webp" alt="Sumiller catando una copa de vino tinto" loading="lazy" draggable="false"></div><figcaption>El vino</figcaption></figure>
     </div>
   </div>
-  <div class="count"><span data-g-n>01</span><i data-g-bar></i><span>08</span></div>
+  <div class="count"><span data-g-n>01</span><i data-g-bar></i><span>05</span></div>
   <div class="lightbox" data-lightbox><div><img alt="" data-lb-img><p data-lb-cap></p></div></div>
-</section>
-
-<!-- ================= 06 · EVENTOS ================= -->
-<section class="eventos" id="eventos" data-eventos data-bg="#1b1a17">
-  <div class="aura" data-aura></div>
-  <div class="top">
-    <div class="eyebrow" data-reveal>06 — Eventos</div>
-    <p data-reveal>Desde celebraciones íntimas hasta encuentros profesionales, creamos experiencias pensadas para reunir a las personas alrededor de una mesa.</p>
-  </div>
-  <div class="stage-img" data-ev-img data-cursor="Eventos"><img src="media/d/eventos-poster.webp" alt="Sala de arcos de piedra con mesas vestidas para un evento" loading="lazy"></div>
-  <h2 class="split" data-ev-title>Momentos especiales</h2>
-  <div class="row">
-    <ul data-ev-list>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Celebraciones privadas</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Eventos corporativos</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Experiencias privadas</li>
-    </ul>
-    <p data-reveal>Un espacio pensado para reuniones íntimas, celebraciones y experiencias gastronómicas diseñadas para compartir.</p>
-  </div>
 </section>
 
 <!-- ================= CIFRAS ================= -->
@@ -794,11 +708,11 @@
 </section>
 
 <!-- ================= TESTIMONIOS ================= -->
-<section class="voces" id="voces" data-voces data-bg="#e0d6cc">
+<section class="voces" id="voces" data-voces data-bg="#f3f1ef">
   <div class="in">
-    <div class="top"><div class="eyebrow">07 — Reseñas</div><small><span data-q-n>01</span> / <span data-q-t>01</span></small></div>
+    <div class="top"><div class="eyebrow">05 — Reseñas</div><small><span data-q-n>01</span> / <span data-q-t>01</span></small></div>
     <div class="quote">
-      <div class="ph" data-q-ph><img src="media/d/reel-tartaleta.webp" alt="" data-q-img loading="lazy" style="object-position:45% 55%"><span class="tag" data-q-tag>Ozio</span></div>
+      <div class="ph" data-q-ph><img src="media/f/opt/resena.webp" alt="" data-q-img loading="lazy"><span class="tag" data-q-tag>Ozio</span></div>
       <div class="qt">
         <div>
           <div class="mark">“</div>
@@ -817,22 +731,40 @@
   </div>
 </section>
 
+<!-- ================= 06 · EVENTOS ================= -->
+<section class="eventos" id="eventos" data-eventos data-bg="#1b1a17">
+  <div class="aura" data-aura></div>
+  <div class="top">
+    <div class="eyebrow" data-reveal>06 — Eventos</div>
+    <p data-reveal>Desde celebraciones íntimas hasta encuentros profesionales, creamos experiencias pensadas para reunir a las personas alrededor de una mesa.</p>
+  </div>
+  <div class="ev-stage">
+    <div class="arch" data-ev-img data-cursor="Eventos"><video src="media/f/opt/eventos.mp4" muted loop playsinline preload="none" poster="media/f/opt/eventos-poster.webp" aria-hidden="true" data-lazy-video></video></div>
+    <h2 class="split" data-ev-title>momentos especiales</h2>
+    <ul data-ev-list>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Celebraciones privadas</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Eventos corporativos</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Experiencias privadas</li>
+    </ul>
+  </div>
+</section>
+
 <!-- ================= 07 · RESERVAS ================= -->
 <section class="reserva" id="reserva" data-reserva data-bg="#1b1a17">
-  <div class="res-win" data-res-win><div class="res-cam" data-res-cam><img src="media/d/sala-bar.webp" alt="La barra de Ozio bajo un arco iluminado lleno de botellas" loading="lazy"></div></div>
+  <div class="res-win" data-res-win><div class="res-cam" data-res-cam><img src="media/f/opt/reserva.webp" alt="La sala de Ozio: barra curva, taburetes de mimbre y banco iluminado" loading="lazy"></div></div>
   <div class="res-shade" data-res-shade></div>
   <div class="rcard" data-rcard>
     <div class="glow"></div><div class="aura" data-aura></div>
     <div class="grid">
       <div>
-        <div class="eyebrow">08 — Reservas</div>
+        <div class="eyebrow">07 — Reserva</div>
         <h2 class="split" data-res-title>Tu mesa te espera</h2>
         <p class="sub">Reserva y descubre una experiencia donde la gastronomía, la arquitectura y la hospitalidad se encuentran.</p>
       </div>
       <ul class="hours" data-hours></ul>
       <div class="btns" data-res-btns>
         <button class="btn-fill" type="button" data-fill data-book><span class="fill"></span><span>Reservar mesa</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-        <button class="btn-ghost" type="button" data-voz-open>hacer llamada <span class="o"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+        <button class="btn-ghost" type="button" data-voz-open>Hacer llamada <span class="o"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.4 2.4M15.3 15.3l2.4 2.4M6.3 17.7l2.4-2.4M15.3 8.7l2.4-2.4"/></svg></span></button>
         <p class="alt">¿Prefieres escribir? <button class="btn-link" type="button" data-chat-open>Chatea con Ozio</button></p>
       </div>
       <div class="contact" data-contact></div>
@@ -843,8 +775,8 @@
 
 <footer data-footer>
   <div class="cols">
-    <div><a class="logo" href="#top" aria-label="Ozio Gastronomico, inicio"><svg class="lg" aria-hidden="true"><use href="#ozio-logo"/></svg></a></div>
-    <div><h4>Ozio</h4><ul><li><a href="#ozio">Sobre nosotros</a></li><li><a href="#" data-carta-open>Menú</a></li><li><a href="#eventos">Eventos</a></li><li><a href="#reserva">Reservas</a></li></ul></div>
+    <div><a class="logo" href="#top" aria-label="Ozio Gastronomico, inicio"><img src="media/logo-ozio.png" width="1031" height="265" alt="" aria-hidden="true" loading="lazy"></a></div>
+    <div><h4>Ozio</h4><ul><li><a href="#ozio">Sobre nosotros</a></li><li><a href="#carta">Menú</a></li><li><a href="#eventos">Eventos</a></li><li><a href="#reserva">Reservas</a></li></ul></div>
     <div><h4>Contacto</h4><ul data-foot-contact></ul></div>
     <div><h4>Redes</h4><ul data-foot-social></ul></div>
   </div>
@@ -951,7 +883,7 @@ const CONFIG = {
   ],
   // Testimonio de ejemplo del diseño: sustituir por reseñas reales (p. ej. Google).
   testimonials: [
-    { quote: 'Nos encantó la experiencia: nuestro aniversario de boda salió magnífico. Gracias al maravilloso equipo de Ozio.', name: 'Carolina Pereira', role: 'Aniversario · Cena para dos', photo: 'media/d/reel-tartaleta.webp', tag: 'Ozio' },
+    { quote: 'Nos encantó la experiencia: nuestro aniversario de boda salió magnífico. Gracias al maravilloso equipo de Ozio.', name: 'Carolina Pereira', role: 'Aniversario · Cena para dos', photo: 'media/f/opt/resena.webp', tag: 'Ozio' },
     { quote: 'La pasta fresca y el ragú de jabalí me devolvieron a Sicilia. Un servicio atento sin ser invasivo.', name: 'Marco Vitale', role: 'Cena · Reseña de Google', photo: 'media/d/gal-2.webp', tag: 'Ozio' },
     { quote: 'Organizamos la cena de empresa aquí y todo fue impecable: la sala, el maridaje y la cocina.', name: 'Lucía Fernández', role: 'Evento corporativo · 24 personas', photo: 'media/d/reel-sala.webp', tag: 'Eventos' },
     { quote: 'La Regina Margherita es, sin exagerar, la mejor pizza que he comido fuera de Italia.', name: 'Andrea Conti', role: 'Comida · Reseña de Google', photo: 'media/d/mesa-centro.webp', tag: 'Ozio' },
@@ -1088,7 +1020,7 @@ const CONFIG = {
     const c = e.target.closest('[data-carta-close]'); if (c) { e.preventDefault(); closeCarta(c.classList.contains('logo') ? () => lenis?.scrollTo(0, { immediate: true }) : null); }
   });
   // pasada la última hoja, seguir bajando cierra la carta y continúa la visita
-  const toNext = () => closeCarta(() => { const t = document.getElementById('ozio'); lenis ? lenis.scrollTo(t, { duration: 1.6 }) : t.scrollIntoView({ behavior: 'smooth' }); });
+  const toNext = () => closeCarta(() => { const t = document.getElementById('cocina'); lenis ? lenis.scrollTo(t, { duration: 1.6 }) : t.scrollIntoView({ behavior: 'smooth' }); });
   const flip = dir => { if (dir > 0) { cI < C.length - 1 ? setPage(cI + 1) : toNext(); } else setPage(cI - 1); };
   cNext.addEventListener('click', () => flip(1));
   // la rueda pasa de hoja (un gesto, una hoja); en modo lectura la rueda es el scroll de la hoja
@@ -1108,6 +1040,31 @@ const CONFIG = {
     if (dy > 80 && atEnd) flip(1); else if (dy < -80 && atTop) flip(-1);
   }, { passive: true });
   addEventListener('keydown', e => { if (!cartaOpen) return; if (e.key === 'Escape') { carta.classList.contains('read') ? setRead(false) : closeCarta(); } if (e.key === 'ArrowRight' || e.key === 'ArrowDown') setPage(cI + 1); if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') setPage(cI - 1); });
+
+  /* ---------- la carta en la página (diseño Framer): hoja central, índice a la derecha y flechas ---------- */
+  const csPage = $('[data-cs-page]'), csThumbs = $('[data-cs-thumbs]');
+  csPage.innerHTML = C.map(c => `<img src="${esc(c.img)}" alt="${esc(c.title)}" loading="lazy" decoding="async">`).join('')
+    + '<span class="lupa" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5M11 8v6M8 11h6"/></svg>Leer la carta</span>';
+  csThumbs.innerHTML = C.map((c, i) => `<button class="cs-th" type="button" data-i="${i}" aria-pressed="false"><img src="${esc(c.th)}" alt="" loading="lazy"><span>${esc(c.title)}</span></button>`).join('');
+  const csImgs = $$('img', csPage), csThs = $$('.cs-th', csThumbs);
+  let csI = -1;
+  const csGo = i => {
+    i = (i + C.length) % C.length; if (i === csI) return;
+    const prev = csI, down = prev < i; csI = i;
+    csThs.forEach((b, j) => b.setAttribute('aria-pressed', j === i));
+    csImgs.forEach((im, j) => im.style.zIndex = j === i ? 3 : j === prev ? 2 : 1);
+    if (!window.gsap || prev < 0 || reduce) { csImgs.forEach((im, j) => im.style.clipPath = j === i ? 'inset(0 0 0 0)' : 'inset(100% 0 0 0)'); return; }
+    gsap.fromTo(csImgs[i], { clipPath: down ? 'inset(100% 0 0 0)' : 'inset(0 0 100% 0)' }, { clipPath: 'inset(0% 0 0% 0)', duration: .9, ease: 'expo.inOut', overwrite: true });
+    gsap.fromTo(csImgs[i], { scale: 1.06 }, { scale: 1, duration: 1.4, ease: 'expo.out' });
+  };
+  csGo(0);
+  csThumbs.addEventListener('click', e => { const b = e.target.closest('.cs-th'); if (b) csGo(+b.dataset.i); });
+  $('[data-cs-prev]').addEventListener('click', () => csGo(csI - 1));
+  $('[data-cs-next]').addEventListener('click', () => csGo(csI + 1));
+  // pulsar la hoja abre la carta a pantalla completa, en esa misma hoja y lista para leer
+  const csOpen = e => { openCarta(e); setPage(csI); setRead(true); };
+  csPage.addEventListener('click', csOpen);
+  csPage.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); csOpen(); } });
 
   /* ---------- reservar: WhatsApp si está configurado; si no, la llamada con Ozio ---------- */
   $('[data-book]').addEventListener('click', () => {
@@ -1136,7 +1093,7 @@ const CONFIG = {
   // se despliegan al pulsar sobre ellos; en cuanto el visitante elige, el pase automático se detiene
   acc.forEach((c, i) => c.addEventListener('click', () => { setAcc(i); accUser = true; aT?.pause(); accBars?.forEach((b, j) => b.style.setProperty('--p', j === i ? 1 : 0)); }));
 
-  if (reduce) { document.body.classList.remove('is-loading'); $('[data-loader]').remove(); $$('.stage').forEach(s => s.style.opacity = 1); $('[data-film]').style.opacity = 1; $$('.odo i').forEach(i => i.style.transform = `translateY(-${+i.dataset.d}em)`); return; }
+  if (reduce) { document.body.classList.remove('is-loading'); $('[data-loader]').remove(); $$('.odo i').forEach(i => i.style.transform = `translateY(-${+i.dataset.d}em)`); return; }
 
   /* =====================================================================
      MOTOR DE MOVIMIENTO
@@ -1176,66 +1133,28 @@ const CONFIG = {
       .to('.loader .meta, [data-loader-bar]', { opacity: 0, duration: .3 }, 1.1)
       .to('.loader .panel.t', { yPercent: -100, duration: 1.1, ease: 'expo.inOut' }, 1.45)
       .to('.loader .panel.b', { yPercent: 100, duration: 1.1, ease: 'expo.inOut' }, 1.45)
-      .fromTo('[data-photo-img]', { scale: 1.22 }, { scale: 1, duration: 2.4, ease: 'expo.out', clearProps: 'transform' }, 1.45)
+      .fromTo('[data-hero-video]', { scale: 1.22 }, { scale: fine ? 1.05 : 1, duration: 2.4, ease: 'expo.out' }, 1.45)
       .from('[data-nav]', { yPercent: -100, opacity: 0, duration: 1.1 }, 1.9)
-      .from('[data-hero-intro], [data-hero-dots]', { y: 24, opacity: 0, duration: 1.1, stagger: .1 }, 2.0)
+      .fromTo('[data-hero-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .025, duration: 1.1, ease: 'power3.out' }, 1.75)
+      .from('[data-hero-lead], [data-hero-ctas] > *, [data-hero-intro]', { y: 24, opacity: 0, duration: 1.1, stagger: .1 }, 2.0)
       .call(() => { $('[data-loader]').remove(); document.body.classList.remove('is-loading'); lenis.start(); ScrollTrigger.refresh(); }, null, 2.4);
     return tl;
   };
   const start = () => (document.fonts?.ready || Promise.resolve()).then(() => requestAnimationFrame(intro));
   qs.has('noloader') ? ($('[data-loader]').remove(), document.body.classList.remove('is-loading'), lenis.start()) : start();
 
-  /* ---------- 01 · la puerta se abre: el vídeo nace en el arco y ocupa la pantalla ---------- */
-  const hero = $('[data-hero]'), photo = $('[data-photo-img]'), film = $('[data-film]'), cam = $('[data-cam]');
-  const IMG = { ar: 2048 / 1143, door: [.402, .1525, .621, .80] }; // arco de la puerta en la foto (fracciones)
-  const G = {};
-  const layoutDoor = () => {
-    const W = cam.clientWidth, H = cam.clientHeight;
-    const k = Math.max(W / IMG.ar, H), dw = IMG.ar * k, dh = k, ox = (W - dw) / 2, oy = (H - dh) / 2;
-    const [a, b, c, d] = IMG.door;
-    Object.assign(G, { W, H, x0: ox + a * dw, y0: oy + b * dh, x1: ox + c * dw, y1: oy + d * dh });
-    G.cx = (G.x0 + G.x1) / 2; G.cy = (G.y0 + G.y1) / 2;
-    G.S = Math.max(W / (G.x1 - G.x0), H / (G.y1 - G.y0)) * 1.25;
-    photo.style.transformOrigin = `${G.cx}px ${G.cy}px`;
-    renderDoor(door.p);
-  };
-  const door = { p: 0 };
-  const renderDoor = p => {
-    if (!G.W) return;
-    const s = 1 + (G.S - 1) * p;
-    const x0 = G.cx + (G.x0 - G.cx) * s, x1 = G.cx + (G.x1 - G.cx) * s, y0 = G.cy + (G.y0 - G.cy) * s, y1 = G.cy + (G.y1 - G.cy) * s;
-    const t = Math.max(0, y0), l = Math.max(0, x0), r = Math.max(0, G.W - x1), b = Math.max(0, G.H - y1);
-    const rad = (x1 - x0) / 2 * (1 - gsap.utils.clamp(0, 1, (p - .55) / .45));
-    photo.style.transform = `scale(${s})`;
-    film.style.clipPath = `inset(${t}px ${r}px ${b}px ${l}px round ${rad}px ${rad}px 0 0)`;
-    film.style.opacity = gsap.utils.clamp(0, 1, p * 6);
-  };
-  const stageIn = (tl, sel, at) => {
-    tl.set(sel, { opacity: 1 }, at)
-      .fromTo(`${sel} .ch`, { yPercent: 115 }, { yPercent: 0, stagger: .012, duration: .5, ease: 'power3.out' }, at)
-      .fromTo(`${sel} p, ${sel} .num`, { opacity: 0, y: 20, filter: 'blur(8px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .45, stagger: .06 }, at + .12);
-  };
-  const stageOut = (tl, sel, at) => tl.to(sel, { opacity: 0, y: -30, filter: 'blur(6px)', duration: .45, ease: 'power2.in' }, at);
-  layoutDoor(); addEventListener('resize', layoutDoor); ScrollTrigger.addEventListener('refreshInit', layoutDoor);
-  const dots = $$('[data-hero-dots] i');
-  const hTl = gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: '+=420%', scrub: 1, pin: true, anticipatePin: 1, invalidateOnRefresh: true,
-    onUpdate: st => { const p = st.progress; dots.forEach((d, i) => d.style.setProperty('--p', gsap.utils.clamp(0, 1, (p - [0, .42, .7][i]) / [.42, .28, .3][i]))); } } });
-  hTl.to('[data-hero-intro]', { opacity: 0, y: 20, duration: .5 }, 0)
-    .to(door, { p: 1, duration: 3, ease: 'power2.inOut', onUpdate: () => renderDoor(door.p) }, 0);
+  /* ---------- presentación: el vídeo de la casa respira al bajar y el titular se despide ---------- */
+  const hero = $('[data-hero]'), cam = $('[data-cam]'), heroVidEl = $('[data-hero-video]');
+  gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } })
+    .to(cam, { scale: 1.12, yPercent: 10, ease: 'none' }, 0)
+    .to('[data-hero-copy]', { yPercent: -28, opacity: 0, ease: 'none' }, 0)
+    .to('[data-hero-intro]', { opacity: 0, ease: 'none', duration: .3 }, 0);
   // pasado el hero el nav lleva fondo oscuro para leerse sobre las secciones claras
-  ScrollTrigger.create({ start: () => hTl.scrollTrigger.end - 2, end: 'max', onToggle: st => nav.classList.toggle('scrolled', st.isActive) });
-  stageIn(hTl, '[data-stage="1"]', 2.9); stageOut(hTl, '[data-stage="1"]', 4.4);
-  stageIn(hTl, '[data-stage="2"]', 4.8); stageOut(hTl, '[data-stage="2"]', 6.4);
-  hTl.set('[data-stage="3"]', { opacity: 1, pointerEvents: 'auto' }, 6.8)
-    .fromTo('[data-s3-lead]', { opacity: 0, y: 20, filter: 'blur(8px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .5 }, 7.15)
-    .fromTo('[data-s3-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .02, duration: .7, ease: 'power3.out' }, 6.8)
-    .fromTo('[data-s3-ctas] > *', { opacity: 0, y: 30 }, { opacity: 1, y: 0, stagger: .12, duration: .5 }, 7.5)
-    .to({}, { duration: 1.4 });
-  if (fine) hero.addEventListener('mousemove', e => {
+  ScrollTrigger.create({ start: () => hero.offsetHeight - 70, end: 'max', onToggle: st => nav.classList.toggle('scrolled', st.isActive) });
+  if (fine) { gsap.set(heroVidEl, { scale: 1.05 }); hero.addEventListener('mousemove', e => {
     const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5;
-    gsap.to(cam, { x: x * -22, y: y * -14, duration: 1.6, ease: 'power3.out' });
-  });
-
+    gsap.to(heroVidEl, { x: x * -20, y: y * -12, duration: 1.6, ease: 'power3.out' });
+  }); }
 
   /* ---------- llamar a Ozio: el sello se presenta un momento al entrar ---------- */
   const fab = $('.voz-fab');
@@ -1266,59 +1185,14 @@ const CONFIG = {
     plates.forEach(p => { const d = +p.dataset.depth; gsap.to($('img', p), { x: x * -34 * d, y: y * -24 * d, duration: 1.4, ease: 'power3.out', overwrite: 'auto' }); });
   });
 
-  /* ---------- 03 · el plato: foto cenital real → ingredientes → la mesa → el detalle ---------- */
-  const plato = $('[data-plato]');
-  const PL = { w: 2000, h: 1333, cx: 845, cy: 685, r: 500, zoom: [580, 640] }; // plato y punto de zoom en la foto original
-  const dishImg = $('[data-dish-img]'), callouts = $$('[data-callout]');
-  const geo = {};
-  const layoutDish = () => {
-    const W = plato.clientWidth, H = plato.clientHeight;
-    const k = Math.max(W / (PL.cx * 2), H / ((PL.h - PL.cy) * 2), W / ((PL.w - PL.cx) * 2), H / (PL.cy * 2));
-    const X = px => W / 2 + (px - PL.cx) * k, Y = py => H / 2 + (py - PL.cy) * k;
-    Object.assign(dishImg.style, { width: PL.w * k + 'px', height: PL.h * k + 'px', left: X(0) + 'px', top: Y(0) + 'px' });
-    $('[data-dish-zoom]').style.transformOrigin = X(PL.zoom[0]) + 'px ' + Y(PL.zoom[1]) + 'px';
-    callouts.forEach(c => { const [px, py] = c.dataset.at.split(',').map(Number);
-      c.style.top = Y(py) + 'px'; if (c.classList.contains('l')) { c.style.right = (W - X(px)) + 'px'; c.style.left = 'auto'; } else c.style.left = X(px) + 'px'; });
-    Object.assign(geo, { W, H, R: PL.r * k, full: Math.hypot(W, H) / 2 + 20, small: W <= 900 });
-    $$('[data-short]', plato).forEach(b => { b.dataset.full = b.dataset.full || b.textContent; b.textContent = W <= 600 ? b.dataset.short : b.dataset.full; });
-  };
-  layoutDish(); addEventListener('resize', layoutDish); ScrollTrigger.addEventListener('refreshInit', layoutDish);
-  const circleR = r => `circle(${r}px at 50% 50%)`;
-  const both = '[data-dish], [data-dish-anno]';
-  const pTl = gsap.timeline({ scrollTrigger: { trigger: plato, start: 'top top', end: '+=420%', scrub: 1, pin: true, anticipatePin: 1, invalidateOnRefresh: true } });
-  pTl.fromTo('[data-dish]', { clipPath: () => circleR(geo.R) }, { clipPath: () => circleR(geo.R), duration: .01 }, 0)
-    .fromTo(both, { scale: .4, opacity: 0, x: () => geo.small ? 0 : geo.W * .16, y: () => geo.small ? geo.H * .5 : geo.H * .3 },
-                  { scale: () => geo.small ? .62 : .6, opacity: 1, x: () => geo.small ? 0 : geo.W * .16, y: () => geo.small ? geo.H * .1 : 0, duration: 1, ease: 'power3.out' }, 0)
-    .fromTo('[data-dish-rot]', { rotate: -75 }, { rotate: 0, duration: 1.2, ease: 'power3.out' }, 0)
-    .fromTo('[data-plate-glow]', { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: 1 }, 0)
-    .fromTo('[data-plate-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .02, duration: .5, ease: 'power3.out' }, .1)
-    .fromTo('[data-plate-copy]', { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: .1, duration: .4 }, .3)
-    .fromTo('.plato-copy', { opacity: 1, x: 0 }, { opacity: 0, x: -40, duration: .35, immediateRender: false }, 1.25)
-    .to(both, { scale: () => geo.W <= 600 ? .74 : geo.small ? .82 : .86, x: 0, y: 0, duration: .5, ease: 'power2.inOut' }, 1.25);
-  // los ingredientes aparecen uno a uno
-  callouts.forEach((c, i) => {
-    const at = 1.8 + i * .32, left = c.classList.contains('l');
-    pTl.fromTo(c, { opacity: 0 }, { opacity: 1, duration: .15 }, at)
-       .fromTo($('i', c), { scale: 0 }, { scale: 1, duration: .25, ease: 'back.out(3)' }, at)
-       .fromTo($('.ln', c), { scaleX: 0 }, { scaleX: 1, duration: .3 }, at + .05)
-       .fromTo($('.tx', c), { x: left ? 24 : -24, opacity: 0 }, { x: 0, opacity: 1, duration: .3 }, at + .15);
-  });
-  // se abre el círculo: aparece la mesa de azulejo
-  pTl.to(callouts, { opacity: 0, duration: .3, stagger: .03 }, 3.6)
-     .to('[data-dish]', { clipPath: () => circleR(geo.full), duration: .8, ease: 'power2.inOut' }, 3.75)
-     .to(both, { scale: 1, duration: .8, ease: 'power2.inOut' }, 3.75)
-     .to('[data-plate-glow]', { opacity: 0, duration: .4 }, 3.75)
-     .to('[data-veil]', { opacity: 1, duration: .5 }, 4.1)
-     .fromTo('[data-cap="mesa"]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .4 }, 4.3)
-     .to('[data-cap="mesa"]', { opacity: 0, y: -30, duration: .3 }, 5.0)
-  // el plato más cerca: la foto cenital se acerca y se funde con el macro
-     .to('[data-dish-zoom]', { scale: 2.9, duration: 1, ease: 'power2.in' }, 5.0)
-     .fromTo('[data-macro]', { opacity: 0, scale: 1.35, filter: 'blur(8px)' }, { opacity: 1, scale: 1.05, filter: 'blur(0px)', duration: .7, ease: 'power2.out' }, 5.6)
-     .fromTo('[data-cap="detalle"]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .4 }, 6.0)
-     .to('[data-macro]', { scale: 1, duration: .8, ease: 'none' }, 6.3)
-     .to({}, { duration: .2 });
+  /* ---------- la carta en la página: la foto de la sala se desliza y las hojas entran ---------- */
+  gsap.fromTo('[data-cs-bg]', { yPercent: -4 }, { yPercent: 4, ease: 'none', scrollTrigger: { trigger: '[data-cs]', start: 'top bottom', end: 'bottom top', scrub: true } });
+  gsap.timeline({ scrollTrigger: { trigger: '[data-cs]', start: 'top 65%' } })
+    .from('[data-cs-page]', { y: 70, opacity: 0, duration: 1.2, ease: 'expo.out' })
+    .from('.cs-arrows button', { x: -30, opacity: 0, duration: 1, stagger: .08, ease: 'expo.out' }, .2)
+    .from('.cs-th', { x: 30, opacity: 0, duration: .9, stagger: .05, ease: 'expo.out' }, .25);
 
-  /* ---------- 04 · la cocina: el vídeo se abre a pantalla completa ---------- */
+  /* ---------- 03 · la cocina: el vídeo se abre a pantalla completa ---------- */
   if (innerWidth > 809) gsap.to('[data-cocina-vid]', { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none', scrollTrigger: { trigger: '[data-cocina]', start: 'top 90%', end: 'top top', scrub: 1 } });
   gsap.fromTo('[data-cocina-vid] > *', { yPercent: -6 }, { yPercent: 6, ease: 'none', scrollTrigger: { trigger: '[data-cocina]', start: 'top bottom', end: 'bottom top', scrub: true } });
   gsap.from(acc, { y: 60, opacity: 0, duration: 1.2, stagger: .1, ease: 'expo.out', scrollTrigger: { trigger: '[data-cocina]', start: 'top 35%' } });
@@ -1381,11 +1255,11 @@ const CONFIG = {
   lb.addEventListener('click', closeLb); addEventListener('keydown', e => { if (e.key === 'Escape' && lb.classList.contains('on')) closeLb(); });
   gsap.fromTo('[data-enc-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .03, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: '[data-encuentro]', start: 'top 70%' } });
 
-  /* ---------- 06 · eventos: la foto se abre bajo el titular + aura que sigue al cursor ---------- */
-  gsap.timeline({ scrollTrigger: { trigger: '[data-eventos]', start: 'top 80%', end: 'center center', scrub: 1 } })
-    .to('[data-ev-img]', { clipPath: 'inset(0% 0% 0% 0% round 20px)', ease: 'power2.out' }, 0)
-    .to('[data-ev-img] img', { scale: 1, ease: 'power2.out' }, 0)
-    .fromTo('[data-ev-title] .ch', { yPercent: 115, opacity: 0 }, { yPercent: 0, opacity: 1, stagger: .02, ease: 'power3.out' }, .15);
+  /* ---------- 06 · eventos: el arco se abre con el vídeo dentro + aura que sigue al cursor ---------- */
+  gsap.timeline({ scrollTrigger: { trigger: '[data-eventos]', start: 'top 75%', end: 'center center', scrub: 1 } })
+    .fromTo('[data-ev-img]', { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'power2.out' }, 0)
+    .fromTo('[data-ev-img] video', { scale: 1.25 }, { scale: 1, ease: 'power2.out' }, 0)
+    .fromTo('[data-ev-title] .ch', { yPercent: 115, opacity: 0 }, { yPercent: 0, opacity: 1, stagger: .02, ease: 'power3.out' }, .2);
   gsap.from('[data-ev-list] li', { y: 36, opacity: 0, duration: 1.1, stagger: .1, ease: 'expo.out', scrollTrigger: { trigger: '[data-ev-list]', start: 'top 92%' } });
   $$('[data-aura]').forEach(a => {
     const host = a.parentElement; const ax = gsap.quickTo(a, 'x', { duration: 1.1, ease: 'power3' }), ay = gsap.quickTo(a, 'y', { duration: 1.1, ease: 'power3' });

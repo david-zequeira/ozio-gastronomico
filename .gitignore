@@ -8,3 +8,7 @@ media/hero-end.jpg
 media/ambient.mp4
 media/g-calabacin.jpg
 media/g-carpaccio-azulejo.jpg
+# originales descargados de Framer (pesados); la web usa las versiones optimizadas de media/f/opt/
+media/f/*.png
+media/f/*.jpg
+media/f/*.mp4

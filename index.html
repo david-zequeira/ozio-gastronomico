@@ -1110,8 +1110,10 @@ const CONFIG = {
   // la sección de la carta nace escondida: "Ver menú" (y el resto de enlaces al menú) la despliega bajo los platos
   // y baja hasta ella; desde ahí el scroll sigue con normalidad hacia el resto de la página
   const csSec = $('[data-cs]');
+  let csOpenedAt = 0;
   const openCs = () => {
     const first = csSec.hidden;
+    csOpenedAt = performance.now();
     if (first) {
       csSec.hidden = false;
       lenis?.resize?.();
@@ -1122,6 +1124,17 @@ const CONFIG = {
     else csSec.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
   };
   document.addEventListener('click', e => { const a = e.target.closest('[data-cs-open]'); if (!a) return; e.preventDefault(); openCs(); });
+  // al volver a subir, en cuanto la carta queda entera por debajo de la pantalla se recoge sola:
+  // la página vuelve a ser platos → vídeo de la cocina, sin saltos (el cambio ocurre fuera de la vista)
+  let csLastY = scrollY;
+  addEventListener('scroll', () => {
+    const y = scrollY, up = y < csLastY; csLastY = y;
+    if (csSec.hidden || !up || performance.now() - csOpenedAt < 1800) return;
+    if (csSec.getBoundingClientRect().top < innerHeight) return;
+    csSec.hidden = true;
+    lenis?.resize?.();
+    if (window.ScrollTrigger) ScrollTrigger.refresh();
+  }, { passive: true });
 
   /* ---------- reservar: WhatsApp si está configurado; si no, la llamada con Ozio ---------- */
   $('[data-book]').addEventListener('click', () => {

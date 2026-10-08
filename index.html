@@ -18,8 +18,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" as="font" type="font/woff2" href="fonts/Manrope-normal-300_800.woff2" crossorigin>
 <link rel="preload" as="image" href="media/f/opt/hero-poster.webp">
-<link rel="preload" as="image" href="media/logo-ozio.png">
-<style>
+<link rel="preload" as="image" href="media/logo-ozio.png"><style>
 @font-face {
   font-family: 'DM Serif Text';
   font-style: italic;
@@ -52,8 +51,7 @@
     --line-d:rgba(243,241,239,.12); --line-l:rgba(27,26,23,.14);
     --uni:Manrope,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
     --garamond:"DM Serif Text",Georgia,serif;
-    --dm:"DM Serif Text",Georgia,serif;
-    --sans:Manrope,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    --dm:"DM Serif Text",Georgia,serif;    --sans:Manrope,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
     --label:Manrope,-apple-system,system-ui,sans-serif;
     --ease:cubic-bezier(.16,1,.3,1); --ease-io:cubic-bezier(.65,0,.35,1);
     /* 1 unidad de diseño = 1px del lienzo de 1200 de la diseñadora */
@@ -78,6 +76,11 @@
   .uni .a{font-family:var(--dm);font-weight:400;text-transform:none}
   .split .mask{display:inline-block;overflow:hidden;vertical-align:top;padding:.06em 0 .12em;margin:-.06em 0 -.12em}
   .split .ch{display:inline-block;will-change:transform}
+  /* Títulos a dos alturas (como en la web de referencia): arriba la frase en Manrope fina y debajo la parte
+     destacada en la misma Manrope fina, en cursiva (Manrope no trae cursiva propia: el navegador la inclina).
+     En esa línea la animación va por palabras para que la máscara no recorte la inclinación de cada letra. */
+  .sc{display:block;font-family:inherit;font-style:italic;font-weight:inherit;font-size:1em;line-height:inherit;letter-spacing:inherit;text-transform:none}
+  .split .sc .mask{padding:.06em .14em .12em .02em;margin:-.06em -.14em -.12em -.02em}
 
   /* ---------- logotipo OZIO ---------- */
   /* tres tonos del vector de la diseñadora: centro del símbolo, pétalos y texto. Por defecto, versión para fondo oscuro */
@@ -157,7 +160,7 @@
   .hero-copy{--ht:clamp(38px,calc(var(--u)*50),60px);position:absolute;inset:0;z-index:3;display:grid;align-items:start;justify-items:center;text-align:center;padding:max(110px,calc(50svh - var(--ht) * 2.3)) 20px 0;will-change:transform}
   .hero-scene{grid-area:1/1;display:flex;flex-direction:column;align-items:center;opacity:0;visibility:hidden}
   .hero-scene.on{opacity:1;visibility:visible}
-  .hero-copy .hero-t{font-family:var(--uni);font-weight:600;font-size:var(--ht);line-height:1.08;letter-spacing:-.02em;max-width:11em;text-wrap:balance;text-shadow:0 4px 30px rgba(0,0,0,.35)}
+  .hero-copy .hero-t{font-family:var(--uni);font-weight:300;font-size:var(--ht);line-height:1.08;letter-spacing:-.02em;max-width:11em;text-wrap:balance;text-shadow:0 4px 30px rgba(0,0,0,.35)}
   .hero-copy .lead{max-width:31ch;text-wrap:balance;margin-top:clamp(12px,calc(var(--u)*16),20px);font-size:clamp(15px,calc(var(--u)*17),19px);line-height:1.5;letter-spacing:.01em;color:rgba(243,241,239,.94);text-shadow:0 2px 20px rgba(0,0,0,.45)}
   .hero-copy .ctas{display:flex;gap:clamp(10px,calc(var(--u)*14),16px);margin-top:clamp(26px,calc(var(--u)*34),42px);align-items:center;flex-wrap:wrap;justify-content:center}
   /* botones de la portada, más contenidos que en el resto de la página */
@@ -229,7 +232,7 @@
   /* ---------- 02 · INTRODUCCIÓN ---------- */
   .intro-s{position:relative;background:transparent;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14vh 20px 10vh;overflow:hidden}
   .intro-s .eyebrow{font-size:clamp(10px,calc(var(--u)*9),11px);letter-spacing:.42em;font-weight:600}
-  .intro-s h2{font-family:var(--uni);font-weight:400;font-size:clamp(42px,calc(var(--u)*56),72px);line-height:1.05;letter-spacing:-.025em;text-transform:none;max-width:9.6em;margin-top:calc(var(--u)*40);text-wrap:balance}
+  .intro-s h2{font-family:var(--uni);font-weight:300;font-size:clamp(42px,calc(var(--u)*56),72px);line-height:1.05;letter-spacing:-.025em;text-transform:none;max-width:9.6em;margin-top:calc(var(--u)*40);text-wrap:balance}
   .intro-s h2 .w{color:rgba(27,26,23,.12)}
   .intro-s p{margin-top:calc(var(--u)*22);max-width:30em;font-family:var(--label);font-weight:400;font-size:clamp(16px,calc(var(--u)*17.5),22px);line-height:1.5;color:var(--brown)}
   /* la misma línea que "Desliza" en la portada (1 px, 46 px, degradado): crece hacia abajo y se recoge, en bucle */
@@ -251,7 +254,7 @@
   /* mismos tamaños que la portada: etiqueta como 01 — Ozio, titular y subtítulo como los de la portada, botón como los suyos */
   .menu-s .eyebrow{font-size:clamp(10px,calc(var(--u)*9),11px);letter-spacing:.42em;font-weight:600}
   /* la frase ocupa el lugar del titular: mismo tamaño que tenía "Descubrir la carta" */
-  .menu-s h2{font-family:var(--uni);font-weight:600;font-size:45px;line-height:1.1;letter-spacing:-.02em;text-transform:none;margin:calc(var(--u)*20) auto 0;max-width:15em;text-wrap:balance}
+  .menu-s h2{font-family:var(--uni);font-weight:300;font-size:45px;line-height:1.1;letter-spacing:-.02em;text-transform:none;margin:calc(var(--u)*20) auto 0;max-width:15em;text-wrap:balance}
   .menu-s .btn-fill{--bg:var(--champagne);--fill:var(--charcoal);--tx:var(--charcoal);--tx-h:var(--ivory);height:clamp(46px,calc(var(--u)*50),56px);min-width:clamp(150px,calc(var(--u)*168),184px);justify-content:center;gap:14px;padding:0 24px 0 28px;font-size:clamp(15px,calc(var(--u)*16),17px);margin-top:clamp(18px,calc(var(--u)*22),26px)}
   @media (max-width:809px){
     .menu-s{height:auto;min-height:0;padding:calc(56px + 190vw * 555 / 1200 * .64) 0 80px}
@@ -310,9 +313,9 @@
   .plato-copy{position:absolute;left:var(--gut);top:50%;transform:translateY(-50%);z-index:3;max-width:min(440px,40vw)}
   .plato .eyebrow{font-size:clamp(10px,calc(var(--u)*9),11px);letter-spacing:.42em;font-weight:600}
   .plato-copy .eyebrow{color:var(--champagne)}
-  .plato h2,.plato h3{font-family:var(--uni);font-weight:500;text-transform:none;letter-spacing:-.03em}
+  .plato h2,.plato h3{font-family:var(--uni);font-weight:300;text-transform:none;letter-spacing:-.03em}
   .plato h2{font-size:clamp(38px,calc(var(--u)*50),60px);line-height:1.04;margin-top:calc(var(--u)*18)}
-  .plato em{font-family:var(--dm);font-style:italic;font-weight:400;text-transform:none;color:var(--champagne)}
+  .plato .sc{color:var(--champagne)}
   .plato-copy p{margin-top:calc(var(--u)*18);color:rgba(243,241,239,.72);font-size:clamp(15px,calc(var(--u)*14),18px);line-height:1.6;max-width:34ch}
   .plato-cap{position:absolute;left:var(--gut);bottom:11vh;z-index:4;max-width:680px;opacity:0}
   .plato-cap .eyebrow{color:var(--beige)}
@@ -372,7 +375,7 @@
   /* cabecera centrada como el texto de la portada, con sus mismos tamaños de título y subtítulo */
   .encuentro .head{position:relative;z-index:3;padding:calc(var(--u)*60 + 30px) 20px 0;display:flex;flex-direction:column;align-items:center;text-align:center}
   .encuentro .head .eyebrow{margin-bottom:calc(var(--u)*20);font-size:clamp(10px,calc(var(--u)*9),11px);letter-spacing:.42em;font-weight:600}
-  .encuentro h2{font-family:var(--uni);font-weight:600;font-size:clamp(38px,calc(var(--u)*50),60px);line-height:1.08;letter-spacing:-.02em;text-transform:none;max-width:11em;text-wrap:balance}
+  .encuentro h2{font-family:var(--uni);font-weight:300;font-size:clamp(38px,calc(var(--u)*50),60px);line-height:1.08;letter-spacing:-.02em;text-transform:none;max-width:11em;text-wrap:balance}
   .encuentro .head p{max-width:50ch;text-wrap:balance;margin-top:clamp(12px,calc(var(--u)*16),20px);font-size:clamp(15px,calc(var(--u)*17),19px);line-height:1.5;letter-spacing:.01em;color:var(--brown)}
   /* Parallax Gallery (como parallaxgallerypros.framer.website): banda a pantalla completa que se fija
      mientras se hace scroll; 9 fotos con las medidas del ejemplo, esquinas rectas, alturas y huecos irregulares.
@@ -429,7 +432,7 @@
   .eventos .arch{position:relative;width:max(230px,calc(var(--u)*315));aspect-ratio:309/375;border-radius:9999px 9999px 0 0;overflow:hidden;background:#2a2722;will-change:clip-path}
   .eventos .arch video,.eventos .arch img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .eventos .arch::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(27,26,23,0) 50%,rgba(27,26,23,.45))}
-  .ev-stage h2{position:relative;z-index:3;text-align:center;font-family:var(--uni);font-weight:500;font-size:clamp(36px,calc(var(--u)*48),72px);line-height:1.02;letter-spacing:-.02em;text-transform:none;pointer-events:none;text-shadow:0 8px 40px rgba(0,0,0,.35)}
+  .ev-stage h2{position:relative;z-index:3;text-align:center;font-family:var(--uni);font-weight:300;font-size:clamp(36px,calc(var(--u)*48),72px);line-height:1.02;letter-spacing:-.02em;text-transform:none;pointer-events:none;text-shadow:0 8px 40px rgba(0,0,0,.35)}
   .ev-stage ul{position:relative;z-index:3;align-self:end;margin-bottom:calc(var(--u)*31);width:min(100%,calc(var(--u)*773));display:flex;justify-content:space-between;gap:20px;list-style:none}
   .ev-stage li{display:flex;align-items:center;gap:calc(var(--u)*12);font-size:max(14px,calc(var(--u)*14));font-weight:500;color:var(--beige)}
   .ev-stage li svg{width:clamp(15px,calc(var(--u)*14),19px);height:clamp(15px,calc(var(--u)*14),19px);color:var(--champagne);transition:transform .5s var(--ease)}
@@ -491,7 +494,7 @@
   .rcard .grid{position:relative;display:grid;grid-template-columns:1fr minmax(280px,calc(var(--u)*370));column-gap:calc(var(--u)*80);row-gap:calc(var(--u)*44);align-items:start}
   .rcard .btns,.rcard .contact{align-self:end}
   .rcard .eyebrow{letter-spacing:.42em;font-size:12px;color:var(--beige);opacity:.85}
-  .rcard h2{margin-top:calc(var(--u)*22);font-family:var(--uni);font-weight:500;font-size:clamp(36px,calc(var(--u)*44),60px);line-height:1.08;letter-spacing:-.02em;text-transform:none;color:var(--ivory);white-space:nowrap}
+  .rcard h2{margin-top:calc(var(--u)*22);font-family:var(--uni);font-weight:300;font-size:clamp(36px,calc(var(--u)*44),60px);line-height:1.08;letter-spacing:-.02em;text-transform:none;color:var(--ivory);white-space:nowrap}
   .rcard .sub{margin-top:calc(var(--u)*20);max-width:30em;font-size:max(15px,calc(var(--u)*17));line-height:1.55;letter-spacing:-.015em;color:rgba(233,221,207,.85)}
   .hours{list-style:none;margin-top:calc(var(--u)*10);border-top:1px solid rgba(243,241,239,.12)}
   .hours li{position:relative;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:calc(var(--u)*17) 0;font-size:15px;font-weight:500;letter-spacing:.02em;text-transform:uppercase;color:rgba(243,241,239,.9)}
@@ -731,15 +734,15 @@
   <!-- un texto por escena del vídeo: 0–4 s, 4–8 s y 8–12 s -->
   <div class="hero-copy" data-hero-copy>
     <div class="hero-scene on" data-scene="0">
-      <h2 class="hero-t split" data-hero-title>Cocina italiana,<br>alma siciliana</h2>
+      <h2 class="hero-t split" data-hero-title>Cocina italiana,<em class="sc">alma siciliana</em></h2>
       <p class="lead" data-hero-lead>Una mirada contemporánea a los sabores, productos y tradiciones de Sicilia. Un espacio para compartir</p>
     </div>
     <div class="hero-scene" data-scene="1" aria-hidden="true">
-      <h2 class="hero-t">El tiempo<br>de disfrutar</h2>
+      <h2 class="hero-t">El tiempo<em class="sc">de disfrutar</em></h2>
       <p class="lead">Una cocina que invita a detenerse, descubrir y disfrutar.</p>
     </div>
     <div class="hero-scene" data-scene="2" aria-hidden="true">
-    <h1 class="hero-t">Benvenuti<br>a Ozio</h1>
+    <h1 class="hero-t">Benvenuti<em class="sc">a Ozio</em></h1>
     <p class="lead">Un espacio para compartir</p>
     <div class="ctas" data-hero-ctas>
       <a class="btn-split" href="#reserva" data-magnetic><span class="l"><span>Reservar</span><span>Tu mesa</span></span></a>
@@ -753,7 +756,7 @@
 <!-- ================= 01 · OZIO ================= -->
 <section class="intro-s" id="ozio" data-intro data-bg="#e0d6cc">
   <div class="eyebrow" data-reveal>01 — Ozio</div>
-  <h2 data-intro-title>El tiempo dedicado a lo esencial.</h2>
+  <h2 data-intro-title>El tiempo dedicado<em class="sc">a lo esencial.</em></h2>
   <p data-intro-p>En Sicilia, el tiempo también se disfruta.</p>
   <span class="rule" data-rule></span>
 </section>
@@ -783,7 +786,7 @@
   </div>
   <div class="copy">
     <div class="eyebrow" data-menu-copy>02 — Menú</div>
-    <h2 class="split" data-menu-title>Cocina de temporada,<br>sabores que cambian.</h2>
+    <h2 class="split" data-menu-title>Cocina de temporada,<em class="sc">sabores que cambian.</em></h2>
     <a class="btn-fill" href="#carta" data-cs-open data-fill data-menu-copy><span class="fill"></span><span>Ver menú</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
   </div>
 </section>
@@ -840,16 +843,16 @@
 
   <div class="plato-copy">
     <div class="eyebrow" data-plate-copy>04 — El plato</div>
-    <h2 class="split" data-plate-title>Dulce,<br><em>a mano.</em></h2>
+    <h2 class="split" data-plate-title>Dulce,<em class="sc">a mano.</em></h2>
     <p data-plate-copy>Nuestra tartaleta de frutos rojos. Pequeña, precisa y hecha para compartir… aunque nadie la comparte.</p>
   </div>
   <div class="plato-cap" data-cap="mesa">
     <div class="eyebrow">Cerámica pintada a mano</div>
-    <h3>La casa también<br><em>se sirve en la mesa.</em></h3>
+    <h3>La casa también<em class="sc">se sirve en la mesa.</em></h3>
   </div>
   <div class="plato-cap" data-cap="detalle">
     <div class="eyebrow">Postre de la casa</div>
-    <h3>Tartaleta de<br><em>frutos rojos.</em></h3>
+    <h3>Tartaleta de<em class="sc">frutos rojos.</em></h3>
     <p>Chocolate blanco · Frutos del bosque · Menta · Coulis de fresa</p>
   </div>
 </section>
@@ -858,7 +861,7 @@
 <section class="encuentro" id="encuentro" data-encuentro data-bg="#e0d6cc">
   <div class="head">
     <div class="eyebrow" data-reveal>05 — Galería</div>
-    <h2 class="split" data-enc-title>El encuentro</h2>
+    <h2 class="split" data-enc-title>El<em class="sc">encuentro</em></h2>
     <p data-reveal>Donde la gastronomía, la arquitectura y la hospitalidad se encuentran para crear una experiencia que invita a quedarse.</p>
   </div>
   <!-- medidas del ejemplo a 820 px de alto: --h = alto/820, --ar = ancho/alto, --y y --g (hueco a la derecha) en % de ese alto -->
@@ -920,7 +923,7 @@
   </div>
   <div class="ev-stage">
     <div class="arch" data-ev-img data-cursor="Eventos"><img src="media/f/opt/eventos-poster.webp" alt="" loading="lazy"></div>
-    <h2 class="split" data-ev-title>momentos especiales</h2>
+    <h2 class="split" data-ev-title>momentos<em class="sc">especiales</em></h2>
     <ul data-ev-list>
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Celebraciones privadas</li>
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Eventos corporativos</li>
@@ -934,7 +937,7 @@
     <div class="grid">
       <div class="head">
         <div class="eyebrow">08 — Reserva</div>
-        <h2 class="split" data-res-title>Tu mesa te espera</h2>
+        <h2 class="split" data-res-title>Tu mesa<em class="sc">te espera</em></h2>
         <p class="sub">Reserva y descubre una experiencia donde la gastronomía, la arquitectura y la hospitalidad se encuentran.</p>
       </div>
       <ul class="hours" data-hours></ul>
@@ -1089,22 +1092,24 @@ const CONFIG = {
 
   /* ---------- split en letras con máscara (conserva spans internos) ---------- */
   const splitChars = el => {
-    const walk = node => [...node.childNodes].forEach(n => {
+    // dentro de la línea en cursiva (.sc) cada palabra va entera: con una máscara por letra se recortaría la inclinación
+    const walk = (node, whole) => [...node.childNodes].forEach(n => {
       if (n.nodeType === 3) {
         const frag = document.createDocumentFragment();
         n.textContent.split(/(\s+)/).forEach(word => {
           if (!word) return;
           if (/^\s+$/.test(word)) { frag.append(document.createTextNode(' ')); return; }
           const m = document.createElement('span'); m.className = 'mask';
-          [...word].forEach(c => { const s = document.createElement('span'); s.className = 'ch'; s.textContent = c; m.append(s); });
+          (whole ? [word] : [...word]).forEach(c => { const s = document.createElement('span'); s.className = 'ch'; s.textContent = c; m.append(s); });
           frag.append(m);
         });
         n.replaceWith(frag);
-      } else if (n.nodeType === 1 && !n.classList.contains('mask')) walk(n);
+      } else if (n.nodeType === 1 && !n.classList.contains('mask')) walk(n, whole || n.classList.contains('sc'));
     });
-    walk(el);
+    walk(el, false);
   };
   const wrapWords = el => [...el.childNodes].forEach(n => {
+    if (n.nodeType === 1) return wrapWords(n);
     if (n.nodeType !== 3) return;
     const f = document.createDocumentFragment();
     n.textContent.split(/(\s+)/).forEach(t => { if (!t) return; if (/^\s+$/.test(t)) f.append(' '); else { const s = document.createElement('span'); s.className = 'w'; s.textContent = t; f.append(s); } });

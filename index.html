@@ -603,7 +603,7 @@
 <nav class="nav" data-nav>
   <a class="logo" href="#top" data-cursor="Inicio" aria-label="Ozio Gastronomico, inicio"><img class="nav-lg" src="media/logo-ozio.png" width="1031" height="265" alt="" aria-hidden="true"><img class="nav-mk" src="media/logo-ozio-simbolo.png" width="241" height="240" alt="" aria-hidden="true"></a>
   <ul>
-    <li><a href="#carta"><small>01</small>menú</a></li>
+    <li><a href="#carta" data-cs-open><small>01</small>menú</a></li>
     <li><a href="#eventos"><small>02</small>eventos</a></li>
     <li><a href="#reserva"><small>03</small>contáctanos</a></li>
   </ul>
@@ -621,7 +621,7 @@
     <p class="lead" data-hero-lead>Un espacio para compartir</p>
     <div class="ctas" data-hero-ctas>
       <a class="btn-split" href="#reserva" data-magnetic><span class="l"><span>Reservar</span><span>Tu mesa</span></span></a>
-      <a class="btn-ghost" href="#carta" data-magnetic>Ver menú <span class="o"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a class="btn-ghost" href="#carta" data-cs-open data-magnetic>Ver menú <span class="o"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
     </div>
   </div>
   <div class="intro" data-hero-intro><span>Desliza</span><i></i></div>
@@ -649,12 +649,12 @@
     <div class="eyebrow" data-menu-copy>02 — Menú</div>
     <h2 class="split" data-menu-title>Descubrir la carta</h2>
     <p data-menu-copy>Una experiencia gastronómica que cambia con la temporada.</p>
-    <a class="btn-fill" href="#carta" data-fill data-menu-copy><span class="fill"></span><span>Ver menú</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    <a class="btn-fill" href="#carta" data-cs-open data-fill data-menu-copy><span class="fill"></span><span>Ver menú</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
   </div>
 </section>
 
 <!-- ================= LA CARTA: las hojas del menú, en la página ================= -->
-<section class="carta-s" id="carta" data-cs data-bg="#1b1a17" aria-label="La carta de Ozio">
+<section class="carta-s" id="carta" data-cs data-bg="#1b1a17" aria-label="La carta de Ozio" hidden>
   <div class="bg" data-cs-bg><img src="media/f/opt/carta-fondo.webp" alt="" aria-hidden="true" loading="lazy"></div>
   <div class="in">
     <div class="cs-arrows">
@@ -776,7 +776,7 @@
 <footer data-footer>
   <div class="cols">
     <div><a class="logo" href="#top" aria-label="Ozio Gastronomico, inicio"><img src="media/logo-ozio.png" width="1031" height="265" alt="" aria-hidden="true" loading="lazy"></a></div>
-    <div><h4>Ozio</h4><ul><li><a href="#ozio">Sobre nosotros</a></li><li><a href="#carta">Menú</a></li><li><a href="#eventos">Eventos</a></li><li><a href="#reserva">Reservas</a></li></ul></div>
+    <div><h4>Ozio</h4><ul><li><a href="#ozio">Sobre nosotros</a></li><li><a href="#carta" data-cs-open>Menú</a></li><li><a href="#eventos">Eventos</a></li><li><a href="#reserva">Reservas</a></li></ul></div>
     <div><h4>Contacto</h4><ul data-foot-contact></ul></div>
     <div><h4>Redes</h4><ul data-foot-social></ul></div>
   </div>
@@ -1066,6 +1066,22 @@ const CONFIG = {
   csPage.addEventListener('click', csOpen);
   csPage.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); csOpen(); } });
 
+  // la sección de la carta nace escondida: "Ver menú" (y el resto de enlaces al menú) la despliega bajo los platos
+  // y baja hasta ella; desde ahí el scroll sigue con normalidad hacia el resto de la página
+  const csSec = $('[data-cs]');
+  const openCs = () => {
+    const first = csSec.hidden;
+    if (first) {
+      csSec.hidden = false;
+      lenis?.resize?.();
+      if (window.ScrollTrigger) ScrollTrigger.refresh();
+      if (window.gsap && !reduce) gsap.fromTo(csSec, { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.5, ease: 'expo.inOut', clearProps: 'clipPath' });
+    }
+    if (lenis) lenis.scrollTo(csSec, { duration: first ? 1.6 : 2, easing: t => 1 - Math.pow(1 - t, 4) });
+    else csSec.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+  };
+  document.addEventListener('click', e => { const a = e.target.closest('[data-cs-open]'); if (!a) return; e.preventDefault(); openCs(); });
+
   /* ---------- reservar: WhatsApp si está configurado; si no, la llamada con Ozio ---------- */
   $('[data-book]').addEventListener('click', () => {
     if (CONFIG.whatsapp) window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent('Hola, me gustaría reservar una mesa en Ozio.')}`, '_blank', 'noopener');
@@ -1106,7 +1122,7 @@ const CONFIG = {
   lenis.stop();
 
   document.addEventListener('click', e => {
-    const a = e.target.closest('a[href^="#"]'); if (!a || a.hasAttribute('data-carta-open') || a.hasAttribute('data-carta-close') || a.hasAttribute('data-voz-open')) return;
+    const a = e.target.closest('a[href^="#"]'); if (!a || a.hasAttribute('data-carta-open') || a.hasAttribute('data-carta-close') || a.hasAttribute('data-voz-open') || a.hasAttribute('data-cs-open')) return;
     const id = a.getAttribute('href'); if (id.length < 2 && id !== '#') return; e.preventDefault();
     lenis.scrollTo(id === '#top' || id === '#' ? 0 : id, { duration: 2.2, easing: t => 1 - Math.pow(1 - t, 4) });
   });

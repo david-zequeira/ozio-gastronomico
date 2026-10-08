@@ -1440,19 +1440,17 @@ const CONFIG = {
     // pantallas grandes y 1280 px para el móvil, que pesa la mitad y en su pantalla se ve igual de nítido.
     const BIG = innerWidth > 809 && Math.max(innerWidth, innerHeight) * Math.min(devicePixelRatio || 1, 2) > 1400;
     const DIR = BIG ? 'hero-1920' : 'hero-1280', MAXPX = BIG ? 2400 : 1600;
-    // Escenas: fotogramas 0–60, 61–120 y 121–181 (los cortes del montaje). Dentro de cada escena el scroll no es
-    // lineal: la entrada va rápida (EASE) y la imagen se va frenando hacia el último fotograma, sin llegar a pararse.
-    // Cada escena tiene dos tramos (en pantallas de scroll): ENTRY, la entrada rápida y sin texto, y READ, el final
-    // lento con su texto (desde TXT de los fotogramas de la escena). Las escenas 1 y 3 llevan texto y tienen la
-    // lectura más larga; la 3 algo menos, porque su texto sigue visible mientras la portada se va.
-    const B = [0, 60.5, 120.5, N - 1], CUT = new Set([61, 121]), EASE = 4.2, TXT = .9, ENTRY = .55, READ = [1.8, 1.25, 1.2];
-    const ease = u => 1 - Math.pow(1 - u, EASE), U_TXT = 1 - Math.pow(1 - TXT, 1 / EASE);   // punto de la curva donde entra el texto
-    const LEN = READ.map(r => ENTRY + r), SCROLL = LEN.reduce((a, b) => a + b);
+    // Escenas: fotogramas 0–60, 61–120 y 121–181 (los cortes del montaje). La imagen avanza AL RITMO del scroll:
+    // cada escena ocupa LEN pantallas y los fotogramas se reparten casi en línea recta, con una frenada muy leve
+    // al final de la escena (SOFT: cuánto de curva se mezcla con la recta). Así la imagen va pegada al gesto, sin
+    // acelerones ni tramos en los que parezca parada. El texto de cada escena surge al pasar TXT_AT de ella.
+    const B = [0, 60.5, 120.5, N - 1], CUT = new Set([61, 121]), LEN = [1.6, 1.5, 1.5], SOFT = .3;
+    const SCROLL = LEN.reduce((a, b) => a + b);
+    const ease = u => (1 - SOFT) * u + SOFT * Math.sin(u * Math.PI / 2);      // recta con un final algo más suave
     // posición de scroll (pantallas) → fotograma (con decimales: entre dos fotogramas se funden)
     const frameAt = y => {
       let k = 0; while (k < 2 && y > LEN[k]) y -= LEN[k++];
-      const u = y < ENTRY ? U_TXT * y / ENTRY : U_TXT + (1 - U_TXT) * Math.min(1, (y - ENTRY) / READ[k]);
-      return B[k] + (B[k + 1] - B[k]) * ease(u);
+      return B[k] + (B[k + 1] - B[k]) * ease(Math.max(0, Math.min(1, y / LEN[k])));
     };
     const src = i => `media/seq/${DIR}/h-${String(i).padStart(3, '0')}.webp`;
     // Memoria: 182 fotogramas de 1920 descomprimidos ocupan ~1,5 GB; el navegador los descarta y, al dibujarlos,
@@ -1522,9 +1520,9 @@ const CONFIG = {
     // un texto por escena, en su tramo final. Al empezar, sin texto
     // «Cocina italiana, alma siciliana» (escena 1), «El tiempo de disfrutar» sobre el bartender (escena 2) y
     // «Benvenuti a Ozio» con los botones (escena 3)
-    // TXT_AT: en qué punto de los fotogramas de la escena entra su texto. El de la escena 3 entra antes, todavía
-    // en la entrada rápida, para que haya más tiempo de leerlo (la velocidad de la imagen no cambia)
-    const TEXT_OF = [0, 1, 2], TXT_AT = [TXT, TXT, .55];
+    // TXT_AT: en qué punto de los fotogramas de la escena entra su texto; el de la escena 3, algo antes, para que
+    // haya tiempo de leerlo con los botones antes de que la portada se vaya
+    const TEXT_OF = [0, 1, 2], TXT_AT = [.28, .28, .22];
     const sceneFor = f => { for (let k = 0; k < 3; k++) if (f < B[k + 1] || k === 2) return f >= B[k] + (B[k + 1] - B[k]) * TXT_AT[k] ? TEXT_OF[k] : -1; };
     seqST = ScrollTrigger.create({ trigger: hero, start: 'top top', end: () => '+=' + innerHeight * SCROLL, pin: true, anticipatePin: 1,
       onUpdate: st => { want = frameAt(st.progress * SCROLL); } });
@@ -1532,7 +1530,7 @@ const CONFIG = {
       prime();
       if (Math.abs(want - cur) < .01) { if (shownKey < 0) draw(); return; }
       if (Math.abs(want - cur) > .05) dir = want > cur ? 1 : -1;
-      cur += (want - cur) * (1 - Math.exp(-dt / 38));          // suavizado corto: Lenis ya suaviza el scroll
+      cur = want;                                              // pegado al gesto: el scroll ya llega suavizado (Lenis)
       draw();
       const s = sceneFor(cur);
       if (s !== sc) { sc = s; if (s < 0) leaveScene(); else showScene(s, true); }

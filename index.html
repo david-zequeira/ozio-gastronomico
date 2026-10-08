@@ -469,33 +469,47 @@
   .contact{display:flex;gap:calc(var(--u)*64);flex-wrap:wrap}
   .contact small{display:block;font-family:var(--label);font-size:14px;color:rgba(243,241,239,.5);letter-spacing:-.01em;margin-bottom:8px}
   .contact a,.contact span{font-size:max(16px,calc(var(--u)*18));letter-spacing:-.02em;font-weight:500}
-  /* versión compacta, centrada sobre el vídeo */
-  .ev-card .rcard{width:min(100%,calc(var(--u)*700));min-width:min(100%,600px);border-radius:28px;padding:calc(var(--u)*44) calc(var(--u)*48) calc(var(--u)*40)}
-  .ev-card .rcard .grid{grid-template-columns:1fr minmax(210px,calc(var(--u)*240));column-gap:calc(var(--u)*44);row-gap:calc(var(--u)*30)}
+  /* versión compacta (700u), centrada sobre el vídeo, con las proporciones del diseño:
+     a la izquierda etiqueta, título, texto y los dos botones; a la derecha el horario (desde el 59 % del contenido);
+     abajo una fila de contacto — Dirección, Email (alineado con el horario) y Teléfono */
+  .ev-card .rcard{width:min(100%,calc(var(--u)*700));min-width:min(100%,600px);border-radius:28px;padding:calc(var(--u)*46) calc(var(--u)*43) calc(var(--u)*39) calc(var(--u)*52)}
+  .ev-card .rcard .grid{grid-template-columns:58.8% 1fr;grid-template-areas:"head hours" "btns hours" "contact contact";gap:0;align-items:start}
+  .ev-card .rcard .head{grid-area:head;padding-right:calc(var(--u)*30)}
   .ev-card .rcard .eyebrow{font-size:clamp(10px,calc(var(--u)*9),11px);letter-spacing:.42em;font-weight:600}
-  .ev-card .rcard h2{margin-top:calc(var(--u)*14);font-size:clamp(28px,calc(var(--u)*32),42px)}
-  .ev-card .rcard .sub{margin-top:calc(var(--u)*12);font-size:max(14px,calc(var(--u)*13.5));max-width:26em}
-  .ev-card .hours{margin-top:4px}
-  .ev-card .hours li{padding:calc(var(--u)*10) 0;font-size:12px;gap:12px}
+  .ev-card .rcard h2{margin-top:calc(var(--u)*16);font-size:clamp(28px,calc(var(--u)*32),42px)}
+  .ev-card .rcard .sub{margin-top:calc(var(--u)*14);font-size:max(14px,calc(var(--u)*13));max-width:26em}
+  .ev-card .hours{grid-area:hours;margin-top:-4px}
+  .ev-card .hours li{padding:calc(var(--u)*10.5) 2px;font-size:12px;gap:12px}
   .ev-card .hours li b{font-size:14px}
-  .ev-card .rcard .btns{gap:10px}
+  .ev-card .rcard .btns{grid-area:btns;align-self:start;gap:10px;margin-top:calc(var(--u)*30)}
   .ev-card .rcard .btn-fill,.ev-card .rcard .btn-ghost{height:clamp(46px,calc(var(--u)*48),54px);font-size:max(14px,calc(var(--u)*14))}
   .ev-card .rcard .btn-fill{padding:0 20px 0 24px;gap:12px}
   .ev-card .rcard .btn-fill svg{width:18px;height:18px}
   .ev-card .rcard .btn-ghost{padding:0 6px 0 20px;gap:10px}
   .ev-card .rcard .btn-ghost .o{width:36px;height:36px}
-  .ev-card .rcard .btns .alt{margin-top:2px;font-size:13px}
-  .ev-card .rcard .btn-link{font-size:13px}
-  .ev-card .contact{gap:calc(var(--u)*28)}
-  .ev-card .contact small{font-size:12px;margin-bottom:5px}
-  .ev-card .contact a,.ev-card .contact span{font-size:max(14px,calc(var(--u)*14))}
+  .ev-card .contact{grid-area:contact;align-self:start;display:grid;grid-template-columns:35.9% 22.9% minmax(25%,max-content) 1fr;gap:0;margin-top:calc(var(--u)*38)}
+  .ev-card .contact > :first-child{grid-column:2}
+  .ev-card .contact > div{padding-right:12px}
+  .ev-card .contact small{font-size:12px;margin-bottom:6px;color:rgba(243,241,239,.45)}
+  .ev-card .contact a,.ev-card .contact span{display:block;white-space:nowrap;font-size:max(14px,calc(var(--u)*12.2));line-height:1.35;color:var(--ivory)}
+  /* tarjeta más estrecha: la fila de contacto usa todo el ancho para que el correo no pise el teléfono */
+  @media (max-width:1240px){
+    .ev-card .contact{grid-template-columns:1fr max-content max-content;column-gap:calc(var(--u)*30)}
+    .ev-card .contact > :first-child{grid-column:1}
+    .ev-card .contact > div{padding-right:0}
+  }
   @media (max-width:809px){
     .ev-live .ev-card{padding:70px 14px 14px}
     .ev-card .rcard{padding:24px 20px 22px;min-width:0;border-radius:24px}
-    .ev-card .rcard .grid{grid-template-columns:1fr;gap:16px}
+    .ev-card .rcard .grid{grid-template-columns:1fr;grid-template-areas:"head" "hours" "btns" "contact";gap:16px}
+    .ev-card .rcard .head{padding-right:0}
     .ev-card .rcard h2{font-size:30px;margin-top:10px;white-space:normal}
+    .ev-card .hours{margin-top:0}
     .ev-card .hours li{padding:8px 0}
+    .ev-card .rcard .btns{margin-top:0}
     .ev-card .rcard .btn-fill,.ev-card .rcard .btn-ghost{height:46px}
+    .ev-card .contact{grid-template-columns:1fr 1fr;row-gap:12px;margin-top:4px}
+    .ev-card .contact > :first-child{grid-column:1 / -1}
   }
   @media (max-width:809px){.rcard{padding:30px 22px 26px;min-width:0;border-radius:28px}.rcard .grid{grid-template-columns:1fr;gap:22px}.rcard h2{font-size:40px;margin-top:14px}.rcard .sub{margin-top:12px;font-size:15px}.hours{margin-top:0}.hours li{padding:12px 0;font-size:13px}.hours li b{font-size:14px}.rcard h2{white-space:normal}.rcard .btns{gap:10px}.rcard .btn-fill,.rcard .btn-ghost{height:54px}.contact{gap:24px}}
 
@@ -846,7 +860,7 @@
   <div class="rcard" data-rcard role="region" aria-label="Reserva">
     <div class="glow"></div><div class="aura" data-aura></div>
     <div class="grid">
-      <div>
+      <div class="head">
         <div class="eyebrow">07 — Reserva</div>
         <h2 class="split" data-res-title>Tu mesa te espera</h2>
         <p class="sub">Reserva y descubre una experiencia donde la gastronomía, la arquitectura y la hospitalidad se encuentran.</p>
@@ -855,7 +869,6 @@
       <div class="btns" data-res-btns>
         <button class="btn-fill" type="button" data-fill data-book><span class="fill"></span><span>Reservar mesa</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         <button class="btn-ghost" type="button" data-voz-open>Hacer llamada <span class="o"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.4 2.4M15.3 15.3l2.4 2.4M6.3 17.7l2.4-2.4M15.3 8.7l2.4-2.4"/></svg></span></button>
-        <p class="alt">¿Prefieres escribir? <button class="btn-link" type="button" data-chat-open>Chatea con Ozio</button></p>
       </div>
       <div class="contact" data-contact></div>
     </div>
@@ -954,11 +967,11 @@
    CONFIG — datos del restaurante. Lo que esté vacío no se muestra.
    ===================================================================== */
 const CONFIG = {
-  address:  'Madrid',            // p. ej. 'Calle …, Madrid'
-  mapsUrl:  '',                  // enlace de Google Maps para "Cómo llegar"
+  address:  'Aviador Zorita, 37\n28020 Madrid',   // \n = salto de línea
+  mapsUrl:  'https://www.google.com/maps/search/?api=1&query=Aviador%20Zorita%2037%2C%2028020%20Madrid',   // "Cómo llegar"
   whatsapp: '',                  // p. ej. '34600111222'. Vacío = "Reservar mesa" abre la llamada con Ozio
-  email:    '',
-  phone:    '',
+  email:    'info@oziogastronomico.es',
+  phone:    '917 129 170',
   instagram:'',
   hours: [                       // tabla de "tu mesa te espera"
     ['Almuerzo', 'Desde 13:30'],
@@ -1029,9 +1042,11 @@ const CONFIG = {
   /* ---------- contenido desde CONFIG ---------- */
   $('[data-year]').textContent = new Date().getFullYear();
   $('[data-hours]').innerHTML = CONFIG.hours.map(([k, v]) => `<li><span>${esc(k)}</span><b>${esc(v)}</b></li>`).join('');
-  const contact = [['Dirección', CONFIG.address, CONFIG.mapsUrl], ['Email', CONFIG.email, CONFIG.email && 'mailto:' + CONFIG.email], ['WhatsApp', CONFIG.whatsapp && '+' + CONFIG.whatsapp, CONFIG.whatsapp && 'https://wa.me/' + CONFIG.whatsapp], ['Teléfono', CONFIG.phone, CONFIG.phone && 'tel:' + CONFIG.phone.replace(/\s/g, '')]]
+  const telHref = p => 'tel:' + (p.trim().startsWith('+') ? '' : '+34') + p.replace(/[^\d+]/g, '');
+  const contact = [['Dirección', CONFIG.address, CONFIG.mapsUrl], ['Email', CONFIG.email, CONFIG.email && 'mailto:' + CONFIG.email], ['WhatsApp', CONFIG.whatsapp && '+' + CONFIG.whatsapp, CONFIG.whatsapp && 'https://wa.me/' + CONFIG.whatsapp], ['Teléfono', CONFIG.phone, CONFIG.phone && telHref(CONFIG.phone)]]
     .filter(([, v]) => v);
-  $('[data-contact]').innerHTML = contact.map(([k, v, h]) => `<div><small>${k}</small>${h ? `<a href="${esc(h)}" target="_blank" rel="noopener">${esc(v)}</a>` : `<span>${esc(v)}</span>`}</div>`).join('');
+  const brk = v => esc(v).replace(/\n/g, '<br>');
+  $('[data-contact]').innerHTML = contact.map(([k, v, h]) => `<div><small>${k}</small>${h ? `<a href="${esc(h)}"${/^https?:/.test(h) ? ' target="_blank" rel="noopener"' : ''}>${brk(v)}</a>` : `<span>${brk(v)}</span>`}</div>`).join('');
   $('[data-foot-contact]').innerHTML = [CONFIG.mapsUrl && `<li><a href="${esc(CONFIG.mapsUrl)}" target="_blank" rel="noopener">¿Cómo llegar?</a></li>`, CONFIG.whatsapp && `<li><a href="https://wa.me/${esc(CONFIG.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a></li>`, CONFIG.email && `<li><a href="mailto:${esc(CONFIG.email)}">${esc(CONFIG.email)}</a></li>`, '<li><a href="#" data-voz-open>Llamar a Ozio</a></li>', '<li><a href="#reserva">Reservas</a></li>'].filter(Boolean).join('');
   $('[data-foot-social]').innerHTML = CONFIG.instagram ? `<li><a href="https://instagram.com/${esc(CONFIG.instagram)}" target="_blank" rel="noopener">Instagram</a></li>` : '<li><span style="opacity:.55">Próximamente</span></li>';
 

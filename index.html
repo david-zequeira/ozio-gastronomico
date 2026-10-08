@@ -375,7 +375,7 @@
     .acc{left:0;right:0;transform:none;width:auto;min-width:0;padding:0 20px;scroll-padding-inline:20px;overflow-x:auto;bottom:40px;height:auto;scroll-snap-type:x mandatory}
     .acc .card,.acc .card.on{flex:0 0 78%;scroll-snap-align:start}
     .acc .body{flex:none;height:96px}.acc .pic,.acc .card:not(.on) .pic{flex:none;height:96px;width:96px;aspect-ratio:auto}
-    .acc .card,.acc .card.on{flex:0 0 86%}
+    .acc .card,.acc .card.on{flex:0 0 min(86%,380px)}
     .acc .txt,.acc .card:not(.on) .txt{position:relative;opacity:1;transform:none}
   }
 
@@ -558,7 +558,7 @@
     .ev-card .hours li{padding:8px 0}
     .ev-card .rcard .btns{margin-top:0}
     .ev-card .rcard .btn-fill,.ev-card .rcard .btn-ghost{height:46px}
-    .ev-card .rcard .btns{flex-direction:column;align-items:stretch}
+    .ev-card .rcard .btns{flex-wrap:nowrap}.ev-card .rcard .btns>*{flex:1 1 0}
     .ev-card .contact{gap:32px;margin-top:4px;justify-content:flex-start}
   }
   @media (max-width:809px){.rcard{padding:30px 22px 26px;min-width:0;border-radius:28px}.rcard .grid{grid-template-columns:1fr;gap:22px}.rcard h2{font-size:40px;margin-top:14px}.rcard .sub{margin-top:12px;font-size:15px}.hours{margin-top:0}.hours li{padding:12px 0;font-size:13px}.hours li b{font-size:14px}.rcard h2{white-space:normal}.rcard .btns{gap:10px}.rcard .btn-fill,.rcard .btn-ghost{height:54px}.contact{gap:24px}}
@@ -579,8 +579,10 @@
   footer .legal{margin-top:calc(var(--u)*46);display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;font-size:13px;line-height:1.7;color:rgba(243,241,239,.55)}
   footer .legal b{color:var(--ivory);font-weight:500}
   footer .legal .by{display:flex;align-items:center;gap:16px}
+  footer .legal{padding-right:84px}                                   /* el crédito no queda debajo del botón de voz */
   /* el logo grande se va; queda el sello pequeño y sutil, a la derecha */
   footer .legal .mk{width:34px;height:34px;opacity:.45}
+  @media (max-width:560px){.ev-card .rcard .btns{flex-direction:column;align-items:stretch}.ev-card .rcard .btns>*{flex:none}}
   @media (max-width:809px){footer{padding:56px 20px 32px}footer .cols{grid-template-columns:1fr 1fr;row-gap:30px}footer .cols>div:first-child{grid-column:1/-1}}
 
   /* ---------- VOZ: llamar a Ozio ---------- */

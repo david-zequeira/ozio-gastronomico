@@ -1309,27 +1309,31 @@ const CONFIG = {
   acc.forEach((c, i) => c.addEventListener('click', () => { setAcc(i); accUser = true; aT?.pause(); accBars?.forEach((b, j) => b.style.setProperty('--p', j === i ? 1 : 0)); }));
 
   /* ---------- portada: un texto por escena del vídeo ----------
-     Los cortes del vídeo caen en 3,93 s y 7,93 s, así que al parar en 4 s y en 8 s ya se ve la escena nueva.
-     El texto cambia justo en el corte: el que sale se desvanece y el nuevo entra suave, línea a línea. */
-  const heroScenes = $$('[data-scene]'), SCENE_CUTS = [3.93, 7.93];
-  let sceneI = 0;
-  // tiempo de lectura: tras cambiar de escena, el siguiente gesto hacia abajo espera a que el texto haya entrado
-  // (READ_MS); en la última escena, la de los botones, espera algo más antes de dejar bajar la página (END_MS)
-  const READ_MS = 1800, END_MS = 2400;
+     Los cortes del vídeo caen en 3,93 s y 7,93 s. El texto de la escena se despide al empezar cada tramo y el
+     nuevo entra suave, línea a línea, justo cuando el vídeo llega a la escena siguiente y se para. */
+  const heroScenes = $$('[data-scene]');
+  let sceneI = 0, sceneOut = false;
+  // tiempo de lectura: al llegar a una escena, el siguiente gesto hacia abajo espera a que el texto haya entrado
+  // (READ_MS); al llegar al final del vídeo, espera un poco antes de dejar bajar la página (END_MS)
+  const READ_MS = 1800, END_MS = 1200;
   let heroHoldUntil = 0;
-  const sceneAt = t => t < SCENE_CUTS[0] ? 0 : t < SCENE_CUTS[1] ? 1 : 2;
-  const showScene = i => {
-    if (i === sceneI) return;
-    const prev = heroScenes[sceneI], next = heroScenes[i], fwd = i > sceneI; sceneI = i;
+  const showScene = (i, force) => {
+    if (i === sceneI && !force) return;
+    const prev = heroScenes[sceneI], next = heroScenes[i]; sceneI = i; sceneOut = false;
     heroScenes.forEach((s, j) => { s.classList.toggle('on', j === i); s.setAttribute('aria-hidden', String(j !== i)); });
-    if (fwd) heroHoldUntil = performance.now() + (i === heroScenes.length - 1 ? END_MS : READ_MS);
     if (!window.gsap || reduce) return;
     gsap.killTweensOf([prev, next, ...prev.children, ...next.children]);
-    // salida y entrada más pausadas para que dé tiempo a leer cada frase
-    gsap.to(prev, { autoAlpha: 0, y: -14, filter: 'blur(4px)', duration: .8, ease: 'power2.inOut' });
+    if (prev !== next) gsap.to(prev, { autoAlpha: 0, y: -14, filter: 'blur(4px)', duration: .6, ease: 'power2.inOut' });
     gsap.set(next, { autoAlpha: 1, y: 0, filter: 'blur(0px)' });
     gsap.fromTo(next.children, { autoAlpha: 0, y: 22, filter: 'blur(6px)' },
-      { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 1.4, stagger: .22, ease: 'power2.out', delay: .4, clearProps: 'filter' });
+      { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 1.4, stagger: .22, ease: 'power2.out', delay: .1, clearProps: 'filter' });
+  };
+  // el texto actual se despide al empezar un tramo que lleva a otra escena
+  const leaveScene = () => {
+    if (sceneOut) return; sceneOut = true;
+    if (!window.gsap || reduce) return;
+    const s = heroScenes[sceneI]; gsap.killTweensOf([s, ...s.children]);
+    gsap.to(s, { autoAlpha: 0, y: -14, filter: 'blur(4px)', duration: .7, ease: 'power2.inOut' });
   };
 
   if (reduce) { showScene(2); $('[data-hero-video]').currentTime = 8.5; document.body.classList.remove('is-loading'); $('[data-loader]').remove(); $$('.odo i').forEach(i => i.style.transform = `translateY(-${+i.dataset.d}em)`); return; }
@@ -1399,72 +1403,74 @@ const CONFIG = {
   }); }
 
   /* ---------- portada: el vídeo se recorre con la rueda, una escena por gesto ----------
-     Tres estados: 0 s (escena 1), 6 s (escena 2) y 12 s (escena 3 con los botones). Cada gesto recorre 6 s:
-     el texto cambia en el corte, a mitad del tramo, y la escena nueva sigue un momento antes de parar.
-     Mientras la página está arriba del todo y el vídeo no ha llegado al final, la rueda (o un gesto táctil,
-     o las flechas) mueve el vídeo y no la página.
+     Paradas: 0 s (escena 1) → inicio de la escena 2 → inicio de la escena 3 → final del vídeo.
+       · 1.er gesto: el vídeo avanza hasta el primer fotograma de la escena 2.
+       · 2.º gesto: avanza hasta el primer fotograma de la escena 3.
+       · 3.er gesto: la escena 3 se reproduce hasta el final. El siguiente gesto ya baja la página.
+     Cada tramo acelera al empezar y frena al llegar; el texto de la escena se va al arrancar y el nuevo
+     aparece justo al llegar. Mientras la página está arriba del todo y quedan tramos, la rueda (o un gesto
+     táctil, o las flechas) mueve el vídeo y no la página.
      · Un gesto = un paso: se acumula el delta y la inercia del trackpad no cuenta como pasos nuevos.
-     · Hacia delante se reproduce el tramo a velocidad normal, fluido como el vídeo original.
-     · Hacia atrás se recorre con saltos cortos de currentTime (el mp4 lleva un fotograma clave cada 8,
-       así que cada salto tarda pocos ms).
-     · En 12 s se queda en el último fotograma; el siguiente gesto hacia abajo ya mueve la página. */
+     · Hacia delante el tramo se REPRODUCE (nada de saltos de currentTime), así que va fluido como el vídeo
+       original; la aceleración y la frenada se hacen variando poco a poco la velocidad de reproducción.
+     · Hacia atrás el navegador no sabe reproducir: se recorre con saltos cortos de currentTime (el mp4 lleva un
+       fotograma clave cada 8, cada salto tarda ~15 ms), también con arranque y frenada suaves. */
   (() => {
-    const v = heroVidEl, STEP = 6, STEPS = 2, MAX_RATE = 3.2;
-    let end = STEP * STEPS, target = 0, raf = 0, t0 = 0, lastSeek = 0, boost = 1, canPlay = true;
+    const v = heroVidEl;
+    // los cortes caen en 3,93 y 7,93 s: en 3,96 y 7,96 ya se ve el primer fotograma de la escena nueva
+    const STOPS = [0, 3.96, 7.96, 12.05], SCENE_OF = [0, 1, 2, 2], LAST = STOPS.length - 1;
+    // perfil de cada tramo hacia delante: velocidad de reproducción con aceleración constante al arrancar y al frenar
+    // (1,2× de punta: por encima, en equipos modestos el navegador empieza a saltarse fotogramas)
+    const R_START = .25, R_MAX = 1.2, R_MIN = .12, ACC = 1.4;      // ×, ×, ×, (s de vídeo)/s²
+    const BACK_MAX = 3.2, BACK_ACC = 5;
+    let si = 0, target = 0, from = 0, lastDir = 0, moving = false, raf = 0, lastSeek = 0, canPlay = true;
     v.loop = false; v.autoplay = false; v.pause();
-    const fixEnd = () => { if (isFinite(v.duration) && v.duration > 0) end = Math.min(STEP * STEPS, v.duration - .05); };
+    const fixEnd = () => { if (isFinite(v.duration) && v.duration > 0) STOPS[LAST] = Math.min(12.05, v.duration - .05); };
     v.addEventListener('loadedmetadata', fixEnd); fixEnd();
-    v.addEventListener('seeked', () => showScene(sceneAt(v.currentTime)));
 
-    const clampT = t => Math.max(0, Math.min(end, t));
-    const canMove = d => d > 0 ? target < end - .001 : target > .001;
+    const canMove = d => d > 0 ? si < LAST : si > 0;
     const atTop = () => (lenis ? lenis.scroll : scrollY) <= 2;
     const blocked = () => document.body.classList.contains('is-loading')
       || /\b(carta|voz|chat)-open\b/.test(document.documentElement.className)
       || !!document.querySelector('[data-lightbox].on');
 
-    // Hacia delante el tramo se REPRODUCE de verdad, a velocidad constante (PLAY_RATE), igual de fluido que el
-    // vídeo original: sin saltos de currentTime ni cambios de velocidad fotograma a fotograma (eso daba tirones).
-    // Se para al llegar, sin volver atrás para cuadrar el punto exacto.
-    // a velocidad normal se ven prácticamente todos los fotogramas (175 de 180 medidos); a 1,3× ya se saltaba
-    // uno de cada seis, así que se reproduce al ritmo del vídeo original
-    const PLAY_RATE = 1;
+    // llegada: aparece el texto de la escena y, si se venía hacia delante, se deja tiempo para leerlo
+    const land = () => {
+      moving = false;
+      const sc = SCENE_OF[si];
+      if (sc !== sceneI || sceneOut) showScene(sc, true);
+      if (lastDir > 0) heroHoldUntil = performance.now() + (si === LAST ? END_MS : READ_MS);
+    };
     const tick = now => {
       raf = 0;
       if (v.readyState < 2) { raf = requestAnimationFrame(tick); return; }
       const cur = v.currentTime, d = target - cur;
-      showScene(sceneAt(cur));
       if (d > 0 && canPlay) {
-        if (d <= .03) { if (!v.paused) v.pause(); return; }                 // ya está: a menos de un fotograma
-        if (v.playbackRate !== PLAY_RATE) v.playbackRate = PLAY_RATE;
+        if (d <= .015) { v.pause(); land(); return; }
+        // acelera desde el punto de salida y frena al acercarse a la parada (v = √(2·a·distancia))
+        const r = Math.max(R_MIN, Math.min(R_MAX, Math.sqrt(2 * ACC * Math.max(0, cur - from)) + R_START, Math.sqrt(2 * ACC * d)));
+        if (Math.abs(v.playbackRate - r) > .02) v.playbackRate = r;
         if (v.paused) v.play().catch(() => { canPlay = false; });
         raf = requestAnimationFrame(tick); return;
       }
-      if (Math.abs(d) <= .03) { if (!v.paused) v.pause(); return; }
-      // hacia atrás el navegador no sabe reproducir: se recorre con saltos cortos de currentTime
-      // (el mp4 lleva un fotograma clave cada 8, cada salto tarda ~15 ms), con arranque y frenada suaves
-      const ramp = Math.min(1, (now - t0) / 260);
-      const speed = Math.min(MAX_RATE * boost, Math.max(.5, Math.abs(d) * 3.2)) * (.45 + .55 * ramp);
-      {
-        if (!v.paused) v.pause();
-        if (!v.seeking) {
-          const dt = Math.min(.12, (now - (lastSeek || now - 16)) / 1000); lastSeek = now;
-          v.currentTime = d > 0 ? Math.min(target, cur + speed * dt) : Math.max(target, cur - speed * dt);
-        }
+      if (Math.abs(d) <= .015) { if (!v.paused) v.pause(); land(); return; }
+      if (!v.paused) v.pause();
+      if (!v.seeking) {
+        const dt = Math.min(.12, (now - (lastSeek || now - 16)) / 1000); lastSeek = now;
+        const sp = Math.max(.35, Math.min(BACK_MAX, Math.sqrt(2 * BACK_ACC * Math.abs(cur - from)) + .35, Math.sqrt(2 * BACK_ACC * Math.abs(d))));
+        v.currentTime = d > 0 ? Math.min(target, cur + sp * dt) : Math.max(target, cur - sp * dt);
       }
       raf = requestAnimationFrame(tick);
     };
 
-    // un paso de ±2 s (como mucho dos pasos por delante del fotograma visible)
-    // hacia delante no se encadenan pasos: se espera a que el vídeo llegue y a que dé tiempo a leer la frase
-    const holding = dir => dir > 0 && (performance.now() < heroHoldUntil || target - v.currentTime > .05);
-    const fire = (dir, strength) => {
+    // hacia delante no se encadenan tramos: se espera a que el vídeo llegue y a que dé tiempo a leer la frase
+    const holding = dir => dir > 0 && (moving || performance.now() < heroHoldUntil);
+    const fire = dir => {
       if (!canMove(dir) || holding(dir)) return;
-      const next = clampT(STEP * (Math.round(target / STEP) + dir));
-      if (Math.abs(next - v.currentTime) > STEP * 2 + .05) return;
-      boost = Math.max(.85, Math.min(1.6, strength / 70));
-      target = next; hero.dataset.step = Math.round(target / STEP);
-      if (!raf) { t0 = lastSeek = performance.now(); raf = requestAnimationFrame(tick); }
+      si += dir; lastDir = dir; from = v.currentTime; target = STOPS[si]; moving = true;
+      hero.dataset.step = si;
+      if (SCENE_OF[si] !== sceneI) leaveScene();
+      if (!raf) { lastSeek = performance.now(); raf = requestAnimationFrame(tick); }
     };
 
     // rueda / trackpad

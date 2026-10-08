@@ -929,14 +929,14 @@
 
 <!-- ================= 07 · EVENTOS ================= -->
 <section class="eventos" id="eventos" data-eventos data-bg="#1b1a17">
-  <div class="ev-full" data-ev-full aria-hidden="true"><video src="media/f/opt/eventos.mp4" muted playsinline preload="none" poster="media/f/opt/eventos-poster.webp" data-ev-video></video><i class="ev-shade" data-ev-shade></i></div>
+  <div class="ev-full" data-ev-full aria-hidden="true"><video muted playsinline preload="none" poster="media/f/opt/eventos-poster-1080.webp" data-hd="media/f/opt/eventos-1080.mp4" data-sd="media/f/opt/eventos-720.mp4" data-ev-video></video><i class="ev-shade" data-ev-shade></i></div>
   <div class="aura" data-aura></div>
   <div class="top">
     <div class="eyebrow" data-reveal>07 — Eventos</div>
     <p data-reveal>Desde celebraciones íntimas hasta encuentros profesionales, creamos experiencias pensadas para reunir a las personas alrededor de una mesa.</p>
   </div>
   <div class="ev-stage">
-    <div class="arch" data-ev-img data-cursor="Eventos"><img src="media/f/opt/eventos-poster.webp" alt="" loading="lazy"></div>
+    <div class="arch" data-ev-img data-cursor="Eventos"><img src="media/f/opt/eventos-poster-1080.webp" alt="" loading="lazy"></div>
     <h2 class="split" data-ev-title>momentos <em class="sc">especiales</em></h2>
     <ul data-ev-list>
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Celebraciones privadas</li>
@@ -1870,10 +1870,14 @@ const CONFIG = {
   /* ---------- 06 · eventos + 07 · reserva ----------
      1) Al llegar, el arco se descubre de abajo arriba con el vídeo dentro.
      2) La sección se fija y, con el scroll, el arco se abre hasta ocupar toda la pantalla mientras los textos se van.
-     3) A pantalla completa el vídeo se reproduce desde el principio; al terminar (o si se sigue bajando) se queda
-        quieto y aparece encima la tarjeta negra de reserva, más pequeña y centrada. Hacia arriba, todo se deshace. */
+     3) El vídeo arranca desde el principio cuando el arco empieza a abrirse y sigue sin cortes hasta la pantalla
+        completa; al terminar (o si se sigue bajando) se queda quieto y aparece encima la tarjeta negra de reserva,
+        más pequeña y centrada. Hacia arriba, todo se deshace.
+     Original en 1080p (Video OZIO mesa.mp4): 1080p en pantallas grandes, 720p en el móvil. */
   const evSec = $('[data-eventos]'), evFull = $('[data-ev-full]'), evVid = $('[data-ev-video]'), evArch = $('[data-ev-img]'), evShade = $('[data-ev-shade]');
-  evSec.classList.add('ev-live'); evVid.loop = true;
+  evSec.classList.add('ev-live'); evVid.loop = false;
+  { const big = innerWidth > 809 && Math.max(innerWidth, innerHeight) * Math.min(devicePixelRatio || 1, 2) > 1400;
+    evVid.src = big ? evVid.dataset.hd : evVid.dataset.sd; }
   const EV = { r: 0, e: 0, a: null, full: false, card: false };
   const evMeasure = () => { const s = evSec.getBoundingClientRect(), a = evArch.getBoundingClientRect();
     EV.a = { l: a.left - s.left, t: a.top - s.top, w: a.width, h: a.height, W: evFull.clientWidth, H: evFull.clientHeight }; };
@@ -1901,9 +1905,22 @@ const CONFIG = {
     .fromTo('.rcard .sub, .rcard .btns > *, .rcard .contact > *', { y: 18, opacity: 0 }, { y: 0, opacity: 1, stagger: .05, duration: .8, ease: 'expo.out' }, .4);
   const showCard = () => { if (EV.card) return; EV.card = true; evVid.pause(); cardTL.timeScale(1).play(); };
   const hideCard = () => { if (!EV.card) return; EV.card = false; cardTL.timeScale(1.8).reverse(); };
-  const startFull = () => { if (EV.full) return; EV.full = true; evVid.loop = false; try { evVid.currentTime = 0; } catch (_) {} evVid.play().catch(() => {}); };
-  const resetFull = () => { if (!EV.full) return; EV.full = false; hideCard(); evVid.loop = true; evVid.play().catch(() => {}); };
-  evVid.addEventListener('ended', () => { if (EV.full) showCard(); });
+  // sin saltos: a pantalla completa el vídeo sigue por donde iba (antes se reiniciaba a 0 en plena apertura)
+  const startFull = () => { if (EV.full) return; EV.full = true; if (!EV.card) evVid.play().catch(() => {}); };
+  const resetFull = () => { if (!EV.full) return; EV.full = false; hideCard(); evVid.play().catch(() => {}); };
+  // al terminar: a pantalla completa, sale la tarjeta; dentro del arco todavía, vuelve a empezar sin que se note
+  evVid.addEventListener('ended', () => { if (EV.full) showCard(); else { evVid.currentTime = 0; evVid.play().catch(() => {}); } });
+  // empieza desde el principio justo cuando el arco empieza a abrirse; si se vuelve arriba, queda listo otra vez
+  ScrollTrigger.create({ trigger: evSec, start: 'top 75%', onEnter: () => { if (EV.full || EV.card) return;
+      try { evVid.currentTime = 0; } catch (_) {} evVid.play().catch(() => {}); },
+    onLeaveBack: () => { evVid.pause(); try { evVid.currentTime = 0; } catch (_) {} } });
+  // red de seguridad: desde que el arco empieza a abrirse hasta que sale la tarjeta, el vídeo tiene que estar en
+  // marcha. Si se llega de golpe (menú, enlace) la orden de reproducir puede llegar antes que el vídeo: se repite
+  // en cuanto se puede.
+  const evShould = () => { const st = evTL.scrollTrigger, y = lenis.scroll;
+    return y >= st.start - innerHeight * .75 && y <= st.end && !EV.card; };
+  const evKick = () => { if (evShould() && evVid.paused && !evVid.ended && evVid.readyState >= 2) evVid.play().catch(() => {}); };
+  evVid.addEventListener('canplay', evKick); lenis.on('scroll', evKick);
   const evPhase = p => {
     if (p >= .56) startFull(); else if (p < .45) resetFull();
     if (p >= .88) showCard();                                                     // si se sigue bajando, no hace falta esperar

@@ -387,9 +387,10 @@
 
   /* ---------- CIFRAS (odómetro) en banda champán ---------- */
   .stats{background:var(--champagne);color:var(--ivory);padding:calc(var(--u)*96) 48px}
-  .stats .grid{max-width:916px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:52px;text-align:center}
-  .stat b{display:flex;justify-content:center;font:800 max(36px,calc(var(--u)*46))/1 var(--sans);font-variant-numeric:tabular-nums}
-  .stat span{display:block;margin-top:10px;font-size:16px}
+  /* proporciones del diseño: 4 columnas a ~19 % del ancho, cifra grande y etiqueta pegada debajo */
+  .stats .grid{max-width:calc(var(--u)*880);margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:36px;text-align:center}
+  .stat b{display:flex;justify-content:center;font:800 max(36px,calc(var(--u)*52))/1 var(--sans);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+  .stat > span{display:block;margin-top:calc(var(--u)*3 + 1px);font-size:clamp(15px,calc(var(--u)*16.4),21px);line-height:1.3;text-wrap:balance}
   .odo{display:inline-block;height:1em;overflow:hidden;-webkit-mask:linear-gradient(180deg,transparent,#000 22%,#000 78%,transparent);mask:linear-gradient(180deg,transparent,#000 22%,#000 78%,transparent)}
   .odo i{display:flex;flex-direction:column;font-style:normal;will-change:transform}
   .odo i em{font-style:normal;height:1em;line-height:1em}

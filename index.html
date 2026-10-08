@@ -295,6 +295,46 @@
     .cs-th span{font-size:14px}
   }
 
+  /* ---------- 03 · EL PLATO: foto cenital → ingredientes → la mesa → el detalle (de la web anterior,
+     con la tipografía y los tamaños actuales: etiqueta como las demás, título como el de la portada) ---------- */
+  .plato{position:relative;height:100vh;height:100svh;overflow:hidden;color:var(--ivory);background:radial-gradient(60% 60% at 60% 50%,rgba(70,62,50,.55) 0%,rgba(27,26,23,0) 70%)}
+  .plato .glow{position:absolute;left:50%;top:50%;width:80vmin;height:80vmin;margin:-40vmin 0 0 -40vmin;border-radius:50%;background:radial-gradient(circle,rgba(192,164,130,.34),transparent 65%);filter:blur(30px);opacity:0}
+  .dish,.dish-anno{position:absolute;inset:0;will-change:transform}
+  .dish{clip-path:circle(40% at 50% 50%)}
+  .dish-zoom,.dish-rot{position:absolute;inset:0}
+  .dish img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;max-width:none;user-select:none}
+  .dish-anno{z-index:3;pointer-events:none}
+  .macro{position:absolute;inset:0;opacity:0;z-index:2}
+  .macro img{width:100%;height:100%;object-fit:cover;object-position:35% 40%}
+  .plato .veil{position:absolute;inset:0;z-index:2;opacity:0;pointer-events:none;background:linear-gradient(180deg,rgba(27,26,23,0) 45%,rgba(27,26,23,.82) 100%),linear-gradient(90deg,rgba(27,26,23,.55),rgba(27,26,23,0) 55%)}
+  .plato-copy{position:absolute;left:var(--gut);top:50%;transform:translateY(-50%);z-index:3;max-width:min(440px,40vw)}
+  .plato .eyebrow{font-size:clamp(10px,calc(var(--u)*9),11px);letter-spacing:.42em;font-weight:600}
+  .plato-copy .eyebrow{color:var(--champagne)}
+  .plato h2,.plato h3{font-family:var(--uni);font-weight:500;text-transform:none;letter-spacing:-.03em}
+  .plato h2{font-size:clamp(38px,calc(var(--u)*50),60px);line-height:1.04;margin-top:calc(var(--u)*18)}
+  .plato em{font-family:var(--dm);font-style:italic;font-weight:400;text-transform:none;color:var(--champagne)}
+  .plato-copy p{margin-top:calc(var(--u)*18);color:rgba(243,241,239,.72);font-size:clamp(15px,calc(var(--u)*14),18px);line-height:1.6;max-width:34ch}
+  .plato-cap{position:absolute;left:var(--gut);bottom:11vh;z-index:4;max-width:680px;opacity:0}
+  .plato-cap .eyebrow{color:var(--beige)}
+  .plato-cap h3{font-size:clamp(34px,calc(var(--u)*44),56px);line-height:1.04;margin-top:calc(var(--u)*14);text-shadow:0 10px 50px rgba(0,0,0,.5)}
+  .plato-cap p{margin-top:14px;font-family:var(--label);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:rgba(243,241,239,.82)}
+  .callout{position:absolute;display:flex;align-items:center;gap:14px;opacity:0;white-space:nowrap;transform:translate(-5px,-50%)}
+  .callout.l{transform:translate(5px,-50%);flex-direction:row-reverse}
+  .callout i{display:block;flex:none;width:12px;height:12px;border-radius:50%;background:var(--champagne);border:2px solid var(--ivory);box-shadow:0 0 0 5px rgba(27,26,23,.35),0 0 24px rgba(192,164,130,.85)}
+  .callout .ln{display:block;flex:none;height:1px;width:clamp(40px,6vw,96px);background:var(--ivory);box-shadow:0 0 6px rgba(0,0,0,.6);transform-origin:left}
+  .callout.l .ln{transform-origin:right}
+  .callout .tx{background:rgba(27,26,23,.66);backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);border:1px solid rgba(243,241,239,.14);border-radius:12px;padding:10px 14px}
+  .callout .tx small{display:block;font-family:var(--label);font-size:10px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--champagne);margin-bottom:6px}
+  .callout .tx b{font-family:var(--uni);font-weight:600;letter-spacing:-.02em;text-transform:none;font-size:clamp(17px,calc(var(--u)*17),24px)}
+  .callout.l .tx{text-align:right}
+  @media (max-width:900px){
+    .plato-copy{top:11vh;transform:none;left:20px;right:20px;max-width:none}
+    .plato-copy p{display:none}
+    .plato-cap{left:20px;right:20px;bottom:7vh}
+    .callout.m-hide{display:none}
+    .callout{gap:6px}.callout .ln{width:10px}.callout .tx{padding:6px 9px;border-radius:9px}.callout .tx b{font-size:14px}.callout .tx small{display:none}
+  }
+
   /* ---------- 04 · LA COCINA: vídeo de fondo + acordeón ---------- */
   .cocina{position:relative;height:100vh;height:100svh;min-height:620px;overflow:hidden;background:var(--charcoal);color:var(--ivory)}
   /* el vídeo ocupa la pantalla entera desde que aparece (sin recorte ni apertura) */
@@ -761,14 +801,51 @@
   </div>
 </section>
 
-<!-- ================= 03 · LA COCINA ================= -->
+<!-- ================= 03 · EL PLATO (recuperada de la web anterior) ================= -->
+<section class="plato" id="plato" data-plato data-bg="#1b1a17">
+  <div class="glow" data-plate-glow></div>
+  <div class="dish" data-dish>
+    <div class="dish-zoom" data-dish-zoom>
+      <div class="dish-rot" data-dish-rot>
+        <img src="media/d/tartaleta-cenital.webp" alt="Tartaleta de frutos rojos sobre plato de cerámica y mesa de azulejo pintado a mano" data-dish-img>
+      </div>
+    </div>
+  </div>
+  <div class="macro" data-macro><img src="media/d/tartaleta-macro.webp" alt="Detalle de la tartaleta: fresas, moras, chocolate blanco y coulis de fresa" loading="lazy"></div>
+  <div class="veil" data-veil></div>
+
+  <div class="dish-anno" data-dish-anno>
+    <div class="callout l" data-callout data-at="580,620"><i></i><span class="ln"></span><span class="tx"><small>Hecho en casa</small><b data-short="Coulis">Coulis de fresa</b></span></div>
+    <div class="callout r" data-callout data-at="1060,450"><i></i><span class="ln"></span><span class="tx"><small>De temporada</small><b>Fresas</b></span></div>
+    <div class="callout l" data-callout data-at="820,740"><i></i><span class="ln"></span><span class="tx"><small>Frutos del bosque</small><b data-short="Moras">Moras y arándanos</b></span></div>
+    <div class="callout r m-hide" data-callout data-at="1262,640"><i></i><span class="ln"></span><span class="tx"><small>Recién cortada</small><b>Menta</b></span></div>
+    <div class="callout r" data-callout data-at="982,924"><i></i><span class="ln"></span><span class="tx"><small>Sobre masa sablé</small><b data-short="Chocolate blanco">Crema de chocolate blanco</b></span></div>
+  </div>
+
+  <div class="plato-copy">
+    <div class="eyebrow" data-plate-copy>03 — El plato</div>
+    <h2 class="split" data-plate-title>Dulce,<br><em>a mano.</em></h2>
+    <p data-plate-copy>Nuestra tartaleta de frutos rojos. Pequeña, precisa y hecha para compartir… aunque nadie la comparte.</p>
+  </div>
+  <div class="plato-cap" data-cap="mesa">
+    <div class="eyebrow">Cerámica pintada a mano</div>
+    <h3>La casa también<br><em>se sirve en la mesa.</em></h3>
+  </div>
+  <div class="plato-cap" data-cap="detalle">
+    <div class="eyebrow">Postre de la casa</div>
+    <h3>Tartaleta de<br><em>frutos rojos.</em></h3>
+    <p>Chocolate blanco · Frutos del bosque · Menta · Coulis de fresa</p>
+  </div>
+</section>
+
+<!-- ================= 04 · LA COCINA ================= -->
 <section class="cocina" id="cocina" data-cocina data-bg="#1b1a17">
   <div class="vid" data-cocina-vid>
     <img src="media/d/cocina-poster.webp" alt="" aria-hidden="true">
     <video src="media/d/cocina.mp4" muted loop playsinline preload="none" poster="media/d/cocina-poster.webp" data-lazy-video></video>
   </div>
   <div class="shade"></div>
-  <div class="eyebrow" data-reveal>03 — La cocina</div>
+  <div class="eyebrow" data-reveal>04 — La cocina</div>
   <div class="acc" data-acc>
     <article class="card on"><span class="n">(1)</span><div class="body"><div class="pic"><img src="media/f/opt/cocina-1.webp" alt="Limón siciliano con hojas" loading="lazy"></div><div class="txt"><h3>Sicilia</h3><p>La inspiración detrás de nuestra cocina, nuestra cultura y nuestra forma de recibir.</p></div></div><i class="bar"></i></article>
     <article class="card"><span class="n">(2)</span><div class="body"><div class="pic"><img src="media/f/opt/cocina-2.webp" alt="Rama de olivo" loading="lazy"></div><div class="txt"><h3>Ingredientes</h3><p>Materia prima seleccionada por su calidad, origen y autenticidad.</p></div></div><i class="bar"></i></article>
@@ -777,10 +854,10 @@
   </div>
 </section>
 
-<!-- ================= 04 · GALERÍA ================= -->
+<!-- ================= 05 · GALERÍA ================= -->
 <section class="encuentro" id="encuentro" data-encuentro data-bg="#e0d6cc">
   <div class="head">
-    <div class="eyebrow" data-reveal>04 — Galería</div>
+    <div class="eyebrow" data-reveal>05 — Galería</div>
     <h2 class="split" data-enc-title>El encuentro</h2>
     <p data-reveal>Donde la gastronomía, la arquitectura y la hospitalidad se encuentran para crear una experiencia que invita a quedarse.</p>
   </div>
@@ -811,7 +888,7 @@
 
 <!-- ================= TESTIMONIOS ================= -->
 <section class="voces" id="voces" data-voces data-bg="#f3f1ef">
-  <div class="eyebrow">05 — Reseñas</div>
+  <div class="eyebrow">06 — Reseñas</div>
     <div class="quote">
       <div class="ph" data-q-ph><img src="media/f/opt/resena.webp" alt="" data-q-img loading="lazy"><span class="tag" data-q-tag>Ozio</span></div>
       <div class="qt">
@@ -833,12 +910,12 @@
     </div>
 </section>
 
-<!-- ================= 06 · EVENTOS ================= -->
+<!-- ================= 07 · EVENTOS ================= -->
 <section class="eventos" id="eventos" data-eventos data-bg="#1b1a17">
   <div class="ev-full" data-ev-full aria-hidden="true"><video src="media/f/opt/eventos.mp4" muted playsinline preload="none" poster="media/f/opt/eventos-poster.webp" data-ev-video></video><i class="ev-shade" data-ev-shade></i></div>
   <div class="aura" data-aura></div>
   <div class="top">
-    <div class="eyebrow" data-reveal>06 — Eventos</div>
+    <div class="eyebrow" data-reveal>07 — Eventos</div>
     <p data-reveal>Desde celebraciones íntimas hasta encuentros profesionales, creamos experiencias pensadas para reunir a las personas alrededor de una mesa.</p>
   </div>
   <div class="ev-stage">
@@ -850,13 +927,13 @@
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Experiencias privadas</li>
     </ul>
   </div>
-  <!-- 07 · RESERVA: al terminar el vídeo a pantalla completa, la tarjeta aparece centrada encima -->
+  <!-- 08 · RESERVA: al terminar el vídeo a pantalla completa, la tarjeta aparece centrada encima -->
   <div class="ev-card" data-ev-card>
   <div class="rcard" data-rcard role="region" aria-label="Reserva">
     <div class="glow"></div><div class="aura" data-aura></div>
     <div class="grid">
       <div class="head">
-        <div class="eyebrow">07 — Reserva</div>
+        <div class="eyebrow">08 — Reserva</div>
         <h2 class="split" data-res-title>Tu mesa te espera</h2>
         <p class="sub">Reserva y descubre una experiencia donde la gastronomía, la arquitectura y la hospitalidad se encuentran.</p>
       </div>
@@ -1124,7 +1201,7 @@ const CONFIG = {
     const c = e.target.closest('[data-carta-close]'); if (c) { e.preventDefault(); closeCarta(c.classList.contains('logo') ? () => lenis?.scrollTo(0, { immediate: true }) : null); }
   });
   // pasada la última hoja, seguir bajando cierra la carta y continúa la visita
-  const toNext = () => closeCarta(() => { const t = document.getElementById('cocina'); lenis ? lenis.scrollTo(t, { duration: 1.6 }) : t.scrollIntoView({ behavior: 'smooth' }); });
+  const toNext = () => closeCarta(() => { const t = document.getElementById('plato'); lenis ? lenis.scrollTo(t, { duration: 1.6 }) : t.scrollIntoView({ behavior: 'smooth' }); });
   const flip = dir => { if (dir > 0) { cI < C.length - 1 ? setPage(cI + 1) : toNext(); } else setPage(cI - 1); };
   cNext.addEventListener('click', () => flip(1));
   // la rueda pasa de hoja (un gesto, una hoja); en modo lectura la rueda es el scroll de la hoja
@@ -1476,7 +1553,61 @@ const CONFIG = {
     .from('.cs-arrows button', { x: -30, opacity: 0, duration: 1, stagger: .08, ease: 'expo.out' }, .2)
     .from('.cs-th', { x: 30, opacity: 0, duration: .9, stagger: .05, ease: 'expo.out' }, .25);
 
-  /* ---------- 03 · la cocina: el vídeo a pantalla completa desde que entra, con un leve paralaje ---------- */
+  /* ---------- 03 · el plato (de la web anterior): foto cenital real → ingredientes → la mesa → el detalle ----------
+     La sección se fija; con el scroll el plato entra girando, aparecen los ingredientes uno a uno, el círculo
+     se abre a la mesa de azulejo y la cámara se acerca hasta el macro de la tartaleta. */
+  const plato = $('[data-plato]');
+  const PL = { w: 2000, h: 1333, cx: 845, cy: 685, r: 500, zoom: [580, 640] }; // plato y punto de zoom en la foto original
+  const dishImg = $('[data-dish-img]'), callouts = $$('[data-callout]');
+  const dGeo = {};
+  const layoutDish = () => {
+    const W = plato.clientWidth, H = plato.clientHeight;
+    const k = Math.max(W / (PL.cx * 2), H / ((PL.h - PL.cy) * 2), W / ((PL.w - PL.cx) * 2), H / (PL.cy * 2));
+    const X = px => W / 2 + (px - PL.cx) * k, Y = py => H / 2 + (py - PL.cy) * k;
+    Object.assign(dishImg.style, { width: PL.w * k + 'px', height: PL.h * k + 'px', left: X(0) + 'px', top: Y(0) + 'px' });
+    $('[data-dish-zoom]').style.transformOrigin = X(PL.zoom[0]) + 'px ' + Y(PL.zoom[1]) + 'px';
+    callouts.forEach(c => { const [px, py] = c.dataset.at.split(',').map(Number);
+      c.style.top = Y(py) + 'px'; if (c.classList.contains('l')) { c.style.right = (W - X(px)) + 'px'; c.style.left = 'auto'; } else c.style.left = X(px) + 'px'; });
+    Object.assign(dGeo, { W, H, R: PL.r * k, full: Math.hypot(W, H) / 2 + 20, small: W <= 900 });
+    $$('[data-short]', plato).forEach(b => { b.dataset.full = b.dataset.full || b.textContent; b.textContent = W <= 600 ? b.dataset.short : b.dataset.full; });
+  };
+  layoutDish(); addEventListener('resize', layoutDish); ScrollTrigger.addEventListener('refreshInit', layoutDish);
+  const circleR = r => `circle(${r}px at 50% 50%)`;
+  const dishBoth = '[data-dish], [data-dish-anno]';
+  const pTl = gsap.timeline({ scrollTrigger: { trigger: plato, start: 'top top', end: '+=420%', scrub: 1, pin: true, anticipatePin: 1, invalidateOnRefresh: true } });
+  pTl.fromTo('[data-dish]', { clipPath: () => circleR(dGeo.R) }, { clipPath: () => circleR(dGeo.R), duration: .01 }, 0)
+    .fromTo(dishBoth, { scale: .4, opacity: 0, x: () => dGeo.small ? 0 : dGeo.W * .16, y: () => dGeo.small ? dGeo.H * .5 : dGeo.H * .3 },
+                      { scale: () => dGeo.small ? .62 : .6, opacity: 1, x: () => dGeo.small ? 0 : dGeo.W * .16, y: () => dGeo.small ? dGeo.H * .1 : 0, duration: 1, ease: 'power3.out' }, 0)
+    .fromTo('[data-dish-rot]', { rotate: -75 }, { rotate: 0, duration: 1.2, ease: 'power3.out' }, 0)
+    .fromTo('[data-plate-glow]', { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: 1 }, 0)
+    .fromTo('[data-plate-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .02, duration: .5, ease: 'power3.out' }, .1)
+    .fromTo('[data-plate-copy]', { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: .1, duration: .4 }, .3)
+    .fromTo('.plato-copy', { opacity: 1, x: 0 }, { opacity: 0, x: -40, duration: .35, immediateRender: false }, 1.25)
+    .to(dishBoth, { scale: () => dGeo.W <= 600 ? .74 : dGeo.small ? .82 : .86, x: 0, y: 0, duration: .5, ease: 'power2.inOut' }, 1.25);
+  // los ingredientes aparecen uno a uno
+  callouts.forEach((c, i) => {
+    const at = 1.8 + i * .32, left = c.classList.contains('l');
+    pTl.fromTo(c, { opacity: 0 }, { opacity: 1, duration: .15 }, at)
+       .fromTo($('i', c), { scale: 0 }, { scale: 1, duration: .25, ease: 'back.out(3)' }, at)
+       .fromTo($('.ln', c), { scaleX: 0 }, { scaleX: 1, duration: .3 }, at + .05)
+       .fromTo($('.tx', c), { x: left ? 24 : -24, opacity: 0 }, { x: 0, opacity: 1, duration: .3 }, at + .15);
+  });
+  // se abre el círculo: aparece la mesa de azulejo
+  pTl.to(callouts, { opacity: 0, duration: .3, stagger: .03 }, 3.6)
+     .to('[data-dish]', { clipPath: () => circleR(dGeo.full), duration: .8, ease: 'power2.inOut' }, 3.75)
+     .to(dishBoth, { scale: 1, duration: .8, ease: 'power2.inOut' }, 3.75)
+     .to('[data-plate-glow]', { opacity: 0, duration: .4 }, 3.75)
+     .to('[data-veil]', { opacity: 1, duration: .5 }, 4.1)
+     .fromTo('[data-cap="mesa"]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .4 }, 4.3)
+     .to('[data-cap="mesa"]', { opacity: 0, y: -30, duration: .3 }, 5.0)
+  // el plato más cerca: la foto cenital se acerca y se funde con el macro
+     .to('[data-dish-zoom]', { scale: 2.9, duration: 1, ease: 'power2.in' }, 5.0)
+     .fromTo('[data-macro]', { opacity: 0, scale: 1.35, filter: 'blur(8px)' }, { opacity: 1, scale: 1.05, filter: 'blur(0px)', duration: .7, ease: 'power2.out' }, 5.6)
+     .fromTo('[data-cap="detalle"]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .4 }, 6.0)
+     .to('[data-macro]', { scale: 1, duration: .8, ease: 'none' }, 6.3)
+     .to({}, { duration: .2 });
+
+  /* ---------- 04 · la cocina: el vídeo a pantalla completa desde que entra, con un leve paralaje ---------- */
   gsap.fromTo('[data-cocina-vid] > *', { yPercent: -6 }, { yPercent: 6, ease: 'none', scrollTrigger: { trigger: '[data-cocina]', start: 'top bottom', end: 'bottom top', scrub: true } });
   gsap.from(acc, { y: 60, opacity: 0, duration: 1.2, stagger: .1, ease: 'expo.out', scrollTrigger: { trigger: '[data-cocina]', start: 'top 35%' } });
   // el vídeo sigue sonando de fondo mientras el acordeón avanza solo

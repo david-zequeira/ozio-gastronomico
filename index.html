@@ -1230,16 +1230,18 @@ const CONFIG = {
     gsap.to(heroVidEl, { x: x * -20, y: y * -12, duration: 1.6, ease: 'power3.out' });
   }); }
 
-  /* ---------- portada: el vídeo se recorre con la rueda, de 2 en 2 segundos ----------
-     12 s en 6 pasos fijos: 0 → 2 → 4 → 6 → 8 → 10 → 12. Mientras la página está arriba del todo y el vídeo
-     no ha llegado al final, la rueda (o un gesto táctil, o las flechas) mueve el vídeo y no la página.
+  /* ---------- portada: el vídeo se recorre con la rueda, una escena por gesto ----------
+     Tres estados: 0 s (escena 1), 6 s (escena 2) y 12 s (escena 3 con los botones). Cada gesto recorre 6 s:
+     el texto cambia en el corte, a mitad del tramo, y la escena nueva sigue un momento antes de parar.
+     Mientras la página está arriba del todo y el vídeo no ha llegado al final, la rueda (o un gesto táctil,
+     o las flechas) mueve el vídeo y no la página.
      · Un gesto = un paso: se acumula el delta y la inercia del trackpad no cuenta como pasos nuevos.
      · Hacia delante se reproduce el tramo (arranque y frenada suaves) y se para justo en el punto.
      · Hacia atrás se recorre con saltos cortos de currentTime (el mp4 lleva un fotograma clave cada 8,
        así que cada salto tarda pocos ms).
      · En 12 s se queda en el último fotograma; el siguiente gesto hacia abajo ya mueve la página. */
   (() => {
-    const v = heroVidEl, STEP = 2, STEPS = 6, MAX_RATE = 2.6;
+    const v = heroVidEl, STEP = 6, STEPS = 2, MAX_RATE = 4.5;
     let end = STEP * STEPS, target = 0, raf = 0, t0 = 0, lastSeek = 0, boost = 1, canPlay = true;
     v.loop = false; v.autoplay = false; v.pause();
     const fixEnd = () => { if (isFinite(v.duration) && v.duration > 0) end = Math.min(STEP * STEPS, v.duration - .05); };
@@ -1267,7 +1269,9 @@ const CONFIG = {
       const ramp = Math.min(1, (now - t0) / 260);                        // arranque
       const speed = Math.min(MAX_RATE * boost, Math.max(.5, Math.abs(d) * 3.2)) // frenada al acercarse
         * (.45 + .55 * ramp);
-      if (d > 0 && canPlay) {
+      // hasta 1,5× se reproduce (más suave); por encima, muchos decodificadores no llegan, así que se avanza
+      // con saltos cortos de currentTime (el mp4 lleva un fotograma clave cada 8 y cada salto tarda ~15 ms)
+      if (d > 0 && canPlay && speed <= 1.5) {
         if (Math.abs(v.playbackRate - speed) > .04) v.playbackRate = speed;
         if (v.paused) v.play().catch(() => { canPlay = false; });
       } else {
@@ -1309,7 +1313,7 @@ const CONFIG = {
         G.acc += dy;
         if (Math.abs(G.acc) >= THRESH) { fire(sign, a); G.fired = true; G.firedAt = now; G.firedAbs = a; }
       } else if ((a > G.peak * 1.6 && a >= 12 && now - G.firedAt > 220)    // nuevo empujón dentro del gesto
-              || (now - G.firedAt > 650 && a >= G.firedAbs * .8 && a >= 12)) { // rueda girando sin parar
+              || (now - G.firedAt > 900 && a >= G.firedAbs * .8 && a >= 12)) { // rueda girando sin parar
         fire(sign, a); G.firedAt = now; G.firedAbs = a;
       }
       G.peak = a;

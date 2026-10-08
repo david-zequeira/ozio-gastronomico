@@ -297,8 +297,9 @@
 
   /* ---------- 04 · LA COCINA: vídeo de fondo + acordeón ---------- */
   .cocina{position:relative;height:100vh;height:100svh;min-height:620px;overflow:hidden;background:var(--charcoal);color:var(--ivory)}
-  .cocina .vid{position:absolute;inset:0;clip-path:inset(12% 9% 12% 9% round 28px);will-change:clip-path}
-  .cocina .vid video,.cocina .vid img{position:absolute;inset:0;width:100%;height:112%;top:-6%;object-fit:cover}
+  /* el vídeo arranca pegado al borde de arriba (sin franja negra) y se abre por los lados y por abajo */
+  .cocina .vid{position:absolute;inset:0;clip-path:inset(0% 9% 12% 9% round 0px 0px 28px 28px);will-change:clip-path}
+  .cocina .vid video,.cocina .vid img{position:absolute;inset:0;width:100%;height:118%;top:-9%;object-fit:cover}
   .cocina .shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,var(--charcoal) 0%,rgba(32,31,28,.02) 55%),linear-gradient(90deg,rgba(27,26,23,.35),rgba(27,26,23,0) 40%)}
   .cocina .eyebrow{position:absolute;left:var(--gut);top:calc(var(--u)*69 + 30px);color:var(--ivory)}
   .acc{position:absolute;left:50%;bottom:calc(var(--u)*72);transform:translateX(-50%);display:flex;gap:calc(var(--u)*8);width:calc(var(--u)*660);min-width:600px;height:calc(var(--u)*150);min-height:146px}
@@ -1398,7 +1399,7 @@ const CONFIG = {
     .from('.cs-th', { x: 30, opacity: 0, duration: .9, stagger: .05, ease: 'expo.out' }, .25);
 
   /* ---------- 03 · la cocina: el vídeo se abre a pantalla completa ---------- */
-  if (innerWidth > 809) gsap.to('[data-cocina-vid]', { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none', scrollTrigger: { trigger: '[data-cocina]', start: 'top 90%', end: 'top top', scrub: 1 } });
+  if (innerWidth > 809) gsap.fromTo('[data-cocina-vid]', { clipPath: 'inset(0% 9% 12% 9% round 0px 0px 28px 28px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px 0px 0px 0px)', ease: 'none', scrollTrigger: { trigger: '[data-cocina]', start: 'top 90%', end: 'top top', scrub: 1 } });
   gsap.fromTo('[data-cocina-vid] > *', { yPercent: -6 }, { yPercent: 6, ease: 'none', scrollTrigger: { trigger: '[data-cocina]', start: 'top bottom', end: 'bottom top', scrub: true } });
   gsap.from(acc, { y: 60, opacity: 0, duration: 1.2, stagger: .1, ease: 'expo.out', scrollTrigger: { trigger: '[data-cocina]', start: 'top 35%' } });
   // el vídeo sigue sonando de fondo mientras el acordeón avanza solo

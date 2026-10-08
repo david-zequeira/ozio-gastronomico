@@ -506,21 +506,24 @@
   @media (max-width:809px){.rcard{padding:30px 22px 26px;min-width:0;border-radius:28px}.rcard .grid{grid-template-columns:1fr;gap:22px}.rcard h2{font-size:40px;margin-top:14px}.rcard .sub{margin-top:12px;font-size:15px}.hours{margin-top:0}.hours li{padding:12px 0;font-size:13px}.hours li b{font-size:14px}.rcard h2{white-space:normal}.rcard .btns{gap:10px}.rcard .btn-fill,.rcard .btn-ghost{height:54px}.contact{gap:24px}}
 
   /* ---------- FOOTER ---------- */
-  footer{position:relative;background:var(--black);color:var(--ivory);padding:calc(var(--u)*72) calc(var(--u)*60 + 12px) calc(var(--u)*44);overflow:hidden}
-  footer .cols{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr;gap:30px}
-  footer .logo{font-size:44px}
+  /* proporciones del diseño: logo a la izquierda y tres columnas que arrancan en el 43 % del contenido,
+     cada una de un 20 % de ancho; textos algo más pequeños */
+  footer{position:relative;background:var(--black);color:var(--ivory);padding:calc(var(--u)*62) calc(var(--u)*60 + 12px) calc(var(--u)*44);overflow:hidden}
+  footer .cols{display:grid;grid-template-columns:43.1% 20% 20% 1fr;gap:0}
+  footer .cols > div{padding-right:16px}
+  footer .logo{font-size:clamp(30px,calc(var(--u)*29),38px)}
   footer .logo img{display:block;height:1em;width:auto}
-  footer h4{font-size:max(16px,calc(var(--u)*18));font-weight:500;color:rgba(243,241,239,.5);margin-bottom:calc(var(--u)*24)}
-  footer ul{list-style:none;display:flex;flex-direction:column;gap:12px;font-size:max(15px,calc(var(--u)*17));font-weight:500}
+  footer h4{font-size:max(15px,calc(var(--u)*15.5));font-weight:500;color:rgba(243,241,239,.5);margin-bottom:calc(var(--u)*20)}
+  footer ul{list-style:none;display:flex;flex-direction:column;gap:calc(var(--u)*6 + 2px);font-size:max(14px,calc(var(--u)*14.2));font-weight:500;overflow-wrap:anywhere}
   footer ul a{position:relative;display:inline-block}
   footer ul a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .5s var(--ease)}
   footer ul a:hover::after{transform:scaleX(1);transform-origin:left}
-  footer .legal{margin-top:calc(var(--u)*70);display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;font-size:13px;line-height:1.7;color:rgba(243,241,239,.55)}
+  footer .legal{margin-top:calc(var(--u)*46);display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;font-size:13px;line-height:1.7;color:rgba(243,241,239,.55)}
   footer .legal b{color:var(--ivory);font-weight:500}
   footer .legal .by{display:flex;align-items:center;gap:16px}
   /* el logo grande se va; queda el sello pequeño y sutil, a la derecha */
   footer .legal .mk{width:34px;height:34px;opacity:.45}
-  @media (max-width:809px){footer{padding:56px 20px 32px}footer .cols{grid-template-columns:1fr 1fr}footer .cols>div:first-child{grid-column:1/-1}}
+  @media (max-width:809px){footer{padding:56px 20px 32px}footer .cols{grid-template-columns:1fr 1fr;row-gap:30px}footer .cols>div:first-child{grid-column:1/-1}}
 
   /* ---------- VOZ: llamar a Ozio ---------- */
   /* el botón es el sello de Ozio: círculo oscuro con la marca, como en la referencia */
@@ -1040,7 +1043,7 @@ const CONFIG = {
     .filter(([, v]) => v);
   const brk = v => esc(v).replace(/\n/g, '<br>');
   $('[data-contact]').innerHTML = contact.map(([k, v, h]) => `<div><small>${k}</small>${h ? `<a href="${esc(h)}"${/^https?:/.test(h) ? ' target="_blank" rel="noopener"' : ''}>${brk(v)}</a>` : `<span>${brk(v)}</span>`}</div>`).join('');
-  $('[data-foot-contact]').innerHTML = [CONFIG.mapsUrl && `<li><a href="${esc(CONFIG.mapsUrl)}" target="_blank" rel="noopener">¿Cómo llegar?</a></li>`, CONFIG.whatsapp && `<li><a href="https://wa.me/${esc(CONFIG.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a></li>`, CONFIG.email && `<li><a href="mailto:${esc(CONFIG.email)}">${esc(CONFIG.email)}</a></li>`, '<li><a href="#" data-voz-open>Llamar a Ozio</a></li>', '<li><a href="#reserva">Reservas</a></li>'].filter(Boolean).join('');
+  $('[data-foot-contact]').innerHTML = [CONFIG.mapsUrl && `<li><a href="${esc(CONFIG.mapsUrl)}" target="_blank" rel="noopener">¿Cómo llegar?</a></li>`, CONFIG.whatsapp && `<li><a href="https://wa.me/${esc(CONFIG.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a></li>`, CONFIG.email && `<li><a href="mailto:${esc(CONFIG.email)}">${esc(CONFIG.email).replace('@', '@<wbr>')}</a></li>`, '<li><a href="#" data-voz-open>Llamar a Ozio</a></li>', '<li><a href="#reserva">Reservas</a></li>'].filter(Boolean).join('');
   $('[data-foot-social]').innerHTML = CONFIG.instagram ? `<li><a href="https://instagram.com/${esc(CONFIG.instagram)}" target="_blank" rel="noopener">Instagram</a></li>` : '<li><span style="opacity:.55">Próximamente</span></li>';
 
   /* ---------- cifras: odómetro ---------- */

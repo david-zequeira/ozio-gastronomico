@@ -295,7 +295,7 @@
     .cs-th span{font-size:14px}
   }
 
-  /* ---------- 03 · EL PLATO: foto cenital → ingredientes → la mesa → el detalle (de la web anterior,
+  /* ---------- 04 · EL PLATO: foto cenital → ingredientes → la mesa → el detalle (de la web anterior,
      con la tipografía y los tamaños actuales: etiqueta como las demás, título como el de la portada) ---------- */
   .plato{position:relative;height:100vh;height:100svh;overflow:hidden;color:var(--ivory);background:radial-gradient(60% 60% at 60% 50%,rgba(70,62,50,.55) 0%,rgba(27,26,23,0) 70%)}
   .plato .glow{position:absolute;left:50%;top:50%;width:80vmin;height:80vmin;margin:-40vmin 0 0 -40vmin;border-radius:50%;background:radial-gradient(circle,rgba(192,164,130,.34),transparent 65%);filter:blur(30px);opacity:0}
@@ -335,7 +335,7 @@
     .callout{gap:6px}.callout .ln{width:10px}.callout .tx{padding:6px 9px;border-radius:9px}.callout .tx b{font-size:14px}.callout .tx small{display:none}
   }
 
-  /* ---------- 04 · LA COCINA: vídeo de fondo + acordeón ---------- */
+  /* ---------- 03 · LA COCINA: vídeo de fondo + acordeón ---------- */
   .cocina{position:relative;height:100vh;height:100svh;min-height:620px;overflow:hidden;background:var(--charcoal);color:var(--ivory)}
   /* el vídeo ocupa la pantalla entera desde que aparece (sin recorte ni apertura) */
   .cocina .vid{position:absolute;inset:0}
@@ -801,7 +801,23 @@
   </div>
 </section>
 
-<!-- ================= 03 · EL PLATO (recuperada de la web anterior) ================= -->
+<!-- ================= 03 · LA COCINA ================= -->
+<section class="cocina" id="cocina" data-cocina data-bg="#1b1a17">
+  <div class="vid" data-cocina-vid>
+    <img src="media/d/cocina-poster.webp" alt="" aria-hidden="true">
+    <video src="media/d/cocina.mp4" muted loop playsinline preload="none" poster="media/d/cocina-poster.webp" data-lazy-video></video>
+  </div>
+  <div class="shade"></div>
+  <div class="eyebrow" data-reveal>03 — La cocina</div>
+  <div class="acc" data-acc>
+    <article class="card on"><span class="n">(1)</span><div class="body"><div class="pic"><img src="media/f/opt/cocina-1.webp" alt="Limón siciliano con hojas" loading="lazy"></div><div class="txt"><h3>Sicilia</h3><p>La inspiración detrás de nuestra cocina, nuestra cultura y nuestra forma de recibir.</p></div></div><i class="bar"></i></article>
+    <article class="card"><span class="n">(2)</span><div class="body"><div class="pic"><img src="media/f/opt/cocina-2.webp" alt="Rama de olivo" loading="lazy"></div><div class="txt"><h3>Ingredientes</h3><p>Materia prima seleccionada por su calidad, origen y autenticidad.</p></div></div><i class="bar"></i></article>
+    <article class="card"><span class="n">(3)</span><div class="body"><div class="pic"><img src="media/f/opt/cocina-3.webp" alt="Plato de pasta fresca" loading="lazy"></div><div class="txt"><h3>Tradición</h3><p>Recetas que conservan su esencia mientras dialogan con una mirada contemporánea.</p></div></div><i class="bar"></i></article>
+    <article class="card"><span class="n">(4)</span><div class="body"><div class="pic"><img src="media/f/opt/cocina-4.webp" alt="Copa de vino tinto" loading="lazy"></div><div class="txt"><h3>Vino</h3><p>Una selección diseñada para acompañar cada plato y cada conversación.</p></div></div><i class="bar"></i></article>
+  </div>
+</section>
+
+<!-- ================= 04 · EL PLATO (recuperada de la web anterior) ================= -->
 <section class="plato" id="plato" data-plato data-bg="#1b1a17">
   <div class="glow" data-plate-glow></div>
   <div class="dish" data-dish>
@@ -823,7 +839,7 @@
   </div>
 
   <div class="plato-copy">
-    <div class="eyebrow" data-plate-copy>03 — El plato</div>
+    <div class="eyebrow" data-plate-copy>04 — El plato</div>
     <h2 class="split" data-plate-title>Dulce,<br><em>a mano.</em></h2>
     <p data-plate-copy>Nuestra tartaleta de frutos rojos. Pequeña, precisa y hecha para compartir… aunque nadie la comparte.</p>
   </div>
@@ -835,22 +851,6 @@
     <div class="eyebrow">Postre de la casa</div>
     <h3>Tartaleta de<br><em>frutos rojos.</em></h3>
     <p>Chocolate blanco · Frutos del bosque · Menta · Coulis de fresa</p>
-  </div>
-</section>
-
-<!-- ================= 04 · LA COCINA ================= -->
-<section class="cocina" id="cocina" data-cocina data-bg="#1b1a17">
-  <div class="vid" data-cocina-vid>
-    <img src="media/d/cocina-poster.webp" alt="" aria-hidden="true">
-    <video src="media/d/cocina.mp4" muted loop playsinline preload="none" poster="media/d/cocina-poster.webp" data-lazy-video></video>
-  </div>
-  <div class="shade"></div>
-  <div class="eyebrow" data-reveal>04 — La cocina</div>
-  <div class="acc" data-acc>
-    <article class="card on"><span class="n">(1)</span><div class="body"><div class="pic"><img src="media/f/opt/cocina-1.webp" alt="Limón siciliano con hojas" loading="lazy"></div><div class="txt"><h3>Sicilia</h3><p>La inspiración detrás de nuestra cocina, nuestra cultura y nuestra forma de recibir.</p></div></div><i class="bar"></i></article>
-    <article class="card"><span class="n">(2)</span><div class="body"><div class="pic"><img src="media/f/opt/cocina-2.webp" alt="Rama de olivo" loading="lazy"></div><div class="txt"><h3>Ingredientes</h3><p>Materia prima seleccionada por su calidad, origen y autenticidad.</p></div></div><i class="bar"></i></article>
-    <article class="card"><span class="n">(3)</span><div class="body"><div class="pic"><img src="media/f/opt/cocina-3.webp" alt="Plato de pasta fresca" loading="lazy"></div><div class="txt"><h3>Tradición</h3><p>Recetas que conservan su esencia mientras dialogan con una mirada contemporánea.</p></div></div><i class="bar"></i></article>
-    <article class="card"><span class="n">(4)</span><div class="body"><div class="pic"><img src="media/f/opt/cocina-4.webp" alt="Copa de vino tinto" loading="lazy"></div><div class="txt"><h3>Vino</h3><p>Una selección diseñada para acompañar cada plato y cada conversación.</p></div></div><i class="bar"></i></article>
   </div>
 </section>
 
@@ -1201,7 +1201,7 @@ const CONFIG = {
     const c = e.target.closest('[data-carta-close]'); if (c) { e.preventDefault(); closeCarta(c.classList.contains('logo') ? () => lenis?.scrollTo(0, { immediate: true }) : null); }
   });
   // pasada la última hoja, seguir bajando cierra la carta y continúa la visita
-  const toNext = () => closeCarta(() => { const t = document.getElementById('plato'); lenis ? lenis.scrollTo(t, { duration: 1.6 }) : t.scrollIntoView({ behavior: 'smooth' }); });
+  const toNext = () => closeCarta(() => { const t = document.getElementById('cocina'); lenis ? lenis.scrollTo(t, { duration: 1.6 }) : t.scrollIntoView({ behavior: 'smooth' }); });
   const flip = dir => { if (dir > 0) { cI < C.length - 1 ? setPage(cI + 1) : toNext(); } else setPage(cI - 1); };
   cNext.addEventListener('click', () => flip(1));
   // la rueda pasa de hoja (un gesto, una hoja); en modo lectura la rueda es el scroll de la hoja
@@ -1553,7 +1553,16 @@ const CONFIG = {
     .from('.cs-arrows button', { x: -30, opacity: 0, duration: 1, stagger: .08, ease: 'expo.out' }, .2)
     .from('.cs-th', { x: 30, opacity: 0, duration: .9, stagger: .05, ease: 'expo.out' }, .25);
 
-  /* ---------- 03 · el plato (de la web anterior): foto cenital real → ingredientes → la mesa → el detalle ----------
+  /* ---------- 03 · la cocina: el vídeo a pantalla completa desde que entra, con un leve paralaje ---------- */
+  gsap.fromTo('[data-cocina-vid] > *', { yPercent: -6 }, { yPercent: 6, ease: 'none', scrollTrigger: { trigger: '[data-cocina]', start: 'top bottom', end: 'bottom top', scrub: true } });
+  gsap.from(acc, { y: 60, opacity: 0, duration: 1.2, stagger: .1, ease: 'expo.out', scrollTrigger: { trigger: '[data-cocina]', start: 'top 35%' } });
+  // el vídeo sigue sonando de fondo mientras el acordeón avanza solo
+  accBars = acc.map(c => $('.bar', c));
+  aT = gsap.timeline({ repeat: -1, paused: true });
+  acc.forEach((c, i) => aT.call(() => setAcc(i), null, i * 4).fromTo(accBars[i], { '--p': 0 }, { '--p': 1, duration: 4, ease: 'none' }, i * 4));
+  ScrollTrigger.create({ trigger: '[data-cocina]', start: 'top 60%', end: 'bottom top', onToggle: st => st.isActive && !accUser ? aT.play() : aT.pause() });
+
+  /* ---------- 04 · el plato (de la web anterior): foto cenital real → ingredientes → la mesa → el detalle ----------
      La sección se fija; con el scroll el plato entra girando, aparecen los ingredientes uno a uno, el círculo
      se abre a la mesa de azulejo y la cámara se acerca hasta el macro de la tartaleta. */
   const plato = $('[data-plato]');
@@ -1606,15 +1615,6 @@ const CONFIG = {
      .fromTo('[data-cap="detalle"]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .4 }, 6.0)
      .to('[data-macro]', { scale: 1, duration: .8, ease: 'none' }, 6.3)
      .to({}, { duration: .2 });
-
-  /* ---------- 04 · la cocina: el vídeo a pantalla completa desde que entra, con un leve paralaje ---------- */
-  gsap.fromTo('[data-cocina-vid] > *', { yPercent: -6 }, { yPercent: 6, ease: 'none', scrollTrigger: { trigger: '[data-cocina]', start: 'top bottom', end: 'bottom top', scrub: true } });
-  gsap.from(acc, { y: 60, opacity: 0, duration: 1.2, stagger: .1, ease: 'expo.out', scrollTrigger: { trigger: '[data-cocina]', start: 'top 35%' } });
-  // el vídeo sigue sonando de fondo mientras el acordeón avanza solo
-  accBars = acc.map(c => $('.bar', c));
-  aT = gsap.timeline({ repeat: -1, paused: true });
-  acc.forEach((c, i) => aT.call(() => setAcc(i), null, i * 4).fromTo(accBars[i], { '--p': 0 }, { '--p': 1, duration: 4, ease: 'none' }, i * 4));
-  ScrollTrigger.create({ trigger: '[data-cocina]', start: 'top 60%', end: 'bottom top', onToggle: st => st.isActive && !accUser ? aT.play() : aT.pause() });
 
   /* ---------- 05 · el encuentro: Parallax Gallery infinita (scroll + arrastre + inercia) ---------- */
   const pg = $('[data-pg]'), track = $('[data-track]'), gN = $('[data-g-n]'), gBar = $('[data-g-bar]');

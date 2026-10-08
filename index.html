@@ -372,7 +372,7 @@
   .acc .bar::after{content:"";position:absolute;inset:0;background:var(--champagne);transform:scaleX(var(--p,0));transform-origin:left}
   @media (max-width:809px){
     .cocina .vid{clip-path:none}
-    .acc{left:0;right:0;transform:none;width:auto;min-width:0;padding:0 20px;overflow-x:auto;bottom:40px;height:auto;scroll-snap-type:x mandatory}
+    .acc{left:0;right:0;transform:none;width:auto;min-width:0;padding:0 20px;scroll-padding-inline:20px;overflow-x:auto;bottom:40px;height:auto;scroll-snap-type:x mandatory}
     .acc .card,.acc .card.on{flex:0 0 78%;scroll-snap-align:start}
     .acc .body{flex:none;height:96px}.acc .pic,.acc .card:not(.on) .pic{flex:none;height:96px;width:96px;aspect-ratio:auto}
     .acc .card,.acc .card.on{flex:0 0 86%}
@@ -558,7 +558,8 @@
     .ev-card .hours li{padding:8px 0}
     .ev-card .rcard .btns{margin-top:0}
     .ev-card .rcard .btn-fill,.ev-card .rcard .btn-ghost{height:46px}
-    .ev-card .contact{gap:32px;margin-top:4px}
+    .ev-card .rcard .btns{flex-direction:column;align-items:stretch}
+    .ev-card .contact{gap:32px;margin-top:4px;justify-content:flex-start}
   }
   @media (max-width:809px){.rcard{padding:30px 22px 26px;min-width:0;border-radius:28px}.rcard .grid{grid-template-columns:1fr;gap:22px}.rcard h2{font-size:40px;margin-top:14px}.rcard .sub{margin-top:12px;font-size:15px}.hours{margin-top:0}.hours li{padding:12px 0;font-size:13px}.hours li b{font-size:14px}.rcard h2{white-space:normal}.rcard .btns{gap:10px}.rcard .btn-fill,.rcard .btn-ghost{height:54px}.contact{gap:24px}}
 
@@ -1749,16 +1750,23 @@ const CONFIG = {
   const PL = { w: 2000, h: 1333, cx: 845, cy: 685, r: 500, zoom: [580, 640] }; // plato y punto de zoom en la foto original
   const dishImg = $('[data-dish-img]'), callouts = $$('[data-callout]');
   const dGeo = {};
+  const dishScale = () => dGeo.W <= 600 ? .74 : dGeo.small ? .82 : .86;          // tamaño del plato mientras salen los ingredientes
   const layoutDish = () => {
     const W = plato.clientWidth, H = plato.clientHeight;
     const k = Math.max(W / (PL.cx * 2), H / ((PL.h - PL.cy) * 2), W / ((PL.w - PL.cx) * 2), H / (PL.cy * 2));
     const X = px => W / 2 + (px - PL.cx) * k, Y = py => H / 2 + (py - PL.cy) * k;
     Object.assign(dishImg.style, { width: PL.w * k + 'px', height: PL.h * k + 'px', left: X(0) + 'px', top: Y(0) + 'px' });
     $('[data-dish-zoom]').style.transformOrigin = X(PL.zoom[0]) + 'px ' + Y(PL.zoom[1]) + 'px';
-    callouts.forEach(c => { const [px, py] = c.dataset.at.split(',').map(Number);
-      c.style.top = Y(py) + 'px'; if (c.classList.contains('l')) { c.style.right = (W - X(px)) + 'px'; c.style.left = 'auto'; } else c.style.left = X(px) + 'px'; });
     Object.assign(dGeo, { W, H, R: PL.r * k, full: Math.hypot(W, H) / 2 + 20, small: W <= 900 });
     $$('[data-short]', plato).forEach(b => { b.dataset.full = b.dataset.full || b.textContent; b.textContent = W <= 600 ? b.dataset.short : b.dataset.full; });
+    // cada etiqueta va a su lado; si en pantalla (con el plato ya reducido) se saldría por el borde, pasa al otro
+    const s = dishScale(), sx = x => W / 2 + (x - W / 2) * s;
+    callouts.forEach(c => { const [px, py] = c.dataset.at.split(',').map(Number), x = X(px), w = c.offsetWidth;
+      c.dataset.side = c.dataset.side || (c.classList.contains('l') ? 'l' : 'r');
+      let l = c.dataset.side === 'l';
+      if (l && sx(x - w) < 8) l = false; else if (!l && sx(x + w) > W - 8) l = true;
+      c.classList.toggle('l', l); c.classList.toggle('r', !l);
+      c.style.top = Y(py) + 'px'; if (l) { c.style.right = (W - x) + 'px'; c.style.left = 'auto'; } else { c.style.left = x + 'px'; c.style.right = 'auto'; } });
   };
   layoutDish(); addEventListener('resize', layoutDish); ScrollTrigger.addEventListener('refreshInit', layoutDish);
   const circleR = r => `circle(${r}px at 50% 50%)`;
@@ -1772,7 +1780,7 @@ const CONFIG = {
     .fromTo('[data-plate-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .02, duration: .5, ease: 'power3.out' }, .1)
     .fromTo('[data-plate-copy]', { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: .1, duration: .4 }, .3)
     .fromTo('.plato-copy', { opacity: 1, x: 0 }, { opacity: 0, x: -40, duration: .35, immediateRender: false }, 1.25)
-    .to(dishBoth, { scale: () => dGeo.W <= 600 ? .74 : dGeo.small ? .82 : .86, x: 0, y: 0, duration: .5, ease: 'power2.inOut' }, 1.25);
+    .to(dishBoth, { scale: dishScale, x: 0, y: 0, duration: .5, ease: 'power2.inOut' }, 1.25);
   // los ingredientes aparecen uno a uno
   callouts.forEach((c, i) => {
     const at = 1.8 + i * .32, left = c.classList.contains('l');

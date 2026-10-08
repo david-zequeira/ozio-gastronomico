@@ -2006,6 +2006,33 @@ const CONFIG = {
     agentUrl: 'https://ng-agent-eu.onrender.com',
     tenant:   'ozio-gastronomico',
   };
+
+  /* ---------- MEDICIÓN: visitas y clics que importan, al panel de Ozio ----------
+     Un solo identificador por visitante (el mismo que usan la llamada y el chat): así el panel une la visita,
+     su origen (UTM o web de procedencia) y lo que pasó después: conversación, llamada y reserva.
+     Sin cookies ni datos personales; si falla, la web sigue igual. */
+  (() => {
+    const cfg = window.OZIO_VOZ;
+    let sid;
+    try { sid = sessionStorage.getItem('ozio.session'); if (!sid) { sid = 'web-' + crypto.randomUUID(); sessionStorage.setItem('ozio.session', sid); } }
+    catch { sid = 'web-' + Math.random().toString(36).slice(2) + Date.now().toString(36); }
+    const q = new URLSearchParams(location.search);
+    const base = { sessionId: sid, tenant: cfg.tenant, path: (location.pathname + location.hash).slice(0, 300) || '/' };
+    if (document.referrer && !document.referrer.startsWith(location.origin)) base.referrer = document.referrer.slice(0, 500);
+    [['utm_source', 'utmSource'], ['utm_medium', 'utmMedium'], ['utm_campaign', 'utmCampaign']].forEach(([k, n]) => { const v = q.get(k); if (v) base[n] = v.slice(0, 100); });
+    const send = event => { try { fetch(cfg.agentUrl + '/api/track', { method: 'POST', keepalive: true, headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(event ? { ...base, event } : base) }).catch(() => {}); } catch {} };
+    window.ozioTrack = send;
+    send();                                                              // la visita
+    const once = new Set();                                              // cada clic se cuenta una vez por visita
+    document.addEventListener('click', e => {
+      const t = e.target.closest('[data-book],[data-voz-open],[data-chat-open],[data-carta-open],a[href^="tel:"],a[href^="mailto:"],a[href*="google.com/maps"]');
+      if (!t) return;
+      const ev = t.matches('[data-book]') ? 'cta_reservar' : t.matches('[data-voz-open]') ? 'llamada_abierta' : t.matches('[data-chat-open]') ? 'chat_abierto'
+        : t.matches('[data-carta-open]') ? 'carta_abierta' : t.matches('a[href^="tel:"]') ? 'clic_telefono' : t.matches('a[href^="mailto:"]') ? 'clic_email' : 'clic_como_llegar';
+      if (!once.has(ev)) { once.add(ev); send(ev); }
+    }, true);
+  })();
 </script>
 <script type="module" src="voz.js"></script>
 <script type="module" src="chat.js"></script>

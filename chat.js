@@ -34,10 +34,11 @@ const MSG = {
 
 const sessionId = (() => {
   try {
-    let id = sessionStorage.getItem('ozio.chat.session');
-    if (!id) { id = 'chat-' + crypto.randomUUID(); sessionStorage.setItem('ozio.chat.session', id); }
+    // el mismo identificador que la llamada y la medición de visitas: el panel une visita, chat y reserva
+    let id = sessionStorage.getItem('ozio.session');
+    if (!id) { id = 'web-' + crypto.randomUUID(); sessionStorage.setItem('ozio.session', id); }
     return id;
-  } catch { return 'chat-' + Math.random().toString(36).slice(2) + Date.now().toString(36); }
+  } catch { return 'web-' + Math.random().toString(36).slice(2) + Date.now().toString(36); }
 })();
 
 /* ---------- interfaz ---------- */

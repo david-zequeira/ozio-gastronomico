@@ -231,7 +231,9 @@
   .intro-s h2{font-family:var(--uni);font-weight:700;font-size:clamp(42px,calc(var(--u)*56),72px);line-height:1.05;letter-spacing:-.035em;text-transform:none;max-width:9.6em;margin-top:calc(var(--u)*40);text-wrap:balance}
   .intro-s h2 .w{color:rgba(27,26,23,.12)}
   .intro-s p{margin-top:calc(var(--u)*22);max-width:30em;font-family:var(--label);font-weight:400;font-size:clamp(16px,calc(var(--u)*17.5),22px);line-height:1.5;color:var(--brown)}
-  .intro-s .rule{position:relative;flex:none;margin-top:clamp(36px,calc(var(--u)*52),64px);width:1px;height:calc(var(--u)*120);min-height:80px;background:var(--olive);border-radius:2px;transform-origin:top}
+  .intro-s .rule{position:relative;flex:none;margin-top:clamp(36px,calc(var(--u)*52),64px);width:1px;height:calc(var(--u)*120);min-height:80px}
+  /* la línea hace el mismo gesto que la de "Desliza" en la portada: crece hacia abajo y se recoge, en bucle */
+  .intro-s .rule::before{content:"";position:absolute;inset:0 0 2px;border-radius:2px;background:linear-gradient(180deg,var(--olive),rgba(124,130,107,.15));animation:hint 2.4s var(--ease) infinite}
   .intro-s .rule::after{content:"";position:absolute;left:-4px;bottom:1px;width:8px;height:8px;border-right:1px solid var(--olive);border-bottom:1px solid var(--olive);transform:rotate(45deg)}
 
   /* ---------- 02 · MENÚ: platos que vuelan a la mesa (seis platos, como en Framer) ---------- */
@@ -582,7 +584,7 @@
   body.demo .cursor{display:none}
 
   @media (prefers-reduced-motion:reduce){
-    .grain,.hero .intro i,.btn-pill .dot{animation:none}
+    .grain,.hero .intro i,.intro-s .rule::before,.btn-pill .dot{animation:none}
     .loader{display:none}
     .intro-s h2 .w{color:inherit}
     .cocina .vid,.eventos .arch{clip-path:none}
@@ -1334,7 +1336,7 @@ const CONFIG = {
   gsap.timeline({ scrollTrigger: { trigger: '[data-intro]', start: 'top top', end: '+=120%', scrub: .6, pin: true, anticipatePin: 1 } })
     .to(iWords, { color: '#1b1a17', stagger: .15, ease: 'none', duration: .3 })
     .fromTo('[data-intro-p]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .3 }, .75)
-    .fromTo('[data-rule]', { scaleY: 0 }, { scaleY: 1, duration: .5, ease: 'none' }, .2);
+    .fromTo('[data-rule]', { opacity: 0 }, { opacity: 1, duration: .3 }, .75);
 
   /* ---------- 02 · menú: los platos vuelan a la mesa; un solo scroll con la sección fija los hace girar y se pasa a la siguiente vista ---------- */
   const plates = $$('[data-plate]'), plateImgs = plates.map(p => $('img', p));

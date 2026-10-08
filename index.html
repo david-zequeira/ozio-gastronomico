@@ -232,7 +232,7 @@
   .intro-s h2 .w{color:rgba(27,26,23,.12)}
   .intro-s p{margin-top:calc(var(--u)*22);max-width:30em;font-family:var(--label);font-weight:400;font-size:clamp(16px,calc(var(--u)*17.5),22px);line-height:1.5;color:var(--brown)}
   /* la misma línea que "Desliza" en la portada (1 px, 46 px, degradado): crece hacia abajo y se recoge, en bucle */
-  .intro-s .rule{position:relative;flex:none;margin-top:clamp(36px,calc(var(--u)*52),64px);width:1px;height:46px}
+  .intro-s .rule{position:relative;flex:none;margin-top:clamp(36px,calc(var(--u)*52),64px);width:1px;height:clamp(72px,calc(var(--u)*80),96px)}
   .intro-s .rule::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--olive),transparent);animation:hint 2.4s var(--ease) infinite}
 
   /* ---------- 02 · MENÚ: platos que vuelan a la mesa (seis platos, como en Framer) ---------- */
@@ -1332,10 +1332,10 @@ const CONFIG = {
   /* ---------- 02 · inspirado por el mediterráneo: las palabras se encienden ---------- */
   const iTitle = $('[data-intro-title]'); wrapWords(iTitle);
   const iWords = $$('.w', iTitle);
-  gsap.timeline({ scrollTrigger: { trigger: '[data-intro]', start: 'top top', end: '+=120%', scrub: .6, pin: true, anticipatePin: 1 } })
+  gsap.timeline({ scrollTrigger: { trigger: '[data-intro]', start: 'top top', end: '+=160%', scrub: .6, pin: true, anticipatePin: 1 } })
     .to(iWords, { color: '#1b1a17', stagger: .15, ease: 'none', duration: .3 })
     .fromTo('[data-intro-p]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .3 }, .75)
-    .fromTo('[data-rule]', { opacity: 0 }, { opacity: 1, duration: .3 }, .75);
+    .fromTo('[data-rule]', { opacity: 0 }, { opacity: 1, duration: .25 }, .3);
 
   /* ---------- 02 · menú: los platos vuelan a la mesa; un solo scroll con la sección fija los hace girar y se pasa a la siguiente vista ---------- */
   const plates = $$('[data-plate]'), plateImgs = plates.map(p => $('img', p));

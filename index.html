@@ -239,11 +239,14 @@
   /* ---------- 02 · MENÚ: platos que vuelan a la mesa (seis platos, como en Framer) ---------- */
   .menu-s{position:relative;background:transparent;height:100vh;height:100svh;min-height:600px;overflow:hidden}
   /* el tablero ocupa todo el ancho: los platos de los extremos se cortan con el borde de la pantalla */
-  .menu-s .board{position:absolute;left:50%;top:50%;width:100vw;aspect-ratio:1200/555;transform:translate(-50%,-50%)}
-  /* la sombra va en el contenedor (no en la foto que gira) para que caiga siempre hacia abajo */
-  .plate{position:absolute;width:17.7%;aspect-ratio:1;will-change:transform;filter:drop-shadow(0 24px 20px rgba(70,50,30,.3))}
-  .plate img{width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
-  .p1{left:10.4%;top:36.4%}.p2{left:30.5%;top:17.8%}.p3{left:51.8%;top:17.8%}.p4{left:72.5%;top:36.4%}.p5{left:-4.1%;top:74.1%}.p6{left:86.3%;top:74.1%}
+  .menu-s .board{--bw:100vw;position:absolute;left:50%;top:50%;width:var(--bw);aspect-ratio:1200/555;transform:translate(-50%,-50%)}
+  /* la rueda: centro del círculo del diseño (600, 838 sobre el lienzo de 1200×555), radio 646 y platos de 212 */
+  .wheel{--phi:0deg;--R:calc(var(--bw) * .5383);--ps:calc(var(--bw) * .177);position:absolute;left:50%;top:151%;width:0;height:0}
+  .slot{position:absolute;left:0;top:0;width:var(--ps);height:var(--ps);margin:calc(var(--ps) / -2) 0 0 calc(var(--ps) / -2);will-change:transform;transform:rotate(calc(var(--a) + var(--phi))) translateY(calc(var(--R) * -1)) rotate(calc((var(--a) + var(--phi)) * -1))}
+  /* el plato se queda derecho, así la sombra cae siempre hacia abajo; la comida gira con la rueda */
+  .plate{position:absolute;inset:0}
+  .plate::before{content:"";position:absolute;left:10%;right:10%;top:22%;bottom:-6%;border-radius:50%;background:rgba(70,50,30,.32);filter:blur(16px);z-index:-1}
+  .plate img{position:relative;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none;transform:rotate(calc(var(--a) + var(--phi)))}
   .menu-s .copy{position:absolute;left:50%;top:calc(50% + 100vw * 555 / 1200 * .08);transform:translate(-50%,0);text-align:center;width:min(92%,620px);z-index:3}
   /* mismos tamaños que la portada: etiqueta como 01 — Ozio, titular y subtítulo como los de la portada, botón como los suyos */
   .menu-s .eyebrow{font-size:clamp(10px,calc(var(--u)*9),11px);letter-spacing:.42em;font-weight:600}
@@ -252,11 +255,10 @@
   .menu-s .btn-fill{--bg:var(--champagne);--fill:var(--charcoal);--tx:var(--charcoal);--tx-h:var(--ivory);height:clamp(46px,calc(var(--u)*50),56px);min-width:clamp(150px,calc(var(--u)*168),184px);justify-content:center;gap:14px;padding:0 24px 0 28px;font-size:clamp(15px,calc(var(--u)*16),17px);margin-top:clamp(18px,calc(var(--u)*22),26px)}
   @media (max-width:809px){
     .menu-s{height:auto;min-height:0;padding:calc(56px + 190vw * 555 / 1200 * .64) 0 80px}
-    .menu-s .board{top:56px;transform:translateX(-50%);width:190vw}
+    .menu-s .board{--bw:190vw;top:56px;transform:translateX(-50%)}
     .menu-s .copy{position:relative;left:auto;top:auto;transform:none;margin:0 auto}
     .menu-s .btn-fill{min-width:200px}
     .menu-s h2{font-size:34px}
-    .p5,.p6{display:none}
   }
 
   /* ---------- LA CARTA en la página: foto de la sala, la hoja y el índice (diseño Framer) ---------- */
@@ -663,13 +665,26 @@
 
 <!-- ================= 02 · MENÚ ================= -->
 <section class="menu-s" id="menu" data-menu data-bg="#f3f1ef">
+  <!-- la rueda de platos: 16 posiciones cada 22,5° sobre el círculo del diseño; gira hacia la derecha y acelera con el scroll -->
   <div class="board" data-board>
-    <div class="plate p1" data-plate data-depth="1.2"><img src="media/f/opt/plato-1.webp" alt="Penne con tomate cherry y romero" loading="lazy"></div>
-    <div class="plate p2" data-plate data-depth=".8"><img src="media/f/opt/plato-2.webp" alt="Tiramisú con granos de café" loading="lazy"></div>
-    <div class="plate p3" data-plate data-depth="1"><img src="media/f/opt/plato-3.webp" alt="Carne a la brasa con patatas asadas" loading="lazy"></div>
-    <div class="plate p4" data-plate data-depth="1.3"><img src="media/f/opt/plato-4.webp" alt="Pizza con jamón, rúcula y parmesano" loading="lazy"></div>
-    <div class="plate p5" data-plate data-depth="1.6"><img src="media/f/opt/plato-5.webp" alt="" loading="lazy"></div>
-    <div class="plate p6" data-plate data-depth="1.5"><img src="media/f/opt/plato-6.webp" alt="" loading="lazy"></div>
+    <div class="wheel" data-wheel>
+      <div class="slot" style="--a:-168.75deg"><div class="plate" data-plate data-depth="0.8"><img src="media/d/plato-tarta-pina.webp" alt="Tarta de piña con nata y cerezas" loading="lazy" draggable="false"></div></div>
+      <div class="slot" style="--a:-146.25deg"><div class="plate" data-plate data-depth="1.1"><img src="media/d/plato-pizza-porcion.webp" alt="Porción de pizza con pimientos" loading="lazy" draggable="false"></div></div>
+      <div class="slot" style="--a:-123.75deg"><div class="plate" data-plate data-depth="1.4"><img src="media/d/plato-caprese.webp" alt="Ensalada caprese con tomate y mozzarella" loading="lazy" draggable="false"></div></div>
+      <div class="slot" style="--a:-101.25deg"><div class="plate" data-plate data-depth="0.8"><img src="media/d/plato-salmon-caviar.webp" alt="Salmón con caviar, flores y brotes" loading="lazy" draggable="false"></div></div>
+      <div class="slot" style="--a:-78.75deg"><div class="plate" data-plate data-depth="1.1"><img src="media/d/plato-gnocchi.webp" alt="Gnocchi con tomate cherry, albahaca y parmesano" loading="lazy" draggable="false"></div></div>
+      <div class="slot" style="--a:-56.25deg"><div class="plate" data-plate data-depth="1.4"><img src="media/f/opt/plato-5.webp" alt="Pizza con tomate, cebolla morada y albahaca" loading="lazy" draggable="false"></div></div>
+      <div class="slot" style="--a:-33.75deg"><div class="plate" data-plate data-depth="0.8"><img src="media/f/opt/plato-1.webp" alt="Penne con tomate cherry y romero" loading="lazy" draggable="false"></div></div>
+      <div class="slot" style="--a:-11.25deg"><div class="plate" data-plate data-depth="1.1"><img src="media/f/opt/plato-2.webp" alt="Tiramisú con granos de café" loading="lazy" draggable="false"></div></div>
+      <div class="slot" style="--a:11.25deg"><div class="plate" data-plate data-depth="1.4"><img src="media/f/opt/plato-3.webp" alt="Carne a la brasa con patatas asadas" loading="lazy" draggable="false"></div></div>
+      <div class="slot" style="--a:33.75deg"><div class="plate" data-plate data-depth="0.8"><img src="media/f/opt/plato-4.webp" alt="Pizza con jamón, rúcula y parmesano" loading="lazy" draggable="false"></div></div>
+      <div class="slot" style="--a:56.25deg"><div class="plate" data-plate data-depth="1.1"><img src="media/f/opt/plato-6.webp" alt="Halloumi a la plancha con aceitunas" loading="lazy" draggable="false"></div></div>
+      <div class="slot" style="--a:78.75deg"><div class="plate" data-plate data-depth="1.4"><img src="media/d/plato-salmon-caviar.webp" alt="" loading="lazy" draggable="false"></div></div>
+      <div class="slot" style="--a:101.25deg"><div class="plate" data-plate data-depth="0.8"><img src="media/f/opt/plato-5.webp" alt="" loading="lazy" draggable="false"></div></div>
+      <div class="slot" style="--a:123.75deg"><div class="plate" data-plate data-depth="1.1"><img src="media/d/plato-gnocchi.webp" alt="" loading="lazy" draggable="false"></div></div>
+      <div class="slot" style="--a:146.25deg"><div class="plate" data-plate data-depth="1.4"><img src="media/f/opt/plato-2.webp" alt="" loading="lazy" draggable="false"></div></div>
+      <div class="slot" style="--a:168.75deg"><div class="plate" data-plate data-depth="0.8"><img src="media/f/opt/plato-3.webp" alt="" loading="lazy" draggable="false"></div></div>
+    </div>
   </div>
   <div class="copy">
     <div class="eyebrow" data-menu-copy>02 — Menú</div>
@@ -1342,21 +1357,34 @@ const CONFIG = {
     .fromTo('[data-intro-p]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .3 }, .75)
     .fromTo('[data-rule]', { opacity: 0 }, { opacity: 1, duration: .25 }, .3);
 
-  /* ---------- 02 · menú: los platos vuelan a la mesa; un solo scroll con la sección fija los hace girar y se pasa a la siguiente vista ---------- */
-  const plates = $$('[data-plate]'), plateImgs = plates.map(p => $('img', p));
-  const from = [[-.7, -.3, -120], [-.2, -.9, 90], [.2, -.9, -90], [.7, -.3, 120], [-.6, .6, -160], [.6, .6, 160], [-.6, -.8, -140], [.6, -.8, 140], [0, -1, 100]];
+  /* ---------- 02 · menú: la rueda de platos (como el «Arc Pro Carousel» de Framer) ----------
+     Gira hacia la derecha a 3°/s mientras la sección está a la vista (una vuelta cada 2 minutos, el ritmo de la referencia).
+     Al hacer scroll acelera según la velocidad del scroll y frena suave al soltar; así van entrando platos nuevos por la izquierda. */
+  const plates = $$('[data-plate]'), ring = $('[data-wheel]');
   const menuPin = innerWidth > 809;
+  const R = { phi: 0, enter: -40, boost: 0, on: false };
+  const IDLE = 3, BOOST_MAX = 48;                       // °/s en reposo y extra máximo con scroll
   const mTl = gsap.timeline({ scrollTrigger: { trigger: '[data-menu]', start: menuPin ? 'top 92%' : 'top 85%', end: menuPin ? 'top top' : 'center center', scrub: 1 } });
-  plates.forEach((p, i) => mTl.fromTo(p, { xPercent: from[i][0] * 260, yPercent: from[i][1] * 260, rotate: from[i][2], scale: .7 }, { xPercent: 0, yPercent: 0, rotate: 0, scale: 1, ease: 'power3.out', duration: 1 }, i * .06));
-  mTl.fromTo('[data-menu-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .03, ease: 'power3.out', duration: .5 }, .45)
+  mTl.fromTo(R, { enter: -40 }, { enter: 0, ease: 'power3.out', duration: 1 }, 0)              // la rueda entra girando
+    .fromTo(ring, { scale: .82, opacity: 0 }, { scale: 1, opacity: 1, ease: 'power3.out', duration: .9 }, 0)
+    .fromTo('[data-menu-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .03, ease: 'power3.out', duration: .5 }, .45)
     .fromTo('[data-menu-copy]', { opacity: 0, y: 24 }, { opacity: 1, y: 0, stagger: .08, duration: .4 }, .6);
-  if (menuPin) {
-    const rTl = gsap.timeline({ scrollTrigger: { trigger: '[data-menu]', start: 'top top', end: '+=100%', pin: true, anticipatePin: 1, scrub: .8 } });
-    plateImgs.forEach((im, i) => rTl.to(im, { rotate: i % 2 ? -150 : 150, ease: 'none', duration: 1 }, 0));
-  } else plateImgs.forEach((im, i) => gsap.to(im, { rotate: i % 2 ? -360 : 360, duration: 90 + i * 14, ease: 'none', repeat: -1 }));
+  // en escritorio la sección se queda fija un momento: ese scroll es el que acelera la rueda
+  if (menuPin) ScrollTrigger.create({ trigger: '[data-menu]', start: 'top top', end: '+=100%', pin: true, anticipatePin: 1 });
+  ScrollTrigger.create({ trigger: '[data-menu]', start: 'top bottom', end: 'bottom top', onToggle: st => R.on = st.isActive });
+  gsap.ticker.add((t, dt) => {
+    const s = Math.min(dt, 64) / 1000;
+    const v = Math.abs(lenis.velocity || 0);                           // px por fotograma
+    const want = Math.min(BOOST_MAX, v * 1.6);
+    R.boost += (want - R.boost) * (want > R.boost ? .2 : .045);        // acelera rápido, frena en ~1 s
+    if (!R.on) return;
+    R.phi = (R.phi + (IDLE + R.boost) * s) % 360;
+    ring.style.setProperty('--phi', (R.phi + R.enter).toFixed(2) + 'deg');
+  });
   if (fine) $('[data-menu]').addEventListener('mousemove', e => {
     const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5;
-    plates.forEach(p => { const d = +p.dataset.depth; gsap.to($('img', p), { x: x * -34 * d, y: y * -24 * d, duration: 1.4, ease: 'power3.out', overwrite: 'auto' }); });
+    // el paralaje mueve el plato, no la foto (la foto lleva el giro de la rueda)
+    plates.forEach(p => { const d = +p.dataset.depth; gsap.to(p, { x: x * -34 * d, y: y * -24 * d, duration: 1.4, ease: 'power3.out', overwrite: 'auto' }); });
   });
 
   /* ---------- la carta en la página: la foto de la sala se desliza y las hojas entran ---------- */

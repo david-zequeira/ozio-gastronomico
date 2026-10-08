@@ -1313,17 +1313,23 @@ const CONFIG = {
      El texto cambia justo en el corte: el que sale se desvanece y el nuevo entra suave, línea a línea. */
   const heroScenes = $$('[data-scene]'), SCENE_CUTS = [3.93, 7.93];
   let sceneI = 0;
+  // tiempo de lectura: tras cambiar de escena, el siguiente gesto hacia abajo espera a que el texto haya entrado
+  // (READ_MS); en la última escena, la de los botones, espera algo más antes de dejar bajar la página (END_MS)
+  const READ_MS = 1800, END_MS = 2400;
+  let heroHoldUntil = 0;
   const sceneAt = t => t < SCENE_CUTS[0] ? 0 : t < SCENE_CUTS[1] ? 1 : 2;
   const showScene = i => {
     if (i === sceneI) return;
-    const prev = heroScenes[sceneI], next = heroScenes[i]; sceneI = i;
+    const prev = heroScenes[sceneI], next = heroScenes[i], fwd = i > sceneI; sceneI = i;
     heroScenes.forEach((s, j) => { s.classList.toggle('on', j === i); s.setAttribute('aria-hidden', String(j !== i)); });
+    if (fwd) heroHoldUntil = performance.now() + (i === heroScenes.length - 1 ? END_MS : READ_MS);
     if (!window.gsap || reduce) return;
     gsap.killTweensOf([prev, next, ...prev.children, ...next.children]);
-    gsap.to(prev, { autoAlpha: 0, y: -12, filter: 'blur(4px)', duration: .45, ease: 'power2.in' });
+    // salida y entrada más pausadas para que dé tiempo a leer cada frase
+    gsap.to(prev, { autoAlpha: 0, y: -14, filter: 'blur(4px)', duration: .8, ease: 'power2.inOut' });
     gsap.set(next, { autoAlpha: 1, y: 0, filter: 'blur(0px)' });
-    gsap.fromTo(next.children, { autoAlpha: 0, y: 18, filter: 'blur(6px)' },
-      { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: .9, stagger: .1, ease: 'power3.out', delay: .18, clearProps: 'filter' });
+    gsap.fromTo(next.children, { autoAlpha: 0, y: 22, filter: 'blur(6px)' },
+      { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 1.4, stagger: .22, ease: 'power2.out', delay: .4, clearProps: 'filter' });
   };
 
   if (reduce) { showScene(2); $('[data-hero-video]').currentTime = 8.5; document.body.classList.remove('is-loading'); $('[data-loader]').remove(); $$('.odo i').forEach(i => i.style.transform = `translateY(-${+i.dataset.d}em)`); return; }
@@ -1381,8 +1387,9 @@ const CONFIG = {
   /* ---------- presentación: el vídeo de la casa respira al bajar y el titular se despide ---------- */
   const hero = $('[data-hero]'), cam = $('[data-cam]'), heroVidEl = $('[data-hero-video]');
   gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } })
-    .to(cam, { scale: 1.12, yPercent: 10, ease: 'none' }, 0)
-    .to('[data-hero-copy]', { yPercent: -28, opacity: 0, ease: 'none' }, 0)
+    .to(cam, { scale: 1.12, yPercent: 10, ease: 'none', duration: 1 }, 0)
+    // el último texto (con los botones) se queda un poco más al bajar y se despide en la segunda mitad
+    .fromTo('[data-hero-copy]', { yPercent: 0, opacity: 1 }, { yPercent: -22, opacity: 0, ease: 'power1.in', duration: .55, immediateRender: false }, .4)
     .to('[data-hero-intro]', { opacity: 0, ease: 'none', duration: .3 }, 0);
   // pasado el hero el nav lleva fondo oscuro para leerse sobre las secciones claras
   ScrollTrigger.create({ start: () => hero.offsetHeight - 70, end: 'max', onToggle: st => nav.classList.toggle('scrolled', st.isActive) });
@@ -1402,7 +1409,7 @@ const CONFIG = {
        así que cada salto tarda pocos ms).
      · En 12 s se queda en el último fotograma; el siguiente gesto hacia abajo ya mueve la página. */
   (() => {
-    const v = heroVidEl, STEP = 6, STEPS = 2, MAX_RATE = 4.5;
+    const v = heroVidEl, STEP = 6, STEPS = 2, MAX_RATE = 3.2;
     let end = STEP * STEPS, target = 0, raf = 0, t0 = 0, lastSeek = 0, boost = 1, canPlay = true;
     v.loop = false; v.autoplay = false; v.pause();
     const fixEnd = () => { if (isFinite(v.duration) && v.duration > 0) end = Math.min(STEP * STEPS, v.duration - .05); };
@@ -1446,8 +1453,10 @@ const CONFIG = {
     };
 
     // un paso de ±2 s (como mucho dos pasos por delante del fotograma visible)
+    // hacia delante no se encadenan pasos: se espera a que el vídeo llegue y a que dé tiempo a leer la frase
+    const holding = dir => dir > 0 && (performance.now() < heroHoldUntil || target - v.currentTime > .05);
     const fire = (dir, strength) => {
-      if (!canMove(dir)) return;
+      if (!canMove(dir) || holding(dir)) return;
       const next = clampT(STEP * (Math.round(target / STEP) + dir));
       if (Math.abs(next - v.currentTime) > STEP * 2 + .05) return;
       boost = Math.max(.85, Math.min(1.6, strength / 70));
@@ -1465,9 +1474,11 @@ const CONFIG = {
       const now = e.timeStamp, sign = Math.sign(dy), a = Math.abs(dy);
       if (now - G.last > GAP || (G.dir && sign !== G.dir)) {             // empieza un gesto nuevo
         G.dir = sign; G.acc = 0; G.fired = false; G.peak = 0;
-        G.mine = !blocked() && atTop() && canMove(sign);
+        // también se queda el gesto (sin mover nada) mientras se lee la última frase, para no saltar de sección
+        G.mine = !blocked() && atTop() && (canMove(sign) || holding(sign));
       }
       G.last = now;
+      if (G.mine && !canMove(G.dir) && !holding(G.dir)) G.mine = false;   // pasado el tiempo de lectura, la página sigue
       if (!G.mine) return;                                                // la página se mueve con normalidad
       e.preventDefault(); e.stopPropagation();                            // Lenis no recibe este gesto
       if (!G.fired) {
@@ -1488,7 +1499,7 @@ const CONFIG = {
       const dy = T.y - e.touches[0].clientY;
       if (T.mine === null) {
         if (Math.abs(dy) < 6) return;
-        T.dir = Math.sign(dy); T.mine = !blocked() && atTop() && canMove(T.dir);
+        T.dir = Math.sign(dy); T.mine = !blocked() && atTop() && (canMove(T.dir) || holding(T.dir));
       }
       if (!T.mine) return;
       e.preventDefault();

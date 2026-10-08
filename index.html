@@ -619,7 +619,7 @@
 <!-- ================= PRESENTACIÓN: el vídeo de la casa ================= -->
 <section class="hero" id="top" data-hero data-bg="#1b1a17">
   <div class="cam" data-cam>
-    <video src="media/f/opt/hero.mp4" muted loop playsinline autoplay preload="auto" poster="media/f/opt/hero-poster.webp" aria-hidden="true" data-hero-video></video>
+    <video src="media/f/opt/hero.mp4" muted playsinline preload="auto" poster="media/f/opt/hero-poster.webp" aria-hidden="true" data-hero-video></video>
   </div>
   <div class="grad"></div>
   <div class="hero-copy" data-hero-copy>
@@ -1099,8 +1099,8 @@ const CONFIG = {
     const v = e.target;
     if (e.isIntersecting) { if (v.preload === 'none') { v.preload = 'auto'; v.load(); } v.play().catch(() => {}); } else v.pause();
   }), { rootMargin: '200px 0px' });
-  const heroVid = $('[data-hero-video]');
-  [heroVid, ...$$('[data-lazy-video]')].forEach(v => vio.observe(v));
+  // el vídeo de la portada no entra aquí: lo mueve la rueda (ver «portada: el vídeo se recorre con la rueda»)
+  $$('[data-lazy-video]').forEach(v => vio.observe(v));
 
   /* ---------- botón circle fill: el relleno nace donde entra el cursor ---------- */
   $$('[data-fill]').forEach(b => b.addEventListener('pointerenter', e => {
@@ -1177,6 +1177,118 @@ const CONFIG = {
     const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5;
     gsap.to(heroVidEl, { x: x * -20, y: y * -12, duration: 1.6, ease: 'power3.out' });
   }); }
+
+  /* ---------- portada: el vídeo se recorre con la rueda, de 2 en 2 segundos ----------
+     12 s en 6 pasos fijos: 0 → 2 → 4 → 6 → 8 → 10 → 12. Mientras la página está arriba del todo y el vídeo
+     no ha llegado al final, la rueda (o un gesto táctil, o las flechas) mueve el vídeo y no la página.
+     · Un gesto = un paso: se acumula el delta y la inercia del trackpad no cuenta como pasos nuevos.
+     · Hacia delante se reproduce el tramo (arranque y frenada suaves) y se para justo en el punto.
+     · Hacia atrás se recorre con saltos cortos de currentTime (el mp4 lleva un fotograma clave cada 8,
+       así que cada salto tarda pocos ms).
+     · En 12 s se queda en el último fotograma; el siguiente gesto hacia abajo ya mueve la página. */
+  (() => {
+    const v = heroVidEl, STEP = 2, STEPS = 6, MAX_RATE = 2.6;
+    let end = STEP * STEPS, target = 0, raf = 0, t0 = 0, lastSeek = 0, boost = 1, canPlay = true;
+    v.loop = false; v.autoplay = false; v.pause();
+    const fixEnd = () => { if (isFinite(v.duration) && v.duration > 0) end = Math.min(STEP * STEPS, v.duration - .05); };
+    v.addEventListener('loadedmetadata', fixEnd); fixEnd();
+
+    const clampT = t => Math.max(0, Math.min(end, t));
+    const canMove = d => d > 0 ? target < end - .001 : target > .001;
+    const atTop = () => (lenis ? lenis.scroll : scrollY) <= 2;
+    const blocked = () => document.body.classList.contains('is-loading')
+      || /\b(carta|voz|chat)-open\b/.test(document.documentElement.className)
+      || !!document.querySelector('[data-lightbox].on');
+
+    // llega al tiempo objetivo con una curva suave y se detiene exactamente en él
+    const tick = now => {
+      raf = 0;
+      if (v.readyState < 2) { raf = requestAnimationFrame(tick); return; }
+      const cur = v.currentTime, d = target - cur;
+      if (Math.abs(d) <= .02) {
+        if (!v.paused) v.pause();
+        if (Math.abs(cur - target) > .0005 && !v.seeking) v.currentTime = target;
+        return;
+      }
+      const ramp = Math.min(1, (now - t0) / 260);                        // arranque
+      const speed = Math.min(MAX_RATE * boost, Math.max(.5, Math.abs(d) * 3.2)) // frenada al acercarse
+        * (.45 + .55 * ramp);
+      if (d > 0 && canPlay) {
+        if (Math.abs(v.playbackRate - speed) > .04) v.playbackRate = speed;
+        if (v.paused) v.play().catch(() => { canPlay = false; });
+      } else {
+        if (!v.paused) v.pause();
+        if (!v.seeking) {
+          const dt = Math.min(.12, (now - (lastSeek || now - 16)) / 1000); lastSeek = now;
+          v.currentTime = d > 0 ? Math.min(target, cur + speed * dt) : Math.max(target, cur - speed * dt);
+        }
+      }
+      raf = requestAnimationFrame(tick);
+    };
+
+    // un paso de ±2 s (como mucho dos pasos por delante del fotograma visible)
+    const fire = (dir, strength) => {
+      if (!canMove(dir)) return;
+      const next = clampT(STEP * (Math.round(target / STEP) + dir));
+      if (Math.abs(next - v.currentTime) > STEP * 2 + .05) return;
+      boost = Math.max(.85, Math.min(1.6, strength / 70));
+      target = next; hero.dataset.step = Math.round(target / STEP);
+      if (!raf) { t0 = lastSeek = performance.now(); raf = requestAnimationFrame(tick); }
+    };
+
+    // rueda / trackpad
+    const G = { last: -1e9, acc: 0, dir: 0, mine: false, fired: false, firedAt: 0, firedAbs: 0, peak: 0 };
+    const GAP = 170, THRESH = 24;
+    addEventListener('wheel', e => {
+      if (e.ctrlKey) return;                                              // zoom con pellizco
+      const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * innerHeight : e.deltaY;
+      if (!dy || Math.abs(e.deltaX) > Math.abs(dy)) return;               // gesto horizontal
+      const now = e.timeStamp, sign = Math.sign(dy), a = Math.abs(dy);
+      if (now - G.last > GAP || (G.dir && sign !== G.dir)) {             // empieza un gesto nuevo
+        G.dir = sign; G.acc = 0; G.fired = false; G.peak = 0;
+        G.mine = !blocked() && atTop() && canMove(sign);
+      }
+      G.last = now;
+      if (!G.mine) return;                                                // la página se mueve con normalidad
+      e.preventDefault(); e.stopPropagation();                            // Lenis no recibe este gesto
+      if (!G.fired) {
+        G.acc += dy;
+        if (Math.abs(G.acc) >= THRESH) { fire(sign, a); G.fired = true; G.firedAt = now; G.firedAbs = a; }
+      } else if ((a > G.peak * 1.6 && a >= 12 && now - G.firedAt > 220)    // nuevo empujón dentro del gesto
+              || (now - G.firedAt > 650 && a >= G.firedAbs * .8 && a >= 12)) { // rueda girando sin parar
+        fire(sign, a); G.firedAt = now; G.firedAbs = a;
+      }
+      G.peak = a;
+    }, { passive: false, capture: true });
+
+    // táctil: un deslizamiento = un paso
+    let T = null;
+    addEventListener('touchstart', e => { T = e.touches.length === 1 ? { y: e.touches[0].clientY, mine: null, fired: false } : null; }, { passive: true });
+    addEventListener('touchmove', e => {
+      if (!T) return;
+      const dy = T.y - e.touches[0].clientY;
+      if (T.mine === null) {
+        if (Math.abs(dy) < 6) return;
+        T.dir = Math.sign(dy); T.mine = !blocked() && atTop() && canMove(T.dir);
+      }
+      if (!T.mine) return;
+      e.preventDefault();
+      if (!T.fired && Math.abs(dy) >= 36) { fire(T.dir, 70); T.fired = true; }
+    }, { passive: false });
+    addEventListener('touchend', () => { T = null; }, { passive: true });
+
+    // teclado: flechas, Av/Re Pág y espacio
+    addEventListener('keydown', e => {
+      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey || blocked() || !atTop()) return;
+      if (e.target.closest('input,textarea,select,[contenteditable]')) return;
+      if (e.key === ' ' && e.target.closest('button,a')) return;
+      const d = (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) ? 1
+              : (e.key === 'ArrowUp' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) ? -1 : 0;
+      if (!d || !canMove(d)) return;
+      e.preventDefault();
+      if (!e.repeat) fire(d, 70);
+    });
+  })();
 
   /* ---------- llamar a Ozio: el sello se presenta un momento al entrar ---------- */
   const fab = $('.voz-fab');

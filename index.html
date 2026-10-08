@@ -1111,6 +1111,7 @@ const CONFIG = {
      Otras versiones, por parámetro: ?bucle (la inicial: vídeo en bucle con un único texto fijo) y ?rueda (el
      vídeo avanza una escena por gesto de la rueda). */
   const SEQ = !qs.has('bucle') && !qs.has('rueda') && !reduce;
+  let seqLoad = { p: 1 };                                    // progreso de carga de la portada (0–1) que sigue el cargador
   const LOOP = qs.has('bucle') && !reduce;
   if (LOOP) { const v = $('[data-hero-video]'); v.loop = true; v.autoplay = true; v.play().catch(() => {}); }
   if (SEQ) {
@@ -1401,11 +1402,17 @@ const CONFIG = {
   /* ---------- LOADER ---------- */
   const intro = () => {
     const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
-    const counter = { v: 0 }, cEl = $('[data-count-loader]');
+    const counter = { v: 0 }, cEl = $('[data-count-loader]'), bar = $('[data-loader-bar]');
+    // la cuenta es la de verdad: nunca pasa de lo que llevan cargado los fotogramas de la portada
+    const showCount = () => { const v = Math.round(Math.min(counter.v, seqLoad.p * 100));
+      cEl.textContent = String(v).padStart(2, '0'); bar.style.transform = `scaleX(${v / 100})`; };
     tl.from('[data-ld-mark]', { scale: .4, rotate: -120, opacity: 0, duration: 1.2 }, .05)
       .fromTo('[data-ld-word]', { clipPath: 'inset(0 100% 0 0)', x: -16 }, { clipPath: 'inset(0 0% 0 0)', x: 0, duration: 1.1, ease: 'expo.inOut' }, .3)
-      .to(counter, { v: 100, duration: 1.1, ease: 'power2.inOut', onUpdate: () => cEl.textContent = String(Math.round(counter.v)).padStart(2, '0') }, 0)
-      .to('[data-loader-bar]', { scaleX: 1, duration: 1.1, ease: 'power2.inOut' }, 0)
+      .to(counter, { v: 100, duration: 1.1, ease: 'power2.inOut', onUpdate: showCount }, 0)
+      // si aún faltan fotogramas, el cargador espera aquí (con la cuenta avanzando) y luego abre la cortina
+      .call(() => { if (seqLoad.p >= 1) return; tl.pause();
+        const wait = () => { showCount(); if (seqLoad.p >= 1) { gsap.ticker.remove(wait); tl.play(); } };
+        gsap.ticker.add(wait); }, null, 1.1)
       .to('[data-loader-word]', { y: -30, opacity: 0, duration: .5, ease: 'expo.in' }, 1.25)
       .to('.loader .meta, [data-loader-bar]', { opacity: 0, duration: .3 }, 1.1)
       .to('.loader .panel.t', { yPercent: -100, duration: 1.1, ease: 'expo.inOut' }, 1.45)
@@ -1429,38 +1436,88 @@ const CONFIG = {
   if (SEQ) {
     const cv = heroVidEl, ctx = cv.getContext('2d');
     const N = 182;                                               // 182 imágenes = 12,1 s de vídeo a 15 por segundo
-    // Escenas: fotogramas 0–58, 59–118 y 119–181 (cortes en 3,93 s y 7,93 s). Dentro de cada escena el scroll no es
+    // Fotogramas sacados del original en 1080p (Video OZIO.mp4, uno de cada dos). Dos juegos: 1920 px para
+    // pantallas grandes y 1280 px para el móvil, que pesa la mitad y en su pantalla se ve igual de nítido.
+    const BIG = innerWidth > 809 && Math.max(innerWidth, innerHeight) * Math.min(devicePixelRatio || 1, 2) > 1400;
+    const DIR = BIG ? 'hero-1920' : 'hero-1280', MAXPX = BIG ? 2400 : 1600;
+    // Escenas: fotogramas 0–60, 61–120 y 121–181 (los cortes del montaje). Dentro de cada escena el scroll no es
     // lineal: la entrada va rápida (EASE) y la imagen se va frenando hacia el último fotograma, sin llegar a pararse.
     // Cada escena tiene dos tramos (en pantallas de scroll): ENTRY, la entrada rápida y sin texto, y READ, el final
     // lento con su texto (desde TXT de los fotogramas de la escena). Las escenas 1 y 3 llevan texto y tienen la
     // lectura más larga; la 3 algo menos, porque su texto sigue visible mientras la portada se va.
-    const B = [0, 58.5, 118.5, N - 1], EASE = 4.2, TXT = .9, ENTRY = .55, READ = [1.8, 1.25, 1.2];
+    const B = [0, 60.5, 120.5, N - 1], CUT = new Set([61, 121]), EASE = 4.2, TXT = .9, ENTRY = .55, READ = [1.8, 1.25, 1.2];
     const ease = u => 1 - Math.pow(1 - u, EASE), U_TXT = 1 - Math.pow(1 - TXT, 1 / EASE);   // punto de la curva donde entra el texto
     const LEN = READ.map(r => ENTRY + r), SCROLL = LEN.reduce((a, b) => a + b);
-    // posición de scroll (pantallas) → fotograma
+    // posición de scroll (pantallas) → fotograma (con decimales: entre dos fotogramas se funden)
     const frameAt = y => {
       let k = 0; while (k < 2 && y > LEN[k]) y -= LEN[k++];
       const u = y < ENTRY ? U_TXT * y / ENTRY : U_TXT + (1 - U_TXT) * Math.min(1, (y - ENTRY) / READ[k]);
       return B[k] + (B[k + 1] - B[k]) * ease(u);
     };
-    const src = i => `media/seq/hero/hs-${String(i).padStart(3, '0')}.webp`;
-    const imgs = new Array(N), ok = new Uint8Array(N);
-    let cur = 0, want = 0, shown = -1, sc = -1;
-    const nearest = i => { for (let d = 0; d < N; d++) { if (ok[i - d]) return i - d; if (ok[i + d]) return i + d; } return -1; };
+    const src = i => `media/seq/${DIR}/h-${String(i).padStart(3, '0')}.webp`;
+    // Memoria: 182 fotogramas de 1920 descomprimidos ocupan ~1,5 GB; el navegador los descarta y, al dibujarlos,
+    // vuelve a descomprimir cada uno (~15 ms), que es justo el tirón del scroll. Por eso se guardan COMPRIMIDOS
+    // (blobs, ~17 MB) y solo se tienen listos para pintar (ImageBitmap, descomprimido fuera del hilo principal)
+    // los que rodean la posición actual, con más margen en el sentido en que se mueve el scroll.
+    const blobs = new Array(N), ok = new Uint8Array(N), bm = new Map(), busy = new Set();
+    const AHEAD = BIG ? 18 : 12, BEHIND = BIG ? 8 : 6, KEEP = BIG ? 26 : 18;
+    let cur = 0, want = 0, shownKey = -1, sc = -1, loaded = 0, rect = null, dir = 1;
+    const nearBm = i => { for (let d = 0; d <= 4; d++) { if (bm.has(i - d)) return i - d; if (bm.has(i + d)) return i + d; } return -1; };
+    const cover = b => { ctx.drawImage(b, rect.x, rect.y, rect.w, rect.h); };
+    // Entre dos fotogramas no se salta: se dibuja el anterior y encima el siguiente con la opacidad de la fracción.
+    // A 15 fotogramas por segundo eso convierte los saltos en movimiento continuo. En un corte de escena no se
+    // funde nada: se pasa limpio al primer fotograma de la escena nueva, como en el montaje.
     const draw = () => {
-      const i = nearest(Math.max(0, Math.min(N - 1, Math.round(cur))));
-      if (i < 0 || i === shown) return; shown = i;
-      const im = imgs[i], s = Math.max(cv.width / im.naturalWidth, cv.height / im.naturalHeight);
-      const w = im.naturalWidth * s, h = im.naturalHeight * s;
-      ctx.drawImage(im, (cv.width - w) / 2, (cv.height - h) / 2, w, h);
+      const f = Math.max(0, Math.min(N - 1, cur));
+      let i = Math.floor(f), a = f - i;
+      if (CUT.has(i + 1)) { if (a >= .5) i++; a = 0; }
+      const q = Math.round(a * 48), key = i * 64 + q;
+      if (key === shownKey) return;
+      const base = bm.has(i) ? i : nearBm(i); if (base < 0) return;          // nunca se bloquea: si no está, espera
+      if (!rect) layout();
+      ctx.globalAlpha = 1; cover(bm.get(base));
+      if (q && base === i && bm.has(i + 1)) { ctx.globalAlpha = q / 48; cover(bm.get(i + 1)); ctx.globalAlpha = 1; }
+      shownKey = base === i && (!q || bm.has(i + 1)) ? key : -1;
     };
-    // el lienzo no necesita más resolución que las imágenes (1280 px de ancho): hasta ~1,4× de ellas
-    const size = () => { const d = Math.min(devicePixelRatio || 1, 1800 / Math.max(1, cv.clientWidth), 2);
-      cv.width = Math.round(cv.clientWidth * d); cv.height = Math.round(cv.clientHeight * d); shown = -1; draw(); };
-    // carga: primero la imagen 0 y una de cada 8 (para tener siempre algo cerca que mostrar), luego el resto
-    const order = [0, ...Array.from({ length: N }, (_, i) => i).filter(i => i && i % 8 === 0), ...Array.from({ length: N }, (_, i) => i).filter(i => i % 8)];
-    order.forEach(i => { const im = new Image(); im.decoding = 'async'; im.src = src(i); imgs[i] = im;
-      im.decode().then(() => { ok[i] = 1; if (Math.abs(i - cur) < 10 || shown < 0) { shown = -1; draw(); } }).catch(() => {}); });
+    // mantiene descomprimidos los fotogramas alrededor de la posición, en orden de cercanía, y suelta los lejanos
+    const prime = () => {
+      const c = Math.round(cur), lo = Math.max(0, c - (dir > 0 ? BEHIND : AHEAD)), hi = Math.min(N - 1, c + (dir > 0 ? AHEAD : BEHIND));
+      for (const [k, b] of bm) if (k < c - KEEP || k > c + KEEP) { b.close?.(); bm.delete(k); }
+      const need = [];
+      for (let k = lo; k <= hi; k++) if (ok[k] && !bm.has(k) && !busy.has(k)) need.push(k);
+      need.sort((x, y) => Math.abs(x - cur) - Math.abs(y - cur));
+      for (const k of need) {
+        if (busy.size >= 4) break;
+        busy.add(k);
+        createImageBitmap(blobs[k]).then(b => {
+          busy.delete(k);
+          if (Math.abs(k - cur) > KEEP) { b.close?.(); return; }
+          bm.set(k, b); if (Math.abs(k - cur) < 2) { shownKey = -1; draw(); }
+        }).catch(() => busy.delete(k));
+      }
+    };
+    const layout = () => { const iw = 16, ih = 9, s = Math.max(cv.width / iw, cv.height / ih);
+      const w = iw * s, h = ih * s; rect = { x: (cv.width - w) / 2, y: (cv.height - h) / 2, w, h }; };
+    // el lienzo no necesita más resolución que las imágenes: hasta MAXPX de ancho real
+    const size = () => { const d = Math.min(devicePixelRatio || 1, MAXPX / Math.max(1, cv.clientWidth), 2);
+      cv.width = Math.round(cv.clientWidth * d); cv.height = Math.round(cv.clientHeight * d);
+      ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; layout(); shownKey = -1; draw(); };
+    // descarga: primero la escena 1 en orden (es lo primero que se ve), luego una de cada 4 del resto y después
+    // los huecos. Seis a la vez para no ahogar la red. El cargador espera a todas (o, como mucho, 9 s).
+    const all = Array.from({ length: N }, (_, i) => i);
+    const order = [...all.filter(i => i < 61), ...all.filter(i => i >= 61 && i % 4 === 0), ...all.filter(i => i >= 61 && i % 4)];
+    seqLoad = { p: 0 };
+    setTimeout(() => { seqLoad.p = 1; }, 9000);
+    let next = 0;
+    const pump = () => {
+      if (next >= order.length) return;
+      const i = order[next++];
+      fetch(src(i)).then(r => r.ok ? r.blob() : Promise.reject(r.status))
+        .then(b => { blobs[i] = b; ok[i] = 1; prime(); })
+        .catch(() => {})
+        .finally(() => { loaded++; seqLoad.p = Math.max(seqLoad.p, loaded / N); pump(); });
+    };
+    for (let k = 0; k < 6; k++) pump();
     size(); addEventListener('resize', size);
     // un texto por escena, en su tramo final. Al empezar, sin texto
     // «Cocina italiana, alma siciliana» (escena 1), «El tiempo de disfrutar» sobre el bartender (escena 2) y
@@ -1472,8 +1529,10 @@ const CONFIG = {
     seqST = ScrollTrigger.create({ trigger: hero, start: 'top top', end: () => '+=' + innerHeight * SCROLL, pin: true, anticipatePin: 1,
       onUpdate: st => { want = frameAt(st.progress * SCROLL); } });
     gsap.ticker.add((t, dt) => {
-      if (Math.abs(want - cur) < .01) return;
-      cur += (want - cur) * (1 - Math.exp(-dt / 70));          // suavizado extra sobre el de Lenis
+      prime();
+      if (Math.abs(want - cur) < .01) { if (shownKey < 0) draw(); return; }
+      if (Math.abs(want - cur) > .05) dir = want > cur ? 1 : -1;
+      cur += (want - cur) * (1 - Math.exp(-dt / 38));          // suavizado corto: Lenis ya suaviza el scroll
       draw();
       const s = sceneFor(cur);
       if (s !== sc) { sc = s; if (s < 0) leaveScene(); else showScene(s, true); }

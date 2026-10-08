@@ -329,10 +329,11 @@
 
   /* ---------- 05 · EL ENCUENTRO: galería con parallax ---------- */
   .encuentro{position:relative;background:transparent}
-  .encuentro .head{position:relative;z-index:3;padding:calc(var(--u)*110 + 40px) var(--gut) calc(var(--u)*30 + 10px);display:grid;grid-template-columns:auto 1fr;column-gap:calc(var(--u)*70);align-items:end}
-  .encuentro .head .eyebrow{grid-column:1/-1;margin-bottom:calc(var(--u)*20);font-size:clamp(10px,calc(var(--u)*9),11px);letter-spacing:.42em;font-weight:600}
-  .encuentro h2{font-family:var(--uni);font-weight:600;font-size:45px;line-height:1.1;letter-spacing:-.02em;text-transform:none}
-  .encuentro .head p{justify-self:end;max-width:26em;font-family:var(--label);font-weight:400;font-size:clamp(16px,calc(var(--u)*17.5),22px);line-height:1.5;color:var(--brown)}
+  /* cabecera centrada como el texto de la portada, con sus mismos tamaños de título y subtítulo */
+  .encuentro .head{position:relative;z-index:3;padding:calc(var(--u)*110 + 40px) 20px calc(var(--u)*30 + 10px);display:flex;flex-direction:column;align-items:center;text-align:center}
+  .encuentro .head .eyebrow{margin-bottom:calc(var(--u)*20);font-size:clamp(10px,calc(var(--u)*9),11px);letter-spacing:.42em;font-weight:600}
+  .encuentro h2{font-family:var(--uni);font-weight:600;font-size:clamp(38px,calc(var(--u)*50),60px);line-height:1.08;letter-spacing:-.02em;text-transform:none;max-width:11em;text-wrap:balance}
+  .encuentro .head p{max-width:31ch;text-wrap:balance;margin-top:clamp(12px,calc(var(--u)*16),20px);font-size:clamp(15px,calc(var(--u)*17),19px);line-height:1.5;letter-spacing:.01em;color:var(--brown)}
   /* Parallax Gallery (como parallaxgallerypros.framer.website): banda a pantalla completa que se fija
      mientras se hace scroll; 9 fotos con las medidas del ejemplo, esquinas rectas, alturas y huecos irregulares.
      --bh es la altura de referencia (el alto de pantalla del ejemplo); todo se mide en % de ella. */
@@ -356,9 +357,6 @@
   .encuentro .count i{display:inline-block;vertical-align:middle;width:90px;height:1px;background:var(--line-l);margin:0 12px;position:relative;overflow:hidden}
   .encuentro .count i::after{content:"";position:absolute;inset:0;background:var(--charcoal);transform:scaleX(var(--p,0));transform-origin:left}
   @media (max-width:809px){
-    .encuentro .head{grid-template-columns:1fr;padding-left:20px;padding-right:20px}
-    .encuentro h2{font-size:34px}
-    .encuentro .head p{justify-self:start;margin-top:14px;max-width:34ch}
     .pgw{--bh:min(100svh,150vw);height:calc(var(--bh) * .9 + 40px);min-height:0}
     .pgw .pg{top:0}
   }

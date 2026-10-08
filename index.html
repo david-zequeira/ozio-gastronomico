@@ -153,9 +153,12 @@
   .hero .cam video,.hero .cam img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .hero .grad{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(20,18,16,.55) 0%,rgba(20,18,16,.18) 16%,rgba(27,26,23,.08) 40%,rgba(27,26,23,.2) 62%,rgba(0,0,0,.6) 100%),radial-gradient(60% 50% at 50% 52%,rgba(15,13,11,.38),rgba(15,13,11,0) 70%)}
   @media (max-width:809px){.hero .grad{background:linear-gradient(180deg,rgba(27,26,23,.45) 0%,rgba(27,26,23,.1) 22%,rgba(27,26,23,.2) 45%,rgba(10,9,8,.8) 100%)}}
-  .hero-copy{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 20px;will-change:transform}
-  .hero-copy h1{font-family:var(--uni);font-weight:600;font-size:clamp(38px,calc(var(--u)*50),60px);line-height:1.08;letter-spacing:-.02em;max-width:7.5em;text-wrap:balance;text-shadow:0 4px 30px rgba(0,0,0,.35)}
-  .hero-copy .lead{margin-top:clamp(12px,calc(var(--u)*16),20px);font-size:clamp(15px,calc(var(--u)*17),19px);line-height:1.5;letter-spacing:.01em;color:rgba(243,241,239,.94);text-shadow:0 2px 20px rgba(0,0,0,.45)}
+  /* las tres escenas ocupan el mismo sitio; el titular arranca siempre a la misma altura */
+  .hero-copy{--ht:clamp(38px,calc(var(--u)*50),60px);position:absolute;inset:0;z-index:3;display:grid;align-items:start;justify-items:center;text-align:center;padding:max(110px,calc(50svh - var(--ht) * 2.3)) 20px 0;will-change:transform}
+  .hero-scene{grid-area:1/1;display:flex;flex-direction:column;align-items:center;opacity:0;visibility:hidden}
+  .hero-scene.on{opacity:1;visibility:visible}
+  .hero-copy .hero-t{font-family:var(--uni);font-weight:600;font-size:var(--ht);line-height:1.08;letter-spacing:-.02em;max-width:11em;text-wrap:balance;text-shadow:0 4px 30px rgba(0,0,0,.35)}
+  .hero-copy .lead{max-width:31ch;text-wrap:balance;margin-top:clamp(12px,calc(var(--u)*16),20px);font-size:clamp(15px,calc(var(--u)*17),19px);line-height:1.5;letter-spacing:.01em;color:rgba(243,241,239,.94);text-shadow:0 2px 20px rgba(0,0,0,.45)}
   .hero-copy .ctas{display:flex;gap:clamp(10px,calc(var(--u)*14),16px);margin-top:clamp(26px,calc(var(--u)*34),42px);align-items:center;flex-wrap:wrap;justify-content:center}
   /* botones de la portada, más contenidos que en el resto de la página */
   .hero-copy .btn-split,.hero-copy .btn-ghost{height:clamp(46px,calc(var(--u)*50),56px);min-width:clamp(150px,calc(var(--u)*168),184px);font-size:clamp(15px,calc(var(--u)*16),17px)}
@@ -622,12 +625,23 @@
     <video src="media/f/opt/hero.mp4" muted playsinline preload="auto" poster="media/f/opt/hero-poster.webp" aria-hidden="true" data-hero-video></video>
   </div>
   <div class="grad"></div>
+  <!-- un texto por escena del vídeo: 0–4 s, 4–8 s y 8–12 s -->
   <div class="hero-copy" data-hero-copy>
-    <h1 class="split" data-hero-title>Benvenuti a Ozio</h1>
-    <p class="lead" data-hero-lead>Un espacio para compartir</p>
+    <div class="hero-scene on" data-scene="0">
+      <h2 class="hero-t split" data-hero-title>Cocina italiana,<br>alma siciliana</h2>
+      <p class="lead" data-hero-lead>Una mirada contemporánea a los sabores, productos y tradiciones de Sicilia. Un espacio para compartir</p>
+    </div>
+    <div class="hero-scene" data-scene="1" aria-hidden="true">
+      <h2 class="hero-t">El tiempo<br>de disfrutar</h2>
+      <p class="lead">Una cocina que invita a detenerse, descubrir y disfrutar.</p>
+    </div>
+    <div class="hero-scene" data-scene="2" aria-hidden="true">
+    <h1 class="hero-t">Benvenuti<br>a Ozio</h1>
+    <p class="lead">Un espacio para compartir</p>
     <div class="ctas" data-hero-ctas>
       <a class="btn-split" href="#reserva" data-magnetic><span class="l"><span>Reservar</span><span>Tu mesa</span></span></a>
       <a class="btn-ghost" href="#carta" data-cs-open data-magnetic>Ver menú <span class="o"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+    </div>
     </div>
   </div>
   <div class="intro" data-hero-intro><span>Desliza</span><i></i></div>
@@ -1115,7 +1129,25 @@ const CONFIG = {
   // se despliegan al pulsar sobre ellos; en cuanto el visitante elige, el pase automático se detiene
   acc.forEach((c, i) => c.addEventListener('click', () => { setAcc(i); accUser = true; aT?.pause(); accBars?.forEach((b, j) => b.style.setProperty('--p', j === i ? 1 : 0)); }));
 
-  if (reduce) { document.body.classList.remove('is-loading'); $('[data-loader]').remove(); $$('.odo i').forEach(i => i.style.transform = `translateY(-${+i.dataset.d}em)`); return; }
+  /* ---------- portada: un texto por escena del vídeo ----------
+     Los cortes del vídeo caen en 3,93 s y 7,93 s, así que al parar en 4 s y en 8 s ya se ve la escena nueva.
+     El texto cambia justo en el corte: el que sale se desvanece y el nuevo entra suave, línea a línea. */
+  const heroScenes = $$('[data-scene]'), SCENE_CUTS = [3.93, 7.93];
+  let sceneI = 0;
+  const sceneAt = t => t < SCENE_CUTS[0] ? 0 : t < SCENE_CUTS[1] ? 1 : 2;
+  const showScene = i => {
+    if (i === sceneI) return;
+    const prev = heroScenes[sceneI], next = heroScenes[i]; sceneI = i;
+    heroScenes.forEach((s, j) => { s.classList.toggle('on', j === i); s.setAttribute('aria-hidden', String(j !== i)); });
+    if (!window.gsap || reduce) return;
+    gsap.killTweensOf([prev, next, ...prev.children, ...next.children]);
+    gsap.to(prev, { autoAlpha: 0, y: -12, filter: 'blur(4px)', duration: .45, ease: 'power2.in' });
+    gsap.set(next, { autoAlpha: 1, y: 0, filter: 'blur(0px)' });
+    gsap.fromTo(next.children, { autoAlpha: 0, y: 18, filter: 'blur(6px)' },
+      { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: .9, stagger: .1, ease: 'power3.out', delay: .18, clearProps: 'filter' });
+  };
+
+  if (reduce) { showScene(2); $('[data-hero-video]').currentTime = 8.5; document.body.classList.remove('is-loading'); $('[data-loader]').remove(); $$('.odo i').forEach(i => i.style.transform = `translateY(-${+i.dataset.d}em)`); return; }
 
   /* =====================================================================
      MOTOR DE MOVIMIENTO
@@ -1192,6 +1224,7 @@ const CONFIG = {
     v.loop = false; v.autoplay = false; v.pause();
     const fixEnd = () => { if (isFinite(v.duration) && v.duration > 0) end = Math.min(STEP * STEPS, v.duration - .05); };
     v.addEventListener('loadedmetadata', fixEnd); fixEnd();
+    v.addEventListener('seeked', () => showScene(sceneAt(v.currentTime)));
 
     const clampT = t => Math.max(0, Math.min(end, t));
     const canMove = d => d > 0 ? target < end - .001 : target > .001;
@@ -1205,6 +1238,7 @@ const CONFIG = {
       raf = 0;
       if (v.readyState < 2) { raf = requestAnimationFrame(tick); return; }
       const cur = v.currentTime, d = target - cur;
+      showScene(sceneAt(cur));
       if (Math.abs(d) <= .02) {
         if (!v.paused) v.pause();
         if (Math.abs(cur - target) > .0005 && !v.seeking) v.currentTime = target;

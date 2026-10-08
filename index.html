@@ -397,33 +397,36 @@
   @media (max-width:809px){.stats .grid{grid-template-columns:1fr 1fr;row-gap:44px}}
 
   /* ---------- TESTIMONIOS ---------- */
-  /* más recogido hacia el centro, como pidió la diseñadora */
-  .voces{position:relative;background:transparent;padding:calc(var(--u)*100) var(--gut) calc(var(--u)*110)}
-  .voces .in{width:min(100%,calc(var(--u)*1010));margin:0 auto}
-  .voces .top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:calc(var(--u)*34)}
-  .voces .top small{font-size:12px;letter-spacing:.04em;color:var(--brown)}
-  .quote{display:grid;grid-template-columns:calc(var(--u)*290) 1fr;gap:calc(var(--u)*70);align-items:stretch}
-  .quote .ph{position:relative;aspect-ratio:3/4;max-height:560px;border-radius:24px;overflow:hidden;clip-path:inset(0 0 0 0 round 24px)}
+  /* proporciones del diseño (medidas a 1490 px): etiqueta en el margen de la página y, centrado debajo,
+     un bloque de ~730u: foto 256u (4:5 aprox.) + aire 67u + columna de texto 407u */
+  .voces{position:relative;background:transparent;padding:calc(var(--u)*63) var(--gut) calc(var(--u)*110)}
+  .voces .eyebrow{font-size:clamp(10px,calc(var(--u)*9),11px);letter-spacing:.42em;font-weight:600}
+  .quote{width:min(100%,calc(var(--u)*730));margin:calc(var(--u)*70) auto 0;display:grid;grid-template-columns:calc(var(--u)*256) 1fr;gap:calc(var(--u)*67);align-items:start}
+  .quote .ph{position:relative;aspect-ratio:425/522;border-radius:clamp(24px,calc(var(--u)*27),36px);overflow:hidden;clip-path:inset(0 0 0 0 round 24px)}
   .quote .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  .quote .ph .tag{position:absolute;left:18px;bottom:18px;display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:rgba(192,164,130,.92);color:var(--ivory);font-size:13px;font-weight:600}
-  .quote .ph .tag::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ivory)}
-  .quote .qt{display:flex;flex-direction:column;justify-content:space-between;padding:4px 0}
-  .quote .mark{font-family:var(--garamond);font-size:120px;line-height:.6;color:var(--champagne)}
-  .quote blockquote{font-family:var(--uni);font-weight:400;font-size:max(24px,calc(var(--u)*34));line-height:1.26;letter-spacing:-.03em;text-transform:none;margin:28px 0 36px;min-height:4.2em;text-wrap:pretty}
-  .quote .who b{display:block;font-size:19px;font-weight:600;letter-spacing:-.01em}
-  .quote .who span{display:block;margin-top:5px;font-size:15px;color:var(--brown)}
-  .quote .stars{margin-top:12px;color:var(--champagne);letter-spacing:.22em;font-size:14px}
-  .quote .ctrl{display:flex;align-items:center;gap:18px;margin-top:36px}
-  .quote .ctrl .segs{flex:1;display:flex;gap:8px;max-width:360px}
-  .quote .ctrl .segs i{flex:1;height:2px;background:rgba(192,164,130,.35);position:relative;overflow:hidden;border-radius:2px}
+  .quote .ph .tag{position:absolute;left:clamp(14px,calc(var(--u)*16),22px);bottom:clamp(14px,calc(var(--u)*16),22px);display:flex;align-items:center;gap:10px;padding:clamp(8px,calc(var(--u)*9),12px) clamp(16px,calc(var(--u)*17),22px) clamp(8px,calc(var(--u)*9),12px) clamp(13px,calc(var(--u)*14),18px);border-radius:999px;background:rgba(192,164,130,.9);color:var(--ivory);font-size:clamp(14px,calc(var(--u)*13),17px);font-weight:500}
+  .quote .ph .tag::before{content:"";width:8px;height:8px;border-radius:50%;background:rgba(243,241,239,.45)}
+  .quote .qt{display:flex;flex-direction:column}
+  .quote .mark{display:block;width:auto;height:clamp(28px,calc(var(--u)*31.5),42px);color:var(--champagne)}
+  .quote blockquote{font-family:var(--uni);font-weight:400;font-size:max(24px,calc(var(--u)*29));line-height:1.09;letter-spacing:-.03em;text-transform:none;margin:calc(var(--u)*30) 0 0;min-height:4.36em;text-wrap:pretty}
+  .quote .foot{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-top:calc(var(--u)*34)}
+  .quote .who b{display:block;font-size:clamp(17px,calc(var(--u)*17),22px);font-weight:500;letter-spacing:-.01em}
+  .quote .who span{display:block;margin-top:calc(var(--u)*6);font-size:clamp(14px,calc(var(--u)*12.5),16px);color:var(--brown)}
+  .quote .stars{margin-top:calc(var(--u)*10);color:var(--champagne);letter-spacing:.5em;font-size:clamp(13px,calc(var(--u)*11.5),15px)}
+  .quote .metric{text-align:right;white-space:nowrap}
+  .quote .metric b{display:block;font-family:var(--uni);font-weight:500;font-size:max(36px,calc(var(--u)*44));line-height:1;letter-spacing:-.03em}
+  .quote .metric span{display:block;margin-top:calc(var(--u)*6);font-size:clamp(14px,calc(var(--u)*12),16px);color:var(--brown)}
+  .quote .ctrl{display:flex;align-items:center;gap:calc(var(--u)*21);margin-top:calc(var(--u)*37)}
+  .quote .ctrl .segs{flex:1;display:flex;gap:calc(var(--u)*5 + 1px)}
+  .quote .ctrl .segs i{flex:1;height:2px;background:var(--champagne);position:relative;overflow:hidden}
   .quote .ctrl .segs i::after{content:"";position:absolute;inset:0;background:var(--charcoal);transform:scaleX(0);transform-origin:left}
   .quote .ctrl .segs i.done::after{transform:scaleX(1)}
   .quote .ctrl .segs i.on::after{transform:scaleX(var(--p,0))}
-  .quote .ctrl .arrows{display:flex;gap:12px;margin-left:auto}
-  .quote .ctrl button{width:54px;height:54px;border-radius:50%;border:1px solid rgba(96,83,71,.45);background:transparent;color:var(--charcoal);display:grid;place-items:center;cursor:pointer;transition:background .4s,color .4s,border-color .4s}
+  .quote .ctrl .arrows{display:flex;gap:calc(var(--u)*20);margin-left:auto}
+  .quote .ctrl button{width:max(48px,calc(var(--u)*53));height:max(48px,calc(var(--u)*53));border-radius:50%;border:1.5px solid var(--champagne);background:transparent;color:var(--charcoal);display:grid;place-items:center;cursor:pointer;transition:background .4s,color .4s,border-color .4s}
   .quote .ctrl button:hover{background:var(--charcoal);border-color:var(--charcoal);color:var(--ivory)}
   .quote .ctrl svg{width:18px;height:18px}
-  @media (max-width:809px){.quote{grid-template-columns:1fr;gap:30px}.quote .ph{aspect-ratio:4/3}.voces{padding:80px 20px}.quote .ctrl .segs{max-width:none}}
+  @media (max-width:809px){.voces{padding:80px 20px}.quote{grid-template-columns:1fr;gap:30px;margin-top:30px}.quote .ph{aspect-ratio:4/3}.quote blockquote{font-size:24px;min-height:0}}
 
   /* ---------- 07 · RESERVAS: tu mesa te espera ---------- */
   .reserva{position:relative;min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:calc(var(--u)*60) 20px;overflow:hidden;background:var(--charcoal);color:var(--ivory)}
@@ -762,16 +765,17 @@
 
 <!-- ================= TESTIMONIOS ================= -->
 <section class="voces" id="voces" data-voces data-bg="#f3f1ef">
-  <div class="in">
-    <div class="top"><div class="eyebrow">05 — Reseñas</div><small><span data-q-n>01</span> / <span data-q-t>01</span></small></div>
+  <div class="eyebrow">05 — Reseñas</div>
     <div class="quote">
       <div class="ph" data-q-ph><img src="media/f/opt/resena.webp" alt="" data-q-img loading="lazy"><span class="tag" data-q-tag>Ozio</span></div>
       <div class="qt">
         <div>
-          <div class="mark">“</div>
+          <svg class="mark" viewBox="0 0 62 52" fill="currentColor" aria-hidden="true"><path d="M0 52V27C0 11 7 3 22 0l2 8c-8 3-11 8-11 15h11v29zM38 52V27c0-16 7-24 22-27l2 8c-8 3-11 8-11 15h11v29z"/></svg>
           <blockquote data-q-text></blockquote>
-          <div class="who"><b data-q-name></b><span data-q-role></span></div>
-          <div class="stars" data-q-stars>★★★★★</div>
+          <div class="foot">
+            <div class="who"><b data-q-name></b><span data-q-role></span><div class="stars" data-q-stars aria-label="5 estrellas">★★★★★</div></div>
+            <div class="metric" data-q-metric><b data-q-mv></b><span data-q-ml></span></div>
+          </div>
         </div>
         <div class="ctrl"><div class="segs" data-q-bar aria-hidden="true"></div>
           <div class="arrows">
@@ -781,7 +785,6 @@
         </div>
       </div>
     </div>
-  </div>
 </section>
 
 <!-- ================= 06 · EVENTOS ================= -->
@@ -935,12 +938,13 @@ const CONFIG = {
     { value: 4.9,  label: 'Valoración gastronómica', prefix: '★ ', decimals: 1 },
   ],
   // Testimonio de ejemplo del diseño: sustituir por reseñas reales (p. ej. Google).
+  // metric (opcional): la cifra grande a la derecha del nombre, p. ej. la nota de la reseña.
   testimonials: [
-    { quote: 'Nos encantó la experiencia: nuestro aniversario de boda salió magnífico. Gracias al maravilloso equipo de Ozio.', name: 'Carolina Pereira', role: 'Aniversario · Cena para dos', photo: 'media/f/opt/resena.webp', tag: 'Ozio' },
-    { quote: 'La pasta fresca y el ragú de jabalí me devolvieron a Sicilia. Un servicio atento sin ser invasivo.', name: 'Marco Vitale', role: 'Cena · Reseña de Google', photo: 'media/d/gal-2.webp', tag: 'Ozio' },
-    { quote: 'Organizamos la cena de empresa aquí y todo fue impecable: la sala, el maridaje y la cocina.', name: 'Lucía Fernández', role: 'Evento corporativo · 24 personas', photo: 'media/d/reel-sala.webp', tag: 'Eventos' },
-    { quote: 'La Regina Margherita es, sin exagerar, la mejor pizza que he comido fuera de Italia.', name: 'Andrea Conti', role: 'Comida · Reseña de Google', photo: 'media/d/mesa-centro.webp', tag: 'Ozio' },
-    { quote: 'Un sitio para ir sin prisa. El tiramisú y el sorbete de limón, imprescindibles.', name: 'Elena Ruiz', role: 'Sobremesa · Cena de amigas', photo: 'media/d/gal-1.jpg', tag: 'Ozio' },
+    { quote: 'Nos encantó la experiencia: nuestro aniversario de boda salió magnífico. Gracias al maravilloso equipo de Ozio.', name: 'Carolina Pereira', role: 'Aniversario · Cena para dos', photo: 'media/f/opt/resena.webp', tag: 'Ozio', metric: { value: '5,0', label: 'valoración' } },
+    { quote: 'La pasta fresca y el ragú de jabalí me devolvieron a Sicilia. Un servicio atento sin ser invasivo.', name: 'Marco Vitale', role: 'Cena · Reseña de Google', photo: 'media/d/gal-2.webp', tag: 'Ozio', metric: { value: '5,0', label: 'valoración' } },
+    { quote: 'Organizamos la cena de empresa aquí y todo fue impecable: la sala, el maridaje y la cocina.', name: 'Lucía Fernández', role: 'Evento corporativo · 24 personas', photo: 'media/d/reel-sala.webp', tag: 'Eventos', metric: { value: '5,0', label: 'valoración' } },
+    { quote: 'La Regina Margherita es, sin exagerar, la mejor pizza que he comido fuera de Italia.', name: 'Andrea Conti', role: 'Comida · Reseña de Google', photo: 'media/d/mesa-centro.webp', tag: 'Ozio', metric: { value: '5,0', label: 'valoración' } },
+    { quote: 'Un sitio para ir sin prisa. El tiramisú y el sorbete de limón, imprescindibles.', name: 'Elena Ruiz', role: 'Sobremesa · Cena de amigas', photo: 'media/d/gal-1.jpg', tag: 'Ozio', metric: { value: '5,0', label: 'valoración' } },
   ],
   // La carta: las hojas del menú real (PDF de la casa), en orden de lectura.
   carta: [
@@ -1005,16 +1009,16 @@ const CONFIG = {
 
   /* ---------- testimonios ---------- */
   const T = CONFIG.testimonials; let tI = 0;
-  const qEls = { text: $('[data-q-text]'), name: $('[data-q-name]'), role: $('[data-q-role]'), img: $('[data-q-img]'), tag: $('[data-q-tag]'), n: $('[data-q-n]') };
-  $('[data-q-t]').textContent = String(T.length).padStart(2, '0');
+  const qEls = { text: $('[data-q-text]'), name: $('[data-q-name]'), role: $('[data-q-role]'), img: $('[data-q-img]'), tag: $('[data-q-tag]'), metric: $('[data-q-metric]'), mv: $('[data-q-mv]'), ml: $('[data-q-ml]') };
   const qBar = $('[data-q-bar]'); qBar.innerHTML = T.map(() => '<i></i>').join(''); const qSegs = $$('i', qBar);
   const showQ = (i, animate) => {
     tI = (i + T.length) % T.length; const t = T[tI];
-    const set = () => { qEls.text.textContent = t.quote; qEls.name.textContent = t.name; qEls.role.textContent = t.role; qEls.tag.textContent = t.tag || 'Ozio'; if (t.photo) qEls.img.src = t.photo; qEls.n.textContent = String(tI + 1).padStart(2, '0');
+    const set = () => { qEls.text.textContent = t.quote; qEls.name.textContent = t.name; qEls.role.textContent = t.role; qEls.tag.textContent = t.tag || 'Ozio'; if (t.photo) qEls.img.src = t.photo;
+      qEls.metric.hidden = !t.metric; qEls.mv.textContent = t.metric ? t.metric.value : ''; qEls.ml.textContent = t.metric ? t.metric.label : '';
       qSegs.forEach((sg, j) => { sg.classList.toggle('done', j < tI); sg.classList.toggle('on', j === tI); }); };
     if (!animate || !window.gsap) return set();
-    gsap.timeline().to([qEls.text, qEls.name, qEls.role], { opacity: 0, y: -14, duration: .35, stagger: .04 })
-      .call(set).fromTo([qEls.text, qEls.name, qEls.role], { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .7, stagger: .06, ease: 'expo.out' })
+    gsap.timeline().to([qEls.text, qEls.name, qEls.role, qEls.metric], { opacity: 0, y: -14, duration: .35, stagger: .04 })
+      .call(set).fromTo([qEls.text, qEls.name, qEls.role, qEls.metric], { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .7, stagger: .06, ease: 'expo.out' })
       .fromTo('[data-q-ph]', { clipPath: 'inset(0 0 100% 0 round 24px)' }, { clipPath: 'inset(0 0 0% 0 round 24px)', duration: .9, ease: 'expo.inOut' }, .3);
   };
   showQ(0);

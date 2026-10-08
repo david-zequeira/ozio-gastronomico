@@ -1404,7 +1404,7 @@ const CONFIG = {
      Mientras la página está arriba del todo y el vídeo no ha llegado al final, la rueda (o un gesto táctil,
      o las flechas) mueve el vídeo y no la página.
      · Un gesto = un paso: se acumula el delta y la inercia del trackpad no cuenta como pasos nuevos.
-     · Hacia delante se reproduce el tramo (arranque y frenada suaves) y se para justo en el punto.
+     · Hacia delante se reproduce el tramo a velocidad normal, fluido como el vídeo original.
      · Hacia atrás se recorre con saltos cortos de currentTime (el mp4 lleva un fotograma clave cada 8,
        así que cada salto tarda pocos ms).
      · En 12 s se queda en el último fotograma; el siguiente gesto hacia abajo ya mueve la página. */
@@ -1423,26 +1423,29 @@ const CONFIG = {
       || /\b(carta|voz|chat)-open\b/.test(document.documentElement.className)
       || !!document.querySelector('[data-lightbox].on');
 
-    // llega al tiempo objetivo con una curva suave y se detiene exactamente en él
+    // Hacia delante el tramo se REPRODUCE de verdad, a velocidad constante (PLAY_RATE), igual de fluido que el
+    // vídeo original: sin saltos de currentTime ni cambios de velocidad fotograma a fotograma (eso daba tirones).
+    // Se para al llegar, sin volver atrás para cuadrar el punto exacto.
+    // a velocidad normal se ven prácticamente todos los fotogramas (175 de 180 medidos); a 1,3× ya se saltaba
+    // uno de cada seis, así que se reproduce al ritmo del vídeo original
+    const PLAY_RATE = 1;
     const tick = now => {
       raf = 0;
       if (v.readyState < 2) { raf = requestAnimationFrame(tick); return; }
       const cur = v.currentTime, d = target - cur;
       showScene(sceneAt(cur));
-      if (Math.abs(d) <= .02) {
-        if (!v.paused) v.pause();
-        if (Math.abs(cur - target) > .0005 && !v.seeking) v.currentTime = target;
-        return;
-      }
-      const ramp = Math.min(1, (now - t0) / 260);                        // arranque
-      const speed = Math.min(MAX_RATE * boost, Math.max(.5, Math.abs(d) * 3.2)) // frenada al acercarse
-        * (.45 + .55 * ramp);
-      // hasta 1,5× se reproduce (más suave); por encima, muchos decodificadores no llegan, así que se avanza
-      // con saltos cortos de currentTime (el mp4 lleva un fotograma clave cada 8 y cada salto tarda ~15 ms)
-      if (d > 0 && canPlay && speed <= 1.5) {
-        if (Math.abs(v.playbackRate - speed) > .04) v.playbackRate = speed;
+      if (d > 0 && canPlay) {
+        if (d <= .03) { if (!v.paused) v.pause(); return; }                 // ya está: a menos de un fotograma
+        if (v.playbackRate !== PLAY_RATE) v.playbackRate = PLAY_RATE;
         if (v.paused) v.play().catch(() => { canPlay = false; });
-      } else {
+        raf = requestAnimationFrame(tick); return;
+      }
+      if (Math.abs(d) <= .03) { if (!v.paused) v.pause(); return; }
+      // hacia atrás el navegador no sabe reproducir: se recorre con saltos cortos de currentTime
+      // (el mp4 lleva un fotograma clave cada 8, cada salto tarda ~15 ms), con arranque y frenada suaves
+      const ramp = Math.min(1, (now - t0) / 260);
+      const speed = Math.min(MAX_RATE * boost, Math.max(.5, Math.abs(d) * 3.2)) * (.45 + .55 * ramp);
+      {
         if (!v.paused) v.pause();
         if (!v.seeking) {
           const dt = Math.min(.12, (now - (lastSeek || now - 16)) / 1000); lastSeek = now;

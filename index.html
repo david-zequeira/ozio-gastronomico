@@ -1996,9 +1996,10 @@ const CONFIG = {
     });
   }
 
-  /* ---------- modo presentación ---------- */
+  /* ---------- modo presentación (solo con ?demo: la barra de atajos y las teclas D, R y H) ---------- */
   let demo;
-  addEventListener('keydown', e => {
+  if (!qs.has('demo')) $('[data-hud]').remove();
+  else addEventListener('keydown', e => {
     if (e.target.closest('input,textarea') || e.metaKey || e.ctrlKey || cartaOpen) return;
     const k = e.key.toLowerCase();
     if (k === 'd') { // auto-scroll cinematográfico (~80 s) para grabar o proyectar

@@ -593,7 +593,7 @@
   @keyframes vozPing{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.55);opacity:0}}
   .voz-fab .t{position:absolute;right:calc(100% + 12px);top:50%;padding:10px 16px;border-radius:999px;background:rgba(27,26,23,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--ivory);font:500 14px/1 var(--sans);white-space:nowrap;opacity:0;transform:translate(6px,-50%);transition:opacity .3s,transform .4s var(--ease);pointer-events:none}
   .voz-fab:hover .t,.voz-fab:focus-visible .t,.voz-fab.hello .t{opacity:1;transform:translate(0,-50%)}
-  body.is-loading .voz-fab,html.voz-open .voz-fab,html.carta-open .voz-fab,body.clean .voz-fab{opacity:0;pointer-events:none}
+  body.is-loading .voz-fab,html.voz-open .voz-fab,html.carta-open .voz-fab,body.clean .voz-fab,html.fab-off .voz-fab{opacity:0;pointer-events:none}
   @media (max-width:560px){.voz-fab{right:14px;bottom:14px;width:58px;height:58px}}
   .voz{position:fixed;inset:0;z-index:95;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(60% 50% at 50% 42%,rgba(192,164,130,.22),transparent 70%),rgba(15,14,12,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);opacity:0;transition:opacity .5s var(--ease);color:var(--ivory);cursor:auto}
   .voz.on{opacity:1}
@@ -633,7 +633,7 @@
   .chat-fab svg{width:20px;height:20px}
   .chat-fab .t{position:absolute;right:calc(100% + 10px);top:50%;padding:8px 12px;border-radius:999px;background:rgba(27,26,23,.8);font:600 10px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;white-space:nowrap;opacity:0;transform:translate(6px,-50%);transition:opacity .3s,transform .4s var(--ease);pointer-events:none}
   .chat-fab:hover .t,.chat-fab:focus-visible .t{opacity:1;transform:translate(0,-50%)}
-  body.is-loading .chat-fab,html.voz-open .chat-fab,html.carta-open .chat-fab,html.chat-open .chat-fab,body.clean .chat-fab,html.chat-open .voz-fab{opacity:0;pointer-events:none}
+  body.is-loading .chat-fab,html.voz-open .chat-fab,html.carta-open .chat-fab,html.chat-open .chat-fab,body.clean .chat-fab,html.fab-off .chat-fab,html.chat-open .voz-fab{opacity:0;pointer-events:none}
   @media (max-width:560px){.chat-fab{right:18px;bottom:84px}}
   .chat{position:fixed;right:20px;bottom:20px;z-index:94;width:min(400px,calc(100vw - 40px));height:min(620px,calc(100vh - 40px));height:min(620px,calc(100dvh - 40px));display:flex;flex-direction:column;border-radius:22px;overflow:hidden;border:1px solid rgba(243,241,239,.14);background:radial-gradient(120% 60% at 50% 0%,rgba(192,164,130,.16),transparent 60%),rgba(20,19,17,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 40px 120px rgba(0,0,0,.55);color:var(--ivory);opacity:0;transform:translateY(18px) scale(.98);transform-origin:bottom right;transition:opacity .45s var(--ease),transform .6s var(--ease);cursor:auto}
   .chat.on{opacity:1;transform:none}
@@ -1742,6 +1742,9 @@ const CONFIG = {
   aT = gsap.timeline({ repeat: -1, paused: true });
   acc.forEach((c, i) => aT.call(() => setAcc(i), null, i * 4).fromTo(accBars[i], { '--p': 0 }, { '--p': 1, duration: 4, ease: 'none' }, i * 4));
   ScrollTrigger.create({ trigger: '[data-cocina]', start: 'top 60%', end: 'bottom top', onToggle: st => st.isActive && !accUser ? aT.play() : aT.pause() });
+  // en el móvil las tarjetas pasan por debajo del chat y la voz: mientras están en pantalla, los botones se apartan
+  ScrollTrigger.create({ trigger: '[data-acc]', start: 'top bottom', end: 'bottom top',
+    onToggle: st => document.documentElement.classList.toggle('fab-off', st.isActive && innerWidth <= 809) });
 
   /* ---------- 04 · el plato (de la web anterior): foto cenital real → ingredientes → la mesa → el detalle ----------
      La sección se fija; con el scroll el plato entra girando, aparecen los ingredientes uno a uno, el círculo

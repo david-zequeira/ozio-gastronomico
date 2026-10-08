@@ -380,7 +380,7 @@
   .ev-card .rcard{pointer-events:auto}
   #reserva{position:relative;height:0}
   .aura{position:absolute;width:70vmax;height:70vmax;left:0;top:0;margin:-35vmax 0 0 -35vmax;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(192,164,130,.34) 0%,rgba(192,164,130,.12) 30%,rgba(192,164,130,0) 62%);filter:blur(20px);mix-blend-mode:screen;will-change:transform}
-  .eventos .eyebrow{color:var(--champagne);font-size:clamp(10px,calc(var(--u)*9),11px);letter-spacing:.42em;font-weight:600}
+  .eventos .top .eyebrow{color:var(--champagne);font-size:clamp(10px,calc(var(--u)*9),11px);letter-spacing:.42em;font-weight:600}
   .eventos .top{position:relative;z-index:4;max-width:max(260px,calc(var(--u)*290))}
   .eventos .top p{margin-top:calc(var(--u)*28);font-weight:300;font-size:max(14px,calc(var(--u)*12.3));line-height:1.6}
   /* el arco sube hasta la altura del texto (como en el diseño) y marca la altura del escenario */
@@ -389,7 +389,7 @@
   .eventos .arch{position:relative;width:max(230px,calc(var(--u)*315));aspect-ratio:309/375;border-radius:9999px 9999px 0 0;overflow:hidden;background:#2a2722;will-change:clip-path}
   .eventos .arch video,.eventos .arch img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .eventos .arch::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(27,26,23,0) 50%,rgba(27,26,23,.45))}
-  .eventos h2{position:relative;z-index:3;text-align:center;font-family:var(--uni);font-weight:500;font-size:clamp(36px,calc(var(--u)*48),72px);line-height:1.02;letter-spacing:-.02em;text-transform:none;pointer-events:none;text-shadow:0 8px 40px rgba(0,0,0,.35)}
+  .ev-stage h2{position:relative;z-index:3;text-align:center;font-family:var(--uni);font-weight:500;font-size:clamp(36px,calc(var(--u)*48),72px);line-height:1.02;letter-spacing:-.02em;text-transform:none;pointer-events:none;text-shadow:0 8px 40px rgba(0,0,0,.35)}
   .ev-stage ul{position:relative;z-index:3;align-self:end;margin-bottom:calc(var(--u)*31);width:min(100%,calc(var(--u)*773));display:flex;justify-content:space-between;gap:20px;list-style:none}
   .ev-stage li{display:flex;align-items:center;gap:calc(var(--u)*12);font-size:max(14px,calc(var(--u)*14));font-weight:500;color:var(--beige)}
   .ev-stage li svg{width:clamp(15px,calc(var(--u)*14),19px);height:clamp(15px,calc(var(--u)*14),19px);color:var(--champagne);transition:transform .5s var(--ease)}
@@ -487,17 +487,10 @@
   .ev-card .rcard .btn-fill svg{width:18px;height:18px}
   .ev-card .rcard .btn-ghost{padding:0 6px 0 20px;gap:10px}
   .ev-card .rcard .btn-ghost .o{width:36px;height:36px}
-  .ev-card .contact{grid-area:contact;align-self:start;display:grid;grid-template-columns:35.9% 22.9% minmax(25%,max-content) 1fr;gap:0;margin-top:calc(var(--u)*38)}
-  .ev-card .contact > :first-child{grid-column:2}
-  .ev-card .contact > div{padding-right:12px}
+  /* contacto: dirección y teléfono, uno al lado del otro, alineados a la derecha (con el borde del horario) */
+  .ev-card .contact{grid-area:contact;align-self:start;display:flex;justify-content:flex-end;align-items:flex-start;gap:calc(var(--u)*56);margin-top:calc(var(--u)*38)}
   .ev-card .contact small{font-size:12px;margin-bottom:6px;color:rgba(243,241,239,.45)}
   .ev-card .contact a,.ev-card .contact span{display:block;white-space:nowrap;font-size:max(14px,calc(var(--u)*12.2));line-height:1.35;color:var(--ivory)}
-  /* tarjeta más estrecha: la fila de contacto usa todo el ancho para que el correo no pise el teléfono */
-  @media (max-width:1240px){
-    .ev-card .contact{grid-template-columns:1fr max-content max-content;column-gap:calc(var(--u)*30)}
-    .ev-card .contact > :first-child{grid-column:1}
-    .ev-card .contact > div{padding-right:0}
-  }
   @media (max-width:809px){
     .ev-live .ev-card{padding:70px 14px 14px}
     .ev-card .rcard{padding:24px 20px 22px;min-width:0;border-radius:24px}
@@ -508,8 +501,7 @@
     .ev-card .hours li{padding:8px 0}
     .ev-card .rcard .btns{margin-top:0}
     .ev-card .rcard .btn-fill,.ev-card .rcard .btn-ghost{height:46px}
-    .ev-card .contact{grid-template-columns:1fr 1fr;row-gap:12px;margin-top:4px}
-    .ev-card .contact > :first-child{grid-column:1 / -1}
+    .ev-card .contact{gap:32px;margin-top:4px}
   }
   @media (max-width:809px){.rcard{padding:30px 22px 26px;min-width:0;border-radius:28px}.rcard .grid{grid-template-columns:1fr;gap:22px}.rcard h2{font-size:40px;margin-top:14px}.rcard .sub{margin-top:12px;font-size:15px}.hours{margin-top:0}.hours li{padding:12px 0;font-size:13px}.hours li b{font-size:14px}.rcard h2{white-space:normal}.rcard .btns{gap:10px}.rcard .btn-fill,.rcard .btn-ghost{height:54px}.contact{gap:24px}}
 
@@ -1043,7 +1035,8 @@ const CONFIG = {
   $('[data-year]').textContent = new Date().getFullYear();
   $('[data-hours]').innerHTML = CONFIG.hours.map(([k, v]) => `<li><span>${esc(k)}</span><b>${esc(v)}</b></li>`).join('');
   const telHref = p => 'tel:' + (p.trim().startsWith('+') ? '' : '+34') + p.replace(/[^\d+]/g, '');
-  const contact = [['Dirección', CONFIG.address, CONFIG.mapsUrl], ['Email', CONFIG.email, CONFIG.email && 'mailto:' + CONFIG.email], ['WhatsApp', CONFIG.whatsapp && '+' + CONFIG.whatsapp, CONFIG.whatsapp && 'https://wa.me/' + CONFIG.whatsapp], ['Teléfono', CONFIG.phone, CONFIG.phone && telHref(CONFIG.phone)]]
+  // en la tarjeta de reserva solo dirección y teléfono (el correo queda en el pie)
+  const contact = [['Dirección', CONFIG.address, CONFIG.mapsUrl], ['Teléfono', CONFIG.phone, CONFIG.phone && telHref(CONFIG.phone)]]
     .filter(([, v]) => v);
   const brk = v => esc(v).replace(/\n/g, '<br>');
   $('[data-contact]').innerHTML = contact.map(([k, v, h]) => `<div><small>${k}</small>${h ? `<a href="${esc(h)}"${/^https?:/.test(h) ? ' target="_blank" rel="noopener"' : ''}>${brk(v)}</a>` : `<span>${brk(v)}</span>`}</div>`).join('');

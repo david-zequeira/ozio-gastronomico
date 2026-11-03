@@ -9,6 +9,9 @@
    El agente puede pedir el correo en pantalla (herramienta
    pedir_contacto_en_pantalla → metadata {state:"tool", tool:...}); se envía a
    POST /api/voice/web-call/:callId/contact.
+
+   Antes de la primera llamada de la visita se informa de que se graba y se
+   pide aceptación; sin ella no se pide el micrófono ni se conecta nada.
    ===================================================================== */
 
 const cfg = window.OZIO_VOZ || {};
@@ -19,9 +22,14 @@ const SDK_URLS = [
   'https://cdn.jsdelivr.net/npm/retell-client-js-sdk@2/+esm',
   'https://esm.sh/retell-client-js-sdk@2',
 ];
+const PHONE = cfg.phone || '';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+// sin WhatsApp configurado, la alternativa real es el teléfono del restaurante o el chat
+const OTHER = PHONE ? `Puedes llamarnos al ${PHONE} o escribirnos.` : 'Puedes escribirnos por el chat.';
+
 const MSG = {
+  consent: 'Antes de llamar',
   connecting: 'Conectando con Ozio…',
   listening: 'Te escucho',
   thinking: 'Un momento…',
@@ -34,9 +42,9 @@ const MSG = {
     mic_denied: 'Necesito permiso para el micrófono. Actívalo en el navegador y vuelve a intentarlo.',
     insecure_context: 'La llamada solo funciona en una página segura (https).',
     rate_limited: 'Demasiadas llamadas seguidas. Prueba en un minuto.',
-    unconfigured: 'La llamada no está disponible ahora mismo. Puedes reservar por WhatsApp.',
+    unconfigured: `La llamada no está disponible ahora mismo. ${OTHER}`,
     generic: 'Se ha cortado la llamada. ¿Lo intentamos otra vez?',
-    unavailable: 'No consigo conectar ahora mismo. Puedes reservar por WhatsApp.',
+    unavailable: `No consigo conectar ahora mismo. ${OTHER}`,
   },
 };
 
@@ -67,6 +75,9 @@ const muteBtn = $('[data-voz-mute]');
 const hangBtn = $('[data-voz-hang]');
 const closeBtn = $('[data-voz-close]');
 const retryBtn = $('[data-voz-retry]');
+const acceptBtn = $('[data-voz-accept]');
+const CONSENT_KEY = 'ozio.voz.acepta';
+const accepted = () => { try { return sessionStorage.getItem(CONSENT_KEY) === '1'; } catch { return false; } };
 
 let state = 'idle';
 let client = null;
@@ -87,6 +98,7 @@ const setState = (next, text) => {
   muteBtn.hidden = !live || next === 'connecting';
   closeBtn.hidden = live;
   retryBtn.hidden = !(next === 'ended' || next === 'error');
+  acceptBtn.hidden = next !== 'consent';
 };
 
 const open = () => {
@@ -154,8 +166,23 @@ const lastAgentLine = (payload) => {
   return null;
 };
 
-async function start() {
-  if (state !== 'idle' && state !== 'ended' && state !== 'error') return;
+function start() {
+  if (state !== 'idle' && state !== 'ended' && state !== 'error' && state !== 'consent') return;
+  if (accepted()) return call();
+  // primero el aviso: qué es, que se graba y para qué, con la política a un clic
+  open();
+  showForm(false);
+  lineEl.textContent = 'Te atenderá una asistente virtual. La llamada se graba y se transcribe para gestionar tu reserva.';
+  setState('consent');
+  setTimeout(() => acceptBtn.focus(), 60);
+}
+
+function accept() {
+  try { sessionStorage.setItem(CONSENT_KEY, '1'); } catch {}
+  call();
+}
+
+async function call() {
   open();
   lineEl.textContent = '';
   showForm(false);
@@ -288,6 +315,7 @@ async function submitEmail(e) {
 document.querySelectorAll('[data-voz-open]').forEach(b => b.addEventListener('click', start));
 hangBtn.addEventListener('click', hangup);
 retryBtn.addEventListener('click', start);
+acceptBtn.addEventListener('click', accept);
 closeBtn.addEventListener('click', close);
 form.addEventListener('submit', submitEmail);
 muteBtn.addEventListener('click', () => {

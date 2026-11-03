@@ -1,0 +1,23 @@
+/* Páginas legales (aviso legal y privacidad): la misma casa que la web, sin animaciones */
+@font-face{font-family:'Manrope';font-weight:300 800;font-display:swap;src:url(fonts/Manrope-normal-300_800.woff2) format('woff2')}
+@font-face{font-family:'DM Serif Text';font-style:italic;font-weight:400;font-display:swap;src:url(fonts/DMSerifText-italic-400.woff2) format('woff2')}
+:root{--ivory:#f3f1ef;--champagne:#c0a482;--charcoal:#1b1a17}
+*{box-sizing:border-box}
+body{margin:0;background:var(--charcoal);color:rgba(243,241,239,.78);font:400 16px/1.7 'Manrope',system-ui,sans-serif;-webkit-text-size-adjust:100%}
+main{max-width:720px;margin:0 auto;padding:clamp(32px,7vw,72px) 16px 80px}
+a{color:var(--ivory);text-decoration:underline;text-underline-offset:3px}
+a:hover{color:var(--champagne)}
+:focus-visible{outline:2px solid var(--champagne);outline-offset:3px;border-radius:4px}
+.back{display:inline-block;padding:10px 0;font-size:14px;text-decoration:none;color:rgba(243,241,239,.6)}
+h1{margin:28px 0 6px;color:var(--ivory);font-weight:300;font-size:clamp(38px,8vw,60px);line-height:1.05;letter-spacing:-.03em}
+h1 i{font-family:'DM Serif Text',serif}
+h2{margin:44px 0 10px;color:var(--ivory);font-weight:500;font-size:20px;letter-spacing:-.01em}
+h3{margin:26px 0 4px;color:var(--champagne);font-weight:600;font-size:13px;letter-spacing:.16em;text-transform:uppercase}
+p,ul{margin:0 0 12px}
+ul{padding-left:20px}
+li{margin-bottom:6px}
+b{color:var(--ivory);font-weight:600}
+.upd{font-size:13px;color:rgba(243,241,239,.45)}
+.note{margin-top:24px;padding:14px 16px;border-radius:14px;border:1px dashed rgba(192,164,130,.5);font-size:14px}
+.pend{padding:1px 6px;border-radius:6px;background:rgba(192,164,130,.22);color:var(--ivory)}
+.foot{margin-top:56px;padding-top:20px;border-top:1px solid rgba(243,241,239,.12);font-size:14px}

@@ -578,6 +578,8 @@
   footer ul a:hover::after{transform:scaleX(1);transform-origin:left}
   footer .legal{margin-top:calc(var(--u)*46);display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;font-size:13px;line-height:1.7;color:rgba(243,241,239,.55)}
   footer .legal b{color:var(--ivory);font-weight:500}
+  footer .legal a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+  footer .legal a:hover{color:var(--ivory)}
   footer .legal .by{display:flex;align-items:center;gap:16px}
   footer .legal{padding-right:84px}                                   /* el crédito no queda debajo del botón de voz */
   /* el logo grande se va; queda el sello pequeño y sutil, a la derecha */
@@ -627,7 +629,19 @@
   .voz-actions .hang{background:#b4533e;border-color:#b4533e;color:#fff}
   .voz-actions [aria-pressed="true"]{background:rgba(255,255,255,.1)}
   .voz-legal{font-size:11px;line-height:1.5;color:rgba(243,241,239,.35);max-width:36ch}
-  .voz:not([data-state="error"]):not([data-state="ended"]) [data-chat-open]{display:none}
+  .voz-legal a,.chat-legal a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+  .book-opts{width:100%;display:flex;flex-direction:column;gap:10px}
+  .book-opts .opt{display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;min-height:64px;padding:16px 20px;border-radius:18px;border:1px solid rgba(243,241,239,.22);background:rgba(255,255,255,.04);color:var(--ivory);text-align:left;text-decoration:none;font:inherit;cursor:pointer;transition:border-color .3s,background .3s}
+  .book-opts .opt:hover{border-color:var(--ivory);background:rgba(255,255,255,.08)}
+  .book-opts .opt b{font:500 17px/1.25 var(--sans);letter-spacing:-.01em}
+  .book-opts .opt small{font-size:13px;line-height:1.4;color:rgba(243,241,239,.6)}
+  .book-opts .opt:first-child{background:var(--ivory);border-color:var(--ivory);color:var(--charcoal)}
+  .book-opts .opt:first-child small{color:rgba(27,26,23,.65)}
+  html.book-open .voz-fab,html.book-open .chat-fab{opacity:0;pointer-events:none}
+  .voz-actions .ok{background:var(--ivory);border-color:var(--ivory);color:var(--charcoal)}
+  .voz[data-state="consent"] .voz-line{font-size:clamp(18px,3.6vw,22px);max-width:30ch}
+  .voz[data-state="consent"] .voz-legal{color:rgba(243,241,239,.6);font-size:12px}
+  [data-voz]:not([data-state="error"]):not([data-state="ended"]):not([data-state="consent"]) [data-chat-open]{display:none}
 
   /* ---------- CHAT: escribir a Ozio ---------- */
   .chat-fab{position:fixed;right:31px;bottom:100px;z-index:70;display:grid;place-items:center;width:50px;height:50px;border-radius:50%;border:1px solid rgba(243,241,239,.2);background:rgba(27,26,23,.66);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--ivory);cursor:pointer;box-shadow:0 20px 60px rgba(0,0,0,.35);transition:transform .5s var(--ease),border-color .4s,opacity .4s}
@@ -710,6 +724,10 @@
     .intro-s h2 .w{color:inherit}
     .cocina .vid,.eventos .arch{clip-path:none}
   }
+  /* lo mismo cuando la web arranca quieta porque no han llegado las librerías */
+  html.quieta .loader{display:none}
+  html.quieta .intro-s h2 .w{color:inherit}
+  html.quieta .cocina .vid,html.quieta .eventos .arch{clip-path:none}
 </style>
 </head>
 <body class="is-loading">
@@ -977,7 +995,7 @@
     <div><h4>Contacto</h4><ul data-foot-contact></ul></div>
     <div><h4>Redes</h4><ul data-foot-social></ul></div>
   </div>
-  <div class="legal"><span>Copyright © <span data-year></span> Ozio Gastronomico.<br>Todos los derechos reservados.</span><span class="by">Experiencia creada por <b>asenix</b><svg class="mk" aria-hidden="true"><use href="#ozio-mark"/></svg></span></div>
+  <div class="legal"><span>Copyright © <span data-year></span> Ozio Gastronomico.<br>Todos los derechos reservados.<br><a href="aviso-legal.html">Aviso legal</a> · <a href="privacidad.html">Privacidad</a></span><span class="by">Experiencia creada por <b>asenix</b><svg class="mk" aria-hidden="true"><use href="#ozio-mark"/></svg></span></div>
 </footer>
 
 <!-- ================= LA CARTA (segunda vista): las hojas del menú real ================= -->
@@ -1011,11 +1029,27 @@
     <div class="voz-actions">
       <button type="button" data-voz-mute aria-pressed="false" hidden><span>Silenciar</span></button>
       <button type="button" class="hang" data-voz-hang hidden>Colgar</button>
+      <button type="button" class="ok" data-voz-accept hidden>Aceptar y llamar</button>
       <button type="button" data-voz-retry hidden>Volver a llamar</button>
       <button type="button" data-chat-open>Escribir</button>
       <button type="button" data-voz-close>Cerrar</button>
     </div>
-    <p class="voz-legal">Te atiende una asistente virtual. La llamada se graba para atención al cliente y reservas.</p>
+    <p class="voz-legal">Te atiende una asistente virtual. La llamada se graba para atención al cliente y reservas. <a href="privacidad.html" target="_blank" rel="noopener">Política de privacidad</a></p>
+  </div>
+</div>
+
+<!-- ================= RESERVAR: las tres vías, la más segura (el teléfono) primero ================= -->
+<div class="voz book" data-book-sheet role="dialog" aria-modal="true" aria-labelledby="book-title" hidden>
+  <div class="voz-in">
+    <div class="voz-brand">Reservas<b class="logo"><svg class="lg" aria-hidden="true"><use href="#ozio-logo"/></svg></b></div>
+    <p class="voz-line" id="book-title">¿Cómo prefieres reservar?</p>
+    <div class="book-opts">
+      <a class="opt" data-book-tel href="#"><b>Llamar al restaurante</b><small data-book-tel-n></small></a>
+      <a class="opt" data-book-wa href="#" target="_blank" rel="noopener" hidden><b>WhatsApp</b><small>Te contestamos por mensaje</small></a>
+      <button class="opt" type="button" data-chat-open><b>Escribir por chat</b><small>Reserva y dudas de la carta, por escrito</small></button>
+      <button class="opt" type="button" data-voz-open><b>Hablar con la asistente</b><small>Llamada desde el navegador, con micrófono</small></button>
+    </div>
+    <div class="voz-actions"><button type="button" data-book-close>Cerrar</button></div>
   </div>
 </div>
 
@@ -1037,7 +1071,7 @@
     <textarea rows="1" maxlength="2000" placeholder="Escribe tu mensaje…" aria-label="Tu mensaje para Ozio" autocomplete="off" enterkeyhint="send" data-chat-input></textarea>
     <button class="chat-send" type="submit" aria-label="Enviar" data-chat-send disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
   </form>
-  <p class="chat-legal">Te atiende una asistente virtual. Guardamos la conversación para gestionar tu reserva.</p>
+  <p class="chat-legal">Te atiende una asistente virtual. Guardamos la conversación para gestionar tu reserva. <a href="privacidad.html" target="_blank" rel="noopener">Privacidad</a></p>
   <p class="sr-only" data-chat-live aria-live="polite"></p>
 </section>
 
@@ -1045,14 +1079,27 @@
 <div class="grain"></div>
 <div class="hud" data-hud>D · demo &nbsp;|&nbsp; R · reset &nbsp;|&nbsp; H · ocultar</div>
 
-<!-- Librerías en local (funciona sin internet en la reunión). Si falta vendor/, se cargan del CDN. -->
-<script src="vendor/gsap.min.js"></script>
-<script src="vendor/ScrollTrigger.min.js"></script>
-<script src="vendor/ScrollToPlugin.min.js"></script>
-<script src="vendor/lenis.min.js"></script>
+<!-- Librerías en local (funciona sin internet en la reunión); si alguna falla, del CDN. Se piden sin bloquear la
+     página y con un tiempo máximo: si a los 8 s no han llegado todas, la web arranca quieta (como con «reducir
+     movimiento»), pero siempre se ve y se puede reservar. -->
 <script>
-  if (!window.gsap) ['gsap','ScrollTrigger','ScrollToPlugin'].forEach(n => document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/'+n+'.min.js"><\/script>'));
-  if (!window.Lenis) document.write('<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"><\/script>');
+  window.ozioLibs = (() => {
+    const add = (src, ms) => new Promise((ok, ko) => {
+      const s = document.createElement('script'); s.src = src; s.async = false;
+      const t = setTimeout(() => ko(new Error('tiempo: ' + src)), ms);
+      s.onload = () => { clearTimeout(t); ok(); }; s.onerror = () => { clearTimeout(t); ko(new Error('fallo: ' + src)); };
+      document.head.append(s);
+    });
+    const lib = (local, cdn, has) => add(local, 5000).catch(() => has() || add(cdn, 6000)).catch(() => {});
+    const gs = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/';
+    const gsap = lib('vendor/gsap.min.js', gs + 'gsap.min.js', () => window.gsap)
+      .then(() => Promise.all([lib('vendor/ScrollTrigger.min.js', gs + 'ScrollTrigger.min.js', () => window.ScrollTrigger),
+                               lib('vendor/ScrollToPlugin.min.js', gs + 'ScrollToPlugin.min.js', () => window.ScrollToPlugin)]));
+    const lenis = lib('vendor/lenis.min.js', 'https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js', () => window.Lenis);
+    const all = Promise.all([gsap, lenis]);
+    return Promise.race([all, new Promise(ok => setTimeout(ok, 8000))])
+      .then(() => !!(window.gsap && window.ScrollTrigger && window.ScrollToPlugin && window.Lenis));
+  })();
 </script>
 <script>
 /* =====================================================================
@@ -1098,11 +1145,15 @@ const CONFIG = {
   ],
 };
 
-(() => {
+// arranca cuando las librerías han llegado o se ha agotado su tiempo (motion = false: la web va quieta)
+window.ozioLibs.then(motion => {
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
   const qs = new URLSearchParams(location.search);
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // sin librerías de movimiento, la web va como con «reducir movimiento»: todo visible y quieto
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches || !motion;
+  if (!motion) document.documentElement.classList.add('quieta');
+  if (!qs.has('demo')) $('[data-hud]').remove();                      // la barra de atajos, solo en modo presentación
   const fine = matchMedia('(pointer:fine)').matches;
 
   /* ---------- PRUEBA (?fotogramas): portada con secuencia de fotogramas en lugar del vídeo ----------
@@ -1317,11 +1368,32 @@ const CONFIG = {
     if (window.ScrollTrigger) ScrollTrigger.refresh();
   }, { passive: true });
 
-  /* ---------- reservar: WhatsApp si está configurado; si no, la llamada con Ozio ---------- */
-  $('[data-book]').addEventListener('click', () => {
-    if (CONFIG.whatsapp) window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent('Hola, me gustaría reservar una mesa en Ozio.')}`, '_blank', 'noopener');
-    else $('.voz-fab').click();
+  /* ---------- reservar: se elige la vía (teléfono, WhatsApp si lo hay, chat o la asistente) ----------
+     La llamada por voz necesita micrófono y un servidor que puede tardar en despertar; el teléfono y el chat
+     no, así que nunca se deja al cliente con una sola puerta. Al elegir, el selector se cierra y cada botón
+     hace lo suyo (los de chat y llamada los atienden chat.js y voz.js). */
+  const book = $('[data-book-sheet]'), bookTel = $('[data-book-tel]'), bookWa = $('[data-book-wa]');
+  if (CONFIG.phone) { bookTel.href = telHref(CONFIG.phone); $('[data-book-tel-n]').textContent = CONFIG.phone; } else bookTel.remove();
+  if (CONFIG.whatsapp) { bookWa.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent('Hola, me gustaría reservar una mesa en Ozio.')}`; bookWa.hidden = false; }
+  let bookFrom = null;
+  const openBook = e => {
+    bookFrom = e?.currentTarget || null;
+    book.hidden = false; document.documentElement.classList.add('book-open'); lenis?.stop();
+    requestAnimationFrame(() => { book.classList.add('on'); $('.opt', book)?.focus(); });
+  };
+  const closeBook = (back = true) => {
+    if (book.hidden) return;
+    book.classList.remove('on'); document.documentElement.classList.remove('book-open');
+    lenis?.start();                                    // ni el chat ni la llamada paran el scroll: se devuelve siempre
+    setTimeout(() => { if (!book.classList.contains('on')) book.hidden = true; }, 500);
+    if (back) bookFrom?.focus?.();
+  };
+  $$('[data-book]').forEach(b => b.addEventListener('click', openBook));
+  book.addEventListener('click', e => {
+    if (e.target === book || e.target.closest('[data-book-close]')) return closeBook();
+    if (e.target.closest('.opt')) closeBook(false);
   });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !book.hidden) closeBook(); });
 
   /* ---------- vídeos: reproducir solo en pantalla ---------- */
   const vio = new IntersectionObserver(es => es.forEach(e => {
@@ -1403,11 +1475,12 @@ const CONFIG = {
   $$('.split').forEach(splitChars);
 
   /* ---------- LOADER ---------- */
+  let introTL = null;
   const intro = () => {
-    const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+    const tl = introTL = gsap.timeline({ defaults: { ease: 'expo.out' } });
     const counter = { v: 0 }, cEl = $('[data-count-loader]'), bar = $('[data-loader-bar]');
     // la cuenta es la de verdad: nunca pasa de lo que llevan cargado los fotogramas de la portada
-    const showCount = () => { const v = Math.round(Math.min(counter.v, seqLoad.p * 100));
+    const showCount = () => { if (!cEl.isConnected) return; const v = Math.round(Math.min(counter.v, seqLoad.p * 100));
       cEl.textContent = String(v).padStart(2, '0'); bar.style.transform = `scaleX(${v / 100})`; };
     tl.from('[data-ld-mark]', { scale: .4, rotate: -120, opacity: 0, duration: 1.2 }, .05)
       .fromTo('[data-ld-word]', { clipPath: 'inset(0 100% 0 0)', x: -16 }, { clipPath: 'inset(0 0% 0 0)', x: 0, duration: 1.1, ease: 'expo.inOut' }, .3)
@@ -1425,11 +1498,15 @@ const CONFIG = {
       // la portada empieza sin texto: el primero aparece con el primer gesto (ver «el vídeo se recorre con la rueda»)
       .from('[data-hero-intro]', { y: 24, opacity: 0, duration: 1.1 }, 2.0)
       .call(() => LOOP && showScene(2), null, 1.75)                     // portada en bucle: su único texto entra con la cortina
-      .call(() => { $('[data-loader]').remove(); document.body.classList.remove('is-loading'); lenis.start(); ScrollTrigger.refresh(); }, null, 2.4);
+      .call(() => openPage(), null, 2.4);
     return tl;
   };
   const start = () => (document.fonts?.ready || Promise.resolve()).then(() => requestAnimationFrame(intro));
-  qs.has('noloader') ? ($('[data-loader]').remove(), document.body.classList.remove('is-loading'), lenis.start(), LOOP && showScene(2)) : start();
+  const openPage = () => { $('[data-loader]')?.remove(); document.body.classList.remove('is-loading'); lenis.start(); ScrollTrigger.refresh(); };
+  qs.has('noloader') ? (openPage(), LOOP && showScene(2)) : start();
+  // red de seguridad: pase lo que pase (fuentes que no llegan, una animación que se queda), a los 12 s se entra
+  // (se salta al final de la entrada para que el menú y la portada queden en su sitio)
+  setTimeout(() => { if (!$('[data-loader]')) return; seqLoad.p = 1; introTL ? introTL.progress(1) : openPage(); }, 12000);
 
   /* ---------- presentación: el vídeo de la casa respira al bajar y el titular se despide ---------- */
   const hero = $('[data-hero]'), cam = $('[data-cam]'), heroVidEl = $('[data-hero-video]');
@@ -1438,16 +1515,22 @@ const CONFIG = {
   let seqST = null;
   if (SEQ) {
     const cv = heroVidEl, ctx = cv.getContext('2d');
-    const N = 182;                                               // 182 imágenes = 12,1 s de vídeo a 15 por segundo
-    // Fotogramas sacados del original en 1080p (Video OZIO.mp4, uno de cada dos). Dos juegos: 1920 px para
-    // pantallas grandes y 1280 px para el móvil, que pesa la mitad y en su pantalla se ve igual de nítido.
-    const BIG = innerWidth > 809 && Math.max(innerWidth, innerHeight) * Math.min(devicePixelRatio || 1, 2) > 1400;
+    // Fotogramas sacados del original en 1080p (Video OZIO.mp4, uno de cada dos): 182 imágenes = 12,1 s a 15 por
+    // segundo. Dos juegos: 1920 px para pantallas grandes y 1280 px para el móvil, que pesa la mitad y en su
+    // pantalla se ve igual de nítido. En el móvil, o con ahorro de datos o una conexión lenta, se usa además uno de
+    // cada dos (91 imágenes, ~5,7 MB en vez de ~11,4): el fundido entre fotogramas mantiene el movimiento continuo.
+    const net = navigator.connection || {};
+    const SLOW = !!net.saveData || /(^|-)2g|3g/.test(net.effectiveType || '');
+    const BIG = !SLOW && innerWidth > 809 && Math.max(innerWidth, innerHeight) * Math.min(devicePixelRatio || 1, 2) > 1400;
     const DIR = BIG ? 'hero-1920' : 'hero-1280', MAXPX = BIG ? 2400 : 1600;
+    const STEP = SLOW || innerWidth <= 809 ? 2 : 1, N = Math.ceil(182 / STEP);
     // Escenas: fotogramas 0–60, 61–120 y 121–181 (los cortes del montaje). La imagen avanza AL RITMO del scroll:
     // cada escena ocupa LEN pantallas y los fotogramas se reparten casi en línea recta, con una frenada muy leve
     // al final de la escena (SOFT: cuánto de curva se mezcla con la recta). Así la imagen va pegada al gesto, sin
     // acelerones ni tramos en los que parezca parada. El texto de cada escena surge al pasar TXT_AT de ella.
-    const B = [0, 60.5, 120.5, N - 1], CUT = new Set([61, 121]), LEN = [1.6, 1.5, 1.5], SOFT = .3;
+    // (con STEP 2: 0–30, 31–60 y 61–90)
+    const C1 = Math.ceil(61 / STEP), C2 = Math.ceil(121 / STEP);
+    const B = [0, C1 - .5, C2 - .5, N - 1], CUT = new Set([C1, C2]), LEN = [1.6, 1.5, 1.5], SOFT = .3;
     const SCROLL = LEN.reduce((a, b) => a + b);
     const ease = u => (1 - SOFT) * u + SOFT * Math.sin(u * Math.PI / 2);      // recta con un final algo más suave
     // posición de scroll (pantallas) → fotograma (con decimales: entre dos fotogramas se funden)
@@ -1455,7 +1538,7 @@ const CONFIG = {
       let k = 0; while (k < 2 && y > LEN[k]) y -= LEN[k++];
       return B[k] + (B[k + 1] - B[k]) * ease(Math.max(0, Math.min(1, y / LEN[k])));
     };
-    const src = i => `media/seq/${DIR}/h-${String(i).padStart(3, '0')}.webp`;
+    const src = i => `media/seq/${DIR}/h-${String(i * STEP).padStart(3, '0')}.webp`;
     // Memoria: 182 fotogramas de 1920 descomprimidos ocupan ~1,5 GB; el navegador los descarta y, al dibujarlos,
     // vuelve a descomprimir cada uno (~15 ms), que es justo el tirón del scroll. Por eso se guardan COMPRIMIDOS
     // (blobs, ~17 MB) y solo se tienen listos para pintar (ImageBitmap, descomprimido fuera del hilo principal)
@@ -1504,11 +1587,12 @@ const CONFIG = {
       cv.width = Math.round(cv.clientWidth * d); cv.height = Math.round(cv.clientHeight * d);
       ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; layout(); shownKey = -1; draw(); };
     // descarga: primero la escena 1 en orden (es lo primero que se ve), luego una de cada 4 del resto y después
-    // los huecos. Seis a la vez para no ahogar la red. El cargador espera a todas (o, como mucho, 9 s).
+    // los huecos. Seis a la vez para no ahogar la red. El cargador solo espera a la escena 1 (o, como mucho, 6 s):
+    // el resto llega mientras se mira y, si al bajar aún falta alguna, se queda la más cercana ya cargada.
     const all = Array.from({ length: N }, (_, i) => i);
-    const order = [...all.filter(i => i < 61), ...all.filter(i => i >= 61 && i % 4 === 0), ...all.filter(i => i >= 61 && i % 4)];
+    const order = [...all.filter(i => i < C1), ...all.filter(i => i >= C1 && i % 4 === 0), ...all.filter(i => i >= C1 && i % 4)];
     seqLoad = { p: 0 };
-    setTimeout(() => { seqLoad.p = 1; }, 9000);
+    setTimeout(() => { seqLoad.p = 1; }, 6000);
     let next = 0;
     const pump = () => {
       if (next >= order.length) return;
@@ -1516,7 +1600,7 @@ const CONFIG = {
       fetch(src(i)).then(r => r.ok ? r.blob() : Promise.reject(r.status))
         .then(b => { blobs[i] = b; ok[i] = 1; prime(); })
         .catch(() => {})
-        .finally(() => { loaded++; seqLoad.p = Math.max(seqLoad.p, loaded / N); pump(); });
+        .finally(() => { loaded++; seqLoad.p = Math.max(seqLoad.p, Math.min(1, loaded / C1)); pump(); });
     };
     for (let k = 0; k < 6; k++) pump();
     size(); addEventListener('resize', size);
@@ -1998,8 +2082,7 @@ const CONFIG = {
 
   /* ---------- modo presentación (solo con ?demo: la barra de atajos y las teclas D, R y H) ---------- */
   let demo;
-  if (!qs.has('demo')) $('[data-hud]').remove();
-  else addEventListener('keydown', e => {
+  if (qs.has('demo')) addEventListener('keydown', e => {
     if (e.target.closest('input,textarea') || e.metaKey || e.ctrlKey || cartaOpen) return;
     const k = e.key.toLowerCase();
     if (k === 'd') { // auto-scroll cinematográfico (~80 s) para grabar o proyectar
@@ -2011,14 +2094,21 @@ const CONFIG = {
     if (k === 'h') document.body.classList.toggle('clean');
   });
   addEventListener('wheel', () => { if (demo?.isActive()) { demo.kill(); document.body.classList.remove('demo'); } }, { passive: true });
-  addEventListener('load', () => ScrollTrigger.refresh());
-})();
+  if (document.readyState === 'complete') ScrollTrigger.refresh(); else addEventListener('load', () => ScrollTrigger.refresh());
+}).catch(err => {
+  // si algo falla al montar la web, nunca se queda en el cargador: se quita y se puede bajar y reservar
+  console.error(err);
+  document.querySelector('[data-loader]')?.remove();
+  document.body.classList.remove('is-loading');
+  document.documentElement.classList.add('quieta');
+});
 </script>
 <script>
   /* Agente de voz (ng-agent): backend y cliente del restaurante. */
   window.OZIO_VOZ = {
     agentUrl: 'https://ng-agent-eu.onrender.com',
     tenant:   'ozio-gastronomico',
+    phone:    '917 129 170',          // lo que se ofrece si la llamada no conecta
   };
 
   /* ---------- MEDICIÓN: visitas y clics que importan, al panel de Ozio ----------

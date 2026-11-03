@@ -1,0 +1,6 @@
+# Los buscadores solo leen el robots.txt de la raíz del dominio. En GitHub Pages (david-zequeira.github.io/ozio-gastronomico/)
+# este archivo no se usa; vale cuando la web pase a su propio dominio (p. ej. oziogastronomico.es).
+User-agent: *
+Allow: /
+
+Sitemap: https://david-zequeira.github.io/ozio-gastronomico/sitemap.xml

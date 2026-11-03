@@ -15,6 +15,28 @@
 <meta property="og:image" content="https://david-zequeira.github.io/ozio-gastronomico/og.jpg">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta property="og:url" content="https://david-zequeira.github.io/ozio-gastronomico/">
+<link rel="canonical" href="https://david-zequeira.github.io/ozio-gastronomico/">
+<!-- ficha del restaurante para buscadores (dirección, horario, contacto). Sin valoraciones: las de la web son de ejemplo -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Ozio Gastronomico",
+  "url": "https://david-zequeira.github.io/ozio-gastronomico/",
+  "image": "https://david-zequeira.github.io/ozio-gastronomico/og.jpg",
+  "logo": "https://david-zequeira.github.io/ozio-gastronomico/media/logo-ozio.png",
+  "description": "Cocina mediterránea con alma siciliana. Un espacio para compartir.",
+  "servesCuisine": ["Italiana", "Siciliana", "Mediterránea"],
+  "telephone": "+34917129170",
+  "email": "info@oziogastronomico.es",
+  "acceptsReservations": true,
+  "address": { "@type": "PostalAddress", "streetAddress": "Calle Aviador Zorita, 37", "postalCode": "28020", "addressLocality": "Madrid", "addressCountry": "ES" },
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], "opens": "13:00", "closes": "15:30" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], "opens": "20:00", "closes": "22:30" }
+  ]
+}
+</script>
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" as="font" type="font/woff2" href="fonts/Manrope-normal-300_800.woff2" crossorigin>
 <link rel="preload" as="image" href="media/f/opt/hero-poster.webp">
@@ -120,7 +142,7 @@
   .uline{position:relative;padding-bottom:5px}
   .uline::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform-origin:right;transition:transform .6s var(--ease)}
   .uline:hover::after{transform:scaleX(0)}
-    @media (max-width:809px){.nav{padding:16px 20px}.nav .logo{font-size:34px}.nav .logo .nav-lg{display:none}.nav .logo .nav-mk{display:block!important}.nav ul{gap:20px}.nav ul small{display:none}.nav ul a,.nav ul button{font-size:14px}}
+    @media (max-width:809px){.nav{padding:16px 20px}.nav .logo{font-size:34px}.nav .logo .nav-lg{display:none}.nav .logo .nav-mk{display:block!important}.nav ul{gap:8px}.nav ul small{display:none}.nav ul a,.nav ul button{font-size:14px;padding:14px 6px;margin:-14px 0}.nav ul a::after,.nav ul button::after{left:6px;right:6px;bottom:9px}}
   .progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:51;background:var(--champagne);transform:scaleX(0);transform-origin:left}
 
   /* ---------- BOTONES ---------- */
@@ -164,6 +186,11 @@
   .hero-copy{--ht:clamp(38px,calc(var(--u)*50),60px);position:absolute;inset:0;z-index:3;display:grid;align-items:start;justify-items:center;text-align:center;padding:max(110px,calc(50svh - var(--ht) * 2.3)) 20px 0;will-change:transform}
   .hero-scene{grid-area:1/1;display:flex;flex-direction:column;align-items:center;opacity:0;visibility:hidden}
   .hero-scene.on{opacity:1;visibility:visible}
+  /* la escena con «Reservar» y «Ver menú» nunca se oculta del todo: transparente y sin clics hasta que le toca,
+     pero alcanzable con el tabulador; al recibir el foco se muestra (ver «el foco trae su escena») */
+  .hero-scene:has([data-hero-ctas]){visibility:visible!important;pointer-events:none}
+  .hero-scene.on:has([data-hero-ctas]),.hero-scene:has([data-hero-ctas]):focus-within{pointer-events:auto}
+  .hero-scene:has([data-hero-ctas]):focus-within,.hero-scene:has([data-hero-ctas]):focus-within>*{opacity:1!important;visibility:visible!important;transform:none!important;filter:none!important}
   .hero-copy .hero-t{font-family:var(--uni);font-weight:300;font-size:var(--ht);line-height:1.08;letter-spacing:-.02em;max-width:11em;text-wrap:balance;text-shadow:0 4px 30px rgba(0,0,0,.35)}
   /* .two: subtítulo en dos líneas fijas (en móvil se reparte solo) */
   .hero-copy .lead.two{max-width:none}
@@ -408,6 +435,10 @@
   .lightbox.on{opacity:1;visibility:visible}
   .lightbox img{max-width:100%;max-height:82vh;border-radius:12px;box-shadow:0 40px 120px rgba(0,0,0,.5);transform:scale(.94);transition:transform .7s var(--ease)}
   .lightbox.on img{transform:none}
+  .lb-x{position:absolute;top:max(18px,env(safe-area-inset-top));right:18px;display:grid;place-items:center;width:52px;height:52px;padding:0;border-radius:50%;border:1px solid rgba(243,241,239,.3);background:rgba(27,26,23,.6);color:var(--ivory);cursor:pointer;transition:border-color .3s,background .3s}
+  .lb-x:hover{border-color:var(--ivory);background:rgba(27,26,23,.9)}
+  .lb-x svg{width:22px;height:22px}
+  .gcard:focus-visible{outline:2px solid var(--champagne);outline-offset:4px}
   .lightbox p{margin-top:16px;text-align:center;font-family:var(--label);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:rgba(243,241,239,.7)}
   .encuentro .count{position:absolute;z-index:3;right:var(--gut);bottom:calc(var(--u)*22 + 6px);font-family:var(--label);font-size:11px;letter-spacing:.3em;color:var(--olive)}
   .encuentro .count i{display:inline-block;vertical-align:middle;width:90px;height:1px;background:var(--line-l);margin:0 12px;position:relative;overflow:hidden}
@@ -430,7 +461,8 @@
   /* la tarjeta de reserva: sin animaciones va debajo del arco; con ellas, centrada sobre el vídeo */
   .ev-card{position:relative;z-index:6;display:flex;justify-content:center;margin-top:calc(var(--u)*40)}
   .ev-live .ev-card{position:absolute;left:0;right:0;top:0;height:100vh;height:100svh;margin:0;align-items:center;padding:max(64px,calc(var(--u)*70)) 20px 20px;pointer-events:none}
-  .ev-live .ev-card .rcard{visibility:hidden;opacity:0}
+  .ev-live .ev-card .rcard{opacity:0;pointer-events:none}
+  .ev-live .ev-card .rcard.on{pointer-events:auto}
   .ev-card .rcard{pointer-events:auto}
   #reserva{position:relative;height:0}
   .aura{position:absolute;width:70vmax;height:70vmax;left:0;top:0;margin:-35vmax 0 0 -35vmax;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(192,164,130,.34) 0%,rgba(192,164,130,.12) 30%,rgba(192,164,130,0) 62%);filter:blur(20px);mix-blend-mode:screen;will-change:transform}
@@ -573,17 +605,26 @@
   footer .logo img{display:block;height:1em;width:auto}
   footer h4{font-size:max(15px,calc(var(--u)*15.5));font-weight:500;color:rgba(243,241,239,.5);margin-bottom:calc(var(--u)*20)}
   footer ul{list-style:none;display:flex;flex-direction:column;gap:calc(var(--u)*6 + 2px);font-size:max(14px,calc(var(--u)*14.2));font-weight:500;overflow-wrap:anywhere}
-  footer ul a{position:relative;display:inline-block}
-  footer ul a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .5s var(--ease)}
-  footer ul a:hover::after{transform:scaleX(1);transform-origin:left}
+  footer ul a,footer ul .lnk{position:relative;display:inline-block}
+  footer ul .lnk{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+  footer ul .mail{overflow-wrap:normal;white-space:nowrap}
+  footer ul a::after,footer ul .lnk::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .5s var(--ease)}
+  footer ul a:hover::after,footer ul .lnk:hover::after{transform:scaleX(1);transform-origin:left}
   footer .legal{margin-top:calc(var(--u)*46);display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;font-size:13px;line-height:1.7;color:rgba(243,241,239,.55)}
   footer .legal b{color:var(--ivory);font-weight:500}
+  footer .legal a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+  footer .legal a:hover{color:var(--ivory)}
   footer .legal .by{display:flex;align-items:center;gap:16px}
   footer .legal{padding-right:84px}                                   /* el crédito no queda debajo del botón de voz */
   /* el logo grande se va; queda el sello pequeño y sutil, a la derecha */
   footer .legal .mk{width:34px;height:34px;opacity:.45}
   @media (max-width:560px){.ev-card .rcard .btns{flex-direction:column;align-items:stretch}.ev-card .rcard .btns>*{flex:none}}
-  @media (max-width:809px){footer{padding:56px 20px 32px}footer .cols{grid-template-columns:1fr 1fr;row-gap:30px}footer .cols>div:first-child{grid-column:1/-1}}
+  @media (max-width:809px){footer{padding:56px 20px 32px}footer .cols{grid-template-columns:1fr 1fr;row-gap:30px}footer .cols>div:first-child{grid-column:1/-1}
+    /* Contacto a todo el ancho y al final: el correo cabe en una línea */
+    footer .cols>div:nth-child(3){grid-column:1/-1;order:1}
+    /* zonas de toque de ~40 px sin separar más las líneas */
+    footer ul{gap:0}footer ul a,footer ul .lnk{padding:9px 0}footer ul a::after,footer ul .lnk::after{bottom:7px}
+    footer .legal a{display:inline-block;padding:8px 0}}
 
   /* ---------- VOZ: llamar a Ozio ---------- */
   /* el botón es el sello de Ozio: círculo oscuro con la marca, como en la referencia */
@@ -595,6 +636,7 @@
   @keyframes vozPing{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.55);opacity:0}}
   .voz-fab .t{position:absolute;right:calc(100% + 12px);top:50%;padding:10px 16px;border-radius:999px;background:rgba(27,26,23,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--ivory);font:500 14px/1 var(--sans);white-space:nowrap;opacity:0;transform:translate(6px,-50%);transition:opacity .3s,transform .4s var(--ease);pointer-events:none}
   .voz-fab:hover .t,.voz-fab:focus-visible .t,.voz-fab.hello .t{opacity:1;transform:translate(0,-50%)}
+  html.at-foot .voz-fab .t,html.at-foot .chat-fab .t{opacity:0!important}
   body.is-loading .voz-fab,html.voz-open .voz-fab,html.carta-open .voz-fab,body.clean .voz-fab,html.fab-off .voz-fab{opacity:0;pointer-events:none}
   @media (max-width:560px){.voz-fab{right:14px;bottom:14px;width:58px;height:58px}}
   .voz{position:fixed;inset:0;z-index:95;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(60% 50% at 50% 42%,rgba(192,164,130,.22),transparent 70%),rgba(15,14,12,.9);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);opacity:0;transition:opacity .5s var(--ease);color:var(--ivory);cursor:auto}
@@ -627,7 +669,19 @@
   .voz-actions .hang{background:#b4533e;border-color:#b4533e;color:#fff}
   .voz-actions [aria-pressed="true"]{background:rgba(255,255,255,.1)}
   .voz-legal{font-size:11px;line-height:1.5;color:rgba(243,241,239,.35);max-width:36ch}
-  .voz:not([data-state="error"]):not([data-state="ended"]) [data-chat-open]{display:none}
+  .voz-legal a,.chat-legal a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+  .book-opts{width:100%;display:flex;flex-direction:column;gap:10px}
+  .book-opts .opt{display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;min-height:64px;padding:16px 20px;border-radius:18px;border:1px solid rgba(243,241,239,.22);background:rgba(255,255,255,.04);color:var(--ivory);text-align:left;text-decoration:none;font:inherit;cursor:pointer;transition:border-color .3s,background .3s}
+  .book-opts .opt:hover{border-color:var(--ivory);background:rgba(255,255,255,.08)}
+  .book-opts .opt b{font:500 17px/1.25 var(--sans);letter-spacing:-.01em}
+  .book-opts .opt small{font-size:13px;line-height:1.4;color:rgba(243,241,239,.6)}
+  .book-opts .opt:first-child{background:var(--ivory);border-color:var(--ivory);color:var(--charcoal)}
+  .book-opts .opt:first-child small{color:rgba(27,26,23,.65)}
+  html.book-open .voz-fab,html.book-open .chat-fab{opacity:0;pointer-events:none}
+  .voz-actions .ok{background:var(--ivory);border-color:var(--ivory);color:var(--charcoal)}
+  .voz[data-state="consent"] .voz-line{font-size:clamp(18px,3.6vw,22px);max-width:30ch}
+  .voz[data-state="consent"] .voz-legal{color:rgba(243,241,239,.6);font-size:12px}
+  [data-voz]:not([data-state="error"]):not([data-state="ended"]):not([data-state="consent"]) [data-chat-open]{display:none}
 
   /* ---------- CHAT: escribir a Ozio ---------- */
   .chat-fab{position:fixed;right:31px;bottom:100px;z-index:70;display:grid;place-items:center;width:50px;height:50px;border-radius:50%;border:1px solid rgba(243,241,239,.2);background:rgba(27,26,23,.66);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--ivory);cursor:pointer;box-shadow:0 20px 60px rgba(0,0,0,.35);transition:transform .5s var(--ease),border-color .4s,opacity .4s}
@@ -689,6 +743,8 @@
     .chat-typing i{animation:none;opacity:.7}
   }
   [hidden]{display:none!important}
+  .skip{position:fixed;left:16px;top:16px;z-index:120;padding:14px 20px;border-radius:999px;background:var(--ivory);color:var(--charcoal);font:600 14px/1 var(--sans);text-decoration:none;transform:translateY(-160%);transition:transform .3s var(--ease)}
+  .skip:focus{transform:none}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
   /* ---------- CURSOR + extras ---------- */
@@ -710,6 +766,10 @@
     .intro-s h2 .w{color:inherit}
     .cocina .vid,.eventos .arch{clip-path:none}
   }
+  /* lo mismo cuando la web arranca quieta porque no han llegado las librerías */
+  html.quieta .loader{display:none}
+  html.quieta .intro-s h2 .w{color:inherit}
+  html.quieta .cocina .vid,html.quieta .eventos .arch{clip-path:none}
 </style>
 </head>
 <body class="is-loading">
@@ -732,6 +792,7 @@
 
 <div class="progress" data-progress></div>
 
+<a class="skip" href="#ozio" data-skip>Saltar al contenido</a>
 <nav class="nav" data-nav>
   <a class="logo" href="#top" data-cursor="Inicio" aria-label="Ozio Gastronomico, inicio"><img class="nav-lg" src="media/logo-ozio.png" width="1031" height="265" alt="" aria-hidden="true"><img class="nav-mk" src="media/logo-ozio-simbolo.png" width="241" height="240" alt="" aria-hidden="true"></a>
   <ul>
@@ -758,7 +819,7 @@
       <h2 class="hero-t">El tiempo<em class="sc">de disfrutar</em></h2>
       <p class="lead">Una cocina que invita a detenerse, descubrir y disfrutar.</p>
     </div>
-    <div class="hero-scene" data-scene="2" aria-hidden="true">
+    <div class="hero-scene" data-scene="2">
     <h1 class="hero-t">Benvenuti<em class="sc">a Ozio</em></h1>
     <p class="lead">Un espacio para compartir</p>
     <div class="ctas" data-hero-ctas>
@@ -898,7 +959,7 @@
   </div>
   <div class="count"><span data-g-n>01</span><i data-g-bar></i><span>09</span></div>
   </div>
-  <div class="lightbox" data-lightbox><div><img alt="" data-lb-img><p data-lb-cap></p></div></div>
+  <div class="lightbox" data-lightbox role="dialog" aria-modal="true" aria-label="Foto ampliada" hidden><button class="lb-x" type="button" data-lb-close aria-label="Cerrar la foto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button><div><img alt="" data-lb-img><p data-lb-cap></p></div></div>
 </section>
 
 <!-- ================= CIFRAS ================= -->
@@ -912,7 +973,7 @@
     <div class="quote">
       <div class="ph" data-q-ph><img src="media/f/opt/resena.webp" alt="" data-q-img loading="lazy"><span class="tag" data-q-tag>Ozio</span></div>
       <div class="qt">
-        <div>
+        <div data-q-live aria-live="off">
           <svg class="mark" viewBox="0 0 62 52" fill="currentColor" aria-hidden="true"><path d="M0 52V27C0 11 7 3 22 0l2 8c-8 3-11 8-11 15h11v29zM38 52V27c0-16 7-24 22-27l2 8c-8 3-11 8-11 15h11v29z"/></svg>
           <blockquote data-q-text></blockquote>
           <div class="foot">
@@ -977,7 +1038,7 @@
     <div><h4>Contacto</h4><ul data-foot-contact></ul></div>
     <div><h4>Redes</h4><ul data-foot-social></ul></div>
   </div>
-  <div class="legal"><span>Copyright © <span data-year></span> Ozio Gastronomico.<br>Todos los derechos reservados.</span><span class="by">Experiencia creada por <b>asenix</b><svg class="mk" aria-hidden="true"><use href="#ozio-mark"/></svg></span></div>
+  <div class="legal"><span>Copyright © <span data-year></span> Ozio Gastronomico.<br>Todos los derechos reservados.<br><a href="aviso-legal.html">Aviso legal</a> · <a href="privacidad.html">Privacidad</a></span><span class="by">Experiencia creada por <b>asenix</b><svg class="mk" aria-hidden="true"><use href="#ozio-mark"/></svg></span></div>
 </footer>
 
 <!-- ================= LA CARTA (segunda vista): las hojas del menú real ================= -->
@@ -1011,11 +1072,27 @@
     <div class="voz-actions">
       <button type="button" data-voz-mute aria-pressed="false" hidden><span>Silenciar</span></button>
       <button type="button" class="hang" data-voz-hang hidden>Colgar</button>
+      <button type="button" class="ok" data-voz-accept hidden>Aceptar y llamar</button>
       <button type="button" data-voz-retry hidden>Volver a llamar</button>
       <button type="button" data-chat-open>Escribir</button>
       <button type="button" data-voz-close>Cerrar</button>
     </div>
-    <p class="voz-legal">Te atiende una asistente virtual. La llamada se graba para atención al cliente y reservas.</p>
+    <p class="voz-legal">Te atiende una asistente virtual. La llamada se graba para atención al cliente y reservas. <a href="privacidad.html" target="_blank" rel="noopener">Política de privacidad</a></p>
+  </div>
+</div>
+
+<!-- ================= RESERVAR: las tres vías, la más segura (el teléfono) primero ================= -->
+<div class="voz book" data-book-sheet role="dialog" aria-modal="true" aria-labelledby="book-title" hidden>
+  <div class="voz-in">
+    <div class="voz-brand">Reservas<b class="logo"><svg class="lg" aria-hidden="true"><use href="#ozio-logo"/></svg></b></div>
+    <p class="voz-line" id="book-title">¿Cómo prefieres reservar?</p>
+    <div class="book-opts">
+      <a class="opt" data-book-tel href="#"><b>Llamar al restaurante</b><small data-book-tel-n></small></a>
+      <a class="opt" data-book-wa href="#" target="_blank" rel="noopener" hidden><b>WhatsApp</b><small>Te contestamos por mensaje</small></a>
+      <button class="opt" type="button" data-chat-open><b>Escribir por chat</b><small>Reserva y dudas de la carta, por escrito</small></button>
+      <button class="opt" type="button" data-voz-open><b>Hablar con la asistente</b><small>Llamada desde el navegador, con micrófono</small></button>
+    </div>
+    <div class="voz-actions"><button type="button" data-book-close>Cerrar</button></div>
   </div>
 </div>
 
@@ -1037,7 +1114,7 @@
     <textarea rows="1" maxlength="2000" placeholder="Escribe tu mensaje…" aria-label="Tu mensaje para Ozio" autocomplete="off" enterkeyhint="send" data-chat-input></textarea>
     <button class="chat-send" type="submit" aria-label="Enviar" data-chat-send disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
   </form>
-  <p class="chat-legal">Te atiende una asistente virtual. Guardamos la conversación para gestionar tu reserva.</p>
+  <p class="chat-legal">Te atiende una asistente virtual. Guardamos la conversación para gestionar tu reserva. <a href="privacidad.html" target="_blank" rel="noopener">Privacidad</a></p>
   <p class="sr-only" data-chat-live aria-live="polite"></p>
 </section>
 
@@ -1045,14 +1122,29 @@
 <div class="grain"></div>
 <div class="hud" data-hud>D · demo &nbsp;|&nbsp; R · reset &nbsp;|&nbsp; H · ocultar</div>
 
-<!-- Librerías en local (funciona sin internet en la reunión). Si falta vendor/, se cargan del CDN. -->
-<script src="vendor/gsap.min.js"></script>
-<script src="vendor/ScrollTrigger.min.js"></script>
-<script src="vendor/ScrollToPlugin.min.js"></script>
-<script src="vendor/lenis.min.js"></script>
+<!-- Librerías en local (funciona sin internet en la reunión); si alguna falla, del CDN. Se piden sin bloquear la
+     página y con un tiempo máximo: si a los 8 s no han llegado todas, la web arranca quieta (como con «reducir
+     movimiento»), pero siempre se ve y se puede reservar. -->
 <script>
-  if (!window.gsap) ['gsap','ScrollTrigger','ScrollToPlugin'].forEach(n => document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/'+n+'.min.js"><\/script>'));
-  if (!window.Lenis) document.write('<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"><\/script>');
+  window.ozioLibs = (() => {
+    // sri: huella del archivo (la misma que la copia de vendor/); si el CDN sirviera otra cosa, no se ejecuta
+    const add = (src, ms, sri) => new Promise((ok, ko) => {
+      const s = document.createElement('script'); s.src = src; s.async = false;
+      if (sri) { s.integrity = 'sha384-' + sri; s.crossOrigin = 'anonymous'; }
+      const t = setTimeout(() => ko(new Error('tiempo: ' + src)), ms);
+      s.onload = () => { clearTimeout(t); ok(); }; s.onerror = () => { clearTimeout(t); ko(new Error('fallo: ' + src)); };
+      document.head.append(s);
+    });
+    const lib = (local, cdn, has, sri) => add(local, 5000).catch(() => has() || add(cdn, 6000, sri)).catch(() => {});
+    const gs = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/';
+    const gsap = lib('vendor/gsap.min.js', gs + 'gsap.min.js', () => window.gsap, 'g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt')
+      .then(() => Promise.all([lib('vendor/ScrollTrigger.min.js', gs + 'ScrollTrigger.min.js', () => window.ScrollTrigger, 'Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d'),
+                               lib('vendor/ScrollToPlugin.min.js', gs + 'ScrollToPlugin.min.js', () => window.ScrollToPlugin, 'RVPQwTb0fPz9kI8s5GwAq1Qioto9fnEQt1aKGSQSm8xV6+DIdBSgcCShoHqfKnhv')]));
+    const lenis = lib('vendor/lenis.min.js', 'https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js', () => window.Lenis, 'B2WBjDzEjJpYvhmi2UyEn7rektqkf5suS6sNoyyrf0EBAwBHdkiXxIlU0V5Ru2ed');
+    const all = Promise.all([gsap, lenis]);
+    return Promise.race([all, new Promise(ok => setTimeout(ok, 8000))])
+      .then(() => !!(window.gsap && window.ScrollTrigger && window.ScrollToPlugin && window.Lenis));
+  })();
 </script>
 <script>
 /* =====================================================================
@@ -1098,11 +1190,15 @@ const CONFIG = {
   ],
 };
 
-(() => {
+// arranca cuando las librerías han llegado o se ha agotado su tiempo (motion = false: la web va quieta)
+window.ozioLibs.then(motion => {
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
   const qs = new URLSearchParams(location.search);
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // sin librerías de movimiento, la web va como con «reducir movimiento»: todo visible y quieto
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches || !motion;
+  if (!motion) document.documentElement.classList.add('quieta');
+  if (!qs.has('demo')) $('[data-hud]').remove();                      // la barra de atajos, solo en modo presentación
   const fine = matchMedia('(pointer:fine)').matches;
 
   /* ---------- PRUEBA (?fotogramas): portada con secuencia de fotogramas en lugar del vídeo ----------
@@ -1161,7 +1257,7 @@ const CONFIG = {
     .filter(([, v]) => v);
   const brk = v => esc(v).replace(/\n/g, '<br>');
   $('[data-contact]').innerHTML = contact.map(([k, v, h]) => `<div><small>${k}</small>${h ? `<a href="${esc(h)}"${/^https?:/.test(h) ? ' target="_blank" rel="noopener"' : ''}>${brk(v)}</a>` : `<span>${brk(v)}</span>`}</div>`).join('');
-  $('[data-foot-contact]').innerHTML = [CONFIG.mapsUrl && `<li><a href="${esc(CONFIG.mapsUrl)}" target="_blank" rel="noopener">¿Cómo llegar?</a></li>`, CONFIG.whatsapp && `<li><a href="https://wa.me/${esc(CONFIG.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a></li>`, CONFIG.email && `<li><a href="mailto:${esc(CONFIG.email)}">${esc(CONFIG.email).replace('@', '@<wbr>')}</a></li>`, '<li><a href="#" data-voz-open>Llamar a Ozio</a></li>', '<li><a href="#reserva">Reservas</a></li>'].filter(Boolean).join('');
+  $('[data-foot-contact]').innerHTML = [CONFIG.mapsUrl && `<li><a href="${esc(CONFIG.mapsUrl)}" target="_blank" rel="noopener">¿Cómo llegar?</a></li>`, CONFIG.whatsapp && `<li><a href="https://wa.me/${esc(CONFIG.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a></li>`, CONFIG.email && `<li><a class="mail" href="mailto:${esc(CONFIG.email)}">${esc(CONFIG.email)}</a></li>`, CONFIG.phone && `<li><a href="${esc(telHref(CONFIG.phone))}">${esc(CONFIG.phone)}</a></li>`, '<li><button class="lnk" type="button" data-voz-open>Hablar con la asistente</button></li>'].filter(Boolean).join('');
   $('[data-foot-social]').innerHTML = CONFIG.instagram ? `<li><a href="https://instagram.com/${esc(CONFIG.instagram)}" target="_blank" rel="noopener">Instagram</a></li>` : '<li><span style="opacity:.55">Próximamente</span></li>';
 
   /* ---------- cifras: odómetro ---------- */
@@ -1169,7 +1265,8 @@ const CONFIG = {
   $('[data-stats-grid]').innerHTML = CONFIG.stats.map(s => {
     const txt = fmtNum(s.value, s.decimals);
     const digits = [...txt].map(c => /\d/.test(c) ? `<span class="odo"><i data-d="${c}">${Array.from({ length: 20 }, (_, i) => `<em>${i % 10}</em>`).join('')}</i></span>` : `<span>${c}</span>`).join('');
-    return `<div class="stat"><b>${s.prefix ? `<span>${s.prefix}</span>` : ''}${digits}${s.suffix ? `<span>${s.suffix}</span>` : ''}</b><span>${esc(s.label)}</span></div>`;
+    // el lector de pantalla oye la cifra final, no la tira de dígitos del odómetro
+    return `<div class="stat"><b aria-hidden="true">${s.prefix ? `<span>${s.prefix}</span>` : ''}${digits}${s.suffix ? `<span>${s.suffix}</span>` : ''}</b><span class="sr-only">${txt}${s.suffix || ''} </span><span>${esc(s.label)}</span></div>`;
   }).join('');
 
   /* ---------- testimonios ---------- */
@@ -1196,9 +1293,11 @@ const CONFIG = {
   cPages.innerHTML = C.map((c, i) => `<button class="c-th" type="button" data-i="${i}" aria-pressed="false"><img src="${esc(c.th)}" alt="" loading="lazy"><span>${esc(c.title)}<small>${esc(c.k)}</small></span></button>`).join('');
   const cImgs = $$('img', cPage), cThs = $$('.c-th', cPages), cNext = $('[data-c-next]');
   let cI = -1;
+  // la hoja que se muestra y sus vecinas se piden ya (van en «lazy»): al pasar de hoja nunca se ve en blanco
+  const near = (imgs, i) => [i - 1, i, i + 1].forEach(j => { const im = imgs[(j + imgs.length) % imgs.length]; if (im.loading === 'lazy') im.loading = 'eager'; });
   const setPage = i => {
     if (i === cI || i < 0 || i >= C.length) return;
-    const prev = cI, down = prev < i; cI = i;
+    const prev = cI, down = prev < i; cI = i; near(cImgs, i);
     cThs.forEach((b, j) => b.setAttribute('aria-pressed', j === i));
     cNext.setAttribute('aria-label', i < C.length - 1 ? 'Siguiente hoja' : 'Seguir descubriendo Ozio');
     cImgs.forEach((im, j) => im.style.zIndex = j === i ? 3 : j === prev ? 2 : 1);
@@ -1272,7 +1371,7 @@ const CONFIG = {
   let csI = -1;
   const csGo = i => {
     i = (i + C.length) % C.length; if (i === csI) return;
-    const prev = csI, down = prev < i; csI = i;
+    const prev = csI, down = prev < i; csI = i; near(csImgs, i);
     csThs.forEach((b, j) => b.setAttribute('aria-pressed', j === i));
     csImgs.forEach((im, j) => im.style.zIndex = j === i ? 3 : j === prev ? 2 : 1);
     if (!window.gsap || prev < 0 || reduce) { csImgs.forEach((im, j) => im.style.clipPath = j === i ? 'inset(0 0 0 0)' : 'inset(100% 0 0 0)'); return; }
@@ -1317,11 +1416,32 @@ const CONFIG = {
     if (window.ScrollTrigger) ScrollTrigger.refresh();
   }, { passive: true });
 
-  /* ---------- reservar: WhatsApp si está configurado; si no, la llamada con Ozio ---------- */
-  $('[data-book]').addEventListener('click', () => {
-    if (CONFIG.whatsapp) window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent('Hola, me gustaría reservar una mesa en Ozio.')}`, '_blank', 'noopener');
-    else $('.voz-fab').click();
+  /* ---------- reservar: se elige la vía (teléfono, WhatsApp si lo hay, chat o la asistente) ----------
+     La llamada por voz necesita micrófono y un servidor que puede tardar en despertar; el teléfono y el chat
+     no, así que nunca se deja al cliente con una sola puerta. Al elegir, el selector se cierra y cada botón
+     hace lo suyo (los de chat y llamada los atienden chat.js y voz.js). */
+  const book = $('[data-book-sheet]'), bookTel = $('[data-book-tel]'), bookWa = $('[data-book-wa]');
+  if (CONFIG.phone) { bookTel.href = telHref(CONFIG.phone); $('[data-book-tel-n]').textContent = CONFIG.phone; } else bookTel.remove();
+  if (CONFIG.whatsapp) { bookWa.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent('Hola, me gustaría reservar una mesa en Ozio.')}`; bookWa.hidden = false; }
+  let bookFrom = null;
+  const openBook = e => {
+    bookFrom = e?.currentTarget || null;
+    book.hidden = false; document.documentElement.classList.add('book-open'); lenis?.stop();
+    requestAnimationFrame(() => { book.classList.add('on'); $('.opt', book)?.focus(); });
+  };
+  const closeBook = (back = true) => {
+    if (book.hidden) return;
+    book.classList.remove('on'); document.documentElement.classList.remove('book-open');
+    lenis?.start();                                    // ni el chat ni la llamada paran el scroll: se devuelve siempre
+    setTimeout(() => { if (!book.classList.contains('on')) book.hidden = true; }, 500);
+    if (back) bookFrom?.focus?.();
+  };
+  $$('[data-book]').forEach(b => b.addEventListener('click', openBook));
+  book.addEventListener('click', e => {
+    if (e.target === book || e.target.closest('[data-book-close]')) return closeBook();
+    if (e.target.closest('.opt')) closeBook(false);
   });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !book.hidden) closeBook(); });
 
   /* ---------- vídeos: reproducir solo en pantalla ---------- */
   const vio = new IntersectionObserver(es => es.forEach(e => {
@@ -1356,7 +1476,8 @@ const CONFIG = {
   const showScene = (i, force) => {
     if (i === sceneI && !force) return;
     const prev = heroScenes[sceneI] || null, next = heroScenes[i]; sceneI = i; sceneOut = false;
-    heroScenes.forEach((s, j) => { s.classList.toggle('on', j === i); s.setAttribute('aria-hidden', String(j !== i)); });
+    // la escena con los botones no se esconde a los lectores de pantalla: tiene el titular y la reserva
+    heroScenes.forEach((s, j) => { s.classList.toggle('on', j === i); if (!s.querySelector('[data-hero-ctas]')) s.setAttribute('aria-hidden', String(j !== i)); });
     if (!window.gsap || reduce) return;
     gsap.killTweensOf([next, ...next.children, ...(prev ? [prev, ...prev.children] : [])]);
     if (prev && prev !== next) gsap.to(prev,{ autoAlpha: 0, y: -14, filter: 'blur(4px)', duration: .6, ease: 'power2.inOut' });
@@ -1371,6 +1492,9 @@ const CONFIG = {
     const s = heroScenes[sceneI]; gsap.killTweensOf([s, ...s.children]);
     gsap.to(s, { autoAlpha: 0, y: -14, filter: 'blur(4px)', duration: .7, ease: 'power2.inOut' });
   };
+
+  // el foco trae su escena: al llegar con el tabulador a «Reservar» o «Ver menú», su texto se ve
+  $('[data-hero-ctas]').addEventListener('focusin', () => showScene(2));
 
   if (reduce) { showScene(2); $('[data-hero-video]').currentTime = 8.5; document.body.classList.remove('is-loading'); $('[data-loader]').remove(); $$('.odo i').forEach(i => i.style.transform = `translateY(-${+i.dataset.d}em)`); return; }
 
@@ -1388,8 +1512,13 @@ const CONFIG = {
     const a = e.target.closest('a[href^="#"]'); if (!a || a.hasAttribute('data-carta-open') || a.hasAttribute('data-carta-close') || a.hasAttribute('data-voz-open') || a.hasAttribute('data-cs-open')) return;
     const id = a.getAttribute('href'); if (id.length < 2 && id !== '#') return; e.preventDefault();
     // «#reserva» lleva al punto de la escena de eventos donde ya se ve la tarjeta
-    const to = id === '#top' || id === '#' ? 0 : id === '#reserva' && window.ozioReserveY ? window.ozioReserveY() : id;
-    lenis.scrollTo(to, { duration: 2.2, easing: t => 1 - Math.pow(1 - t, 4) });
+    // una sección fijada (pin) da su posición de pantalla, que depende de dónde se esté: se mide su envoltorio, que
+    // no se mueve. Así «Eventos» lleva siempre al arco y no a la tarjeta de reserva cuando se viene desde abajo
+    const posOf = sel => { const el = document.querySelector(sel); if (!el) return 0;
+      const box = el.closest('.pin-spacer') || el; return box.getBoundingClientRect().top + lenis.scroll; };
+    const to = id === '#top' || id === '#' ? 0 : id === '#reserva' && window.ozioReserveY ? window.ozioReserveY() : posOf(id);
+    lenis.scrollTo(to, { duration: a.hasAttribute('data-skip') ? 1 : 2.2, easing: t => 1 - Math.pow(1 - t, 4) });
+    if (a.hasAttribute('data-skip')) { const t = $(id); t.tabIndex = -1; t.focus({ preventScroll: true }); }
   });
 
   /* ---------- nav + progreso ---------- */
@@ -1403,11 +1532,12 @@ const CONFIG = {
   $$('.split').forEach(splitChars);
 
   /* ---------- LOADER ---------- */
+  let introTL = null;
   const intro = () => {
-    const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+    const tl = introTL = gsap.timeline({ defaults: { ease: 'expo.out' } });
     const counter = { v: 0 }, cEl = $('[data-count-loader]'), bar = $('[data-loader-bar]');
     // la cuenta es la de verdad: nunca pasa de lo que llevan cargado los fotogramas de la portada
-    const showCount = () => { const v = Math.round(Math.min(counter.v, seqLoad.p * 100));
+    const showCount = () => { if (!cEl.isConnected) return; const v = Math.round(Math.min(counter.v, seqLoad.p * 100));
       cEl.textContent = String(v).padStart(2, '0'); bar.style.transform = `scaleX(${v / 100})`; };
     tl.from('[data-ld-mark]', { scale: .4, rotate: -120, opacity: 0, duration: 1.2 }, .05)
       .fromTo('[data-ld-word]', { clipPath: 'inset(0 100% 0 0)', x: -16 }, { clipPath: 'inset(0 0% 0 0)', x: 0, duration: 1.1, ease: 'expo.inOut' }, .3)
@@ -1425,11 +1555,15 @@ const CONFIG = {
       // la portada empieza sin texto: el primero aparece con el primer gesto (ver «el vídeo se recorre con la rueda»)
       .from('[data-hero-intro]', { y: 24, opacity: 0, duration: 1.1 }, 2.0)
       .call(() => LOOP && showScene(2), null, 1.75)                     // portada en bucle: su único texto entra con la cortina
-      .call(() => { $('[data-loader]').remove(); document.body.classList.remove('is-loading'); lenis.start(); ScrollTrigger.refresh(); }, null, 2.4);
+      .call(() => openPage(), null, 2.4);
     return tl;
   };
   const start = () => (document.fonts?.ready || Promise.resolve()).then(() => requestAnimationFrame(intro));
-  qs.has('noloader') ? ($('[data-loader]').remove(), document.body.classList.remove('is-loading'), lenis.start(), LOOP && showScene(2)) : start();
+  const openPage = () => { $('[data-loader]')?.remove(); document.body.classList.remove('is-loading'); lenis.start(); ScrollTrigger.refresh(); };
+  qs.has('noloader') ? (openPage(), LOOP && showScene(2)) : start();
+  // red de seguridad: pase lo que pase (fuentes que no llegan, una animación que se queda), a los 12 s se entra
+  // (se salta al final de la entrada para que el menú y la portada queden en su sitio)
+  setTimeout(() => { if (!$('[data-loader]')) return; seqLoad.p = 1; introTL ? introTL.progress(1) : openPage(); }, 12000);
 
   /* ---------- presentación: el vídeo de la casa respira al bajar y el titular se despide ---------- */
   const hero = $('[data-hero]'), cam = $('[data-cam]'), heroVidEl = $('[data-hero-video]');
@@ -1438,16 +1572,22 @@ const CONFIG = {
   let seqST = null;
   if (SEQ) {
     const cv = heroVidEl, ctx = cv.getContext('2d');
-    const N = 182;                                               // 182 imágenes = 12,1 s de vídeo a 15 por segundo
-    // Fotogramas sacados del original en 1080p (Video OZIO.mp4, uno de cada dos). Dos juegos: 1920 px para
-    // pantallas grandes y 1280 px para el móvil, que pesa la mitad y en su pantalla se ve igual de nítido.
-    const BIG = innerWidth > 809 && Math.max(innerWidth, innerHeight) * Math.min(devicePixelRatio || 1, 2) > 1400;
+    // Fotogramas sacados del original en 1080p (Video OZIO.mp4, uno de cada dos): 182 imágenes = 12,1 s a 15 por
+    // segundo. Dos juegos: 1920 px para pantallas grandes y 1280 px para el móvil, que pesa la mitad y en su
+    // pantalla se ve igual de nítido. En el móvil, o con ahorro de datos o una conexión lenta, se usa además uno de
+    // cada dos (91 imágenes, ~5,7 MB en vez de ~11,4): el fundido entre fotogramas mantiene el movimiento continuo.
+    const net = navigator.connection || {};
+    const SLOW = !!net.saveData || /(^|-)2g|3g/.test(net.effectiveType || '');
+    const BIG = !SLOW && innerWidth > 809 && Math.max(innerWidth, innerHeight) * Math.min(devicePixelRatio || 1, 2) > 1400;
     const DIR = BIG ? 'hero-1920' : 'hero-1280', MAXPX = BIG ? 2400 : 1600;
+    const STEP = SLOW || innerWidth <= 809 ? 2 : 1, N = Math.ceil(182 / STEP);
     // Escenas: fotogramas 0–60, 61–120 y 121–181 (los cortes del montaje). La imagen avanza AL RITMO del scroll:
     // cada escena ocupa LEN pantallas y los fotogramas se reparten casi en línea recta, con una frenada muy leve
     // al final de la escena (SOFT: cuánto de curva se mezcla con la recta). Así la imagen va pegada al gesto, sin
     // acelerones ni tramos en los que parezca parada. El texto de cada escena surge al pasar TXT_AT de ella.
-    const B = [0, 60.5, 120.5, N - 1], CUT = new Set([61, 121]), LEN = [1.6, 1.5, 1.5], SOFT = .3;
+    // (con STEP 2: 0–30, 31–60 y 61–90)
+    const C1 = Math.ceil(61 / STEP), C2 = Math.ceil(121 / STEP);
+    const B = [0, C1 - .5, C2 - .5, N - 1], CUT = new Set([C1, C2]), LEN = [1.6, 1.5, 1.5], SOFT = .3;
     const SCROLL = LEN.reduce((a, b) => a + b);
     const ease = u => (1 - SOFT) * u + SOFT * Math.sin(u * Math.PI / 2);      // recta con un final algo más suave
     // posición de scroll (pantallas) → fotograma (con decimales: entre dos fotogramas se funden)
@@ -1455,7 +1595,7 @@ const CONFIG = {
       let k = 0; while (k < 2 && y > LEN[k]) y -= LEN[k++];
       return B[k] + (B[k + 1] - B[k]) * ease(Math.max(0, Math.min(1, y / LEN[k])));
     };
-    const src = i => `media/seq/${DIR}/h-${String(i).padStart(3, '0')}.webp`;
+    const src = i => `media/seq/${DIR}/h-${String(i * STEP).padStart(3, '0')}.webp`;
     // Memoria: 182 fotogramas de 1920 descomprimidos ocupan ~1,5 GB; el navegador los descarta y, al dibujarlos,
     // vuelve a descomprimir cada uno (~15 ms), que es justo el tirón del scroll. Por eso se guardan COMPRIMIDOS
     // (blobs, ~17 MB) y solo se tienen listos para pintar (ImageBitmap, descomprimido fuera del hilo principal)
@@ -1504,11 +1644,12 @@ const CONFIG = {
       cv.width = Math.round(cv.clientWidth * d); cv.height = Math.round(cv.clientHeight * d);
       ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; layout(); shownKey = -1; draw(); };
     // descarga: primero la escena 1 en orden (es lo primero que se ve), luego una de cada 4 del resto y después
-    // los huecos. Seis a la vez para no ahogar la red. El cargador espera a todas (o, como mucho, 9 s).
+    // los huecos. Seis a la vez para no ahogar la red. El cargador solo espera a la escena 1 (o, como mucho, 6 s):
+    // el resto llega mientras se mira y, si al bajar aún falta alguna, se queda la más cercana ya cargada.
     const all = Array.from({ length: N }, (_, i) => i);
-    const order = [...all.filter(i => i < 61), ...all.filter(i => i >= 61 && i % 4 === 0), ...all.filter(i => i >= 61 && i % 4)];
+    const order = [...all.filter(i => i < C1), ...all.filter(i => i >= C1 && i % 4 === 0), ...all.filter(i => i >= C1 && i % 4)];
     seqLoad = { p: 0 };
-    setTimeout(() => { seqLoad.p = 1; }, 9000);
+    setTimeout(() => { seqLoad.p = 1; }, 6000);
     let next = 0;
     const pump = () => {
       if (next >= order.length) return;
@@ -1516,7 +1657,7 @@ const CONFIG = {
       fetch(src(i)).then(r => r.ok ? r.blob() : Promise.reject(r.status))
         .then(b => { blobs[i] = b; ok[i] = 1; prime(); })
         .catch(() => {})
-        .finally(() => { loaded++; seqLoad.p = Math.max(seqLoad.p, loaded / N); pump(); });
+        .finally(() => { loaded++; seqLoad.p = Math.max(seqLoad.p, Math.min(1, loaded / C1)); pump(); });
     };
     for (let k = 0; k < 6; k++) pump();
     size(); addEventListener('resize', size);
@@ -1690,6 +1831,8 @@ const CONFIG = {
   /* ---------- llamar a Ozio: el sello se presenta un momento al entrar ---------- */
   const fab = $('.voz-fab');
   setTimeout(() => { fab.classList.add('hello'); setTimeout(() => fab.classList.remove('hello'), 3800); }, 3200);
+  // al final del pie, las etiquetas de los botones flotantes no salen: taparían el crédito y el copyright
+  new IntersectionObserver(([e]) => document.documentElement.classList.toggle('at-foot', e.isIntersecting)).observe($('footer .legal'));
 
   /* ---------- 02 · inspirado por el mediterráneo: las palabras se encienden ---------- */
   const iTitle = $('[data-intro-title]'); wrapWords(iTitle);
@@ -1776,15 +1919,18 @@ const CONFIG = {
   layoutDish(); addEventListener('resize', layoutDish); ScrollTrigger.addEventListener('refreshInit', layoutDish);
   const circleR = r => `circle(${r}px at 50% 50%)`;
   const dishBoth = '[data-dish], [data-dish-anno]';
-  const pTl = gsap.timeline({ scrollTrigger: { trigger: plato, start: 'top top', end: '+=420%', scrub: 1, pin: true, anticipatePin: 1, invalidateOnRefresh: true } });
-  pTl.fromTo('[data-dish]', { clipPath: () => circleR(dGeo.R) }, { clipPath: () => circleR(dGeo.R), duration: .01 }, 0)
-    .fromTo(dishBoth, { scale: .4, opacity: 0, x: () => dGeo.small ? 0 : dGeo.W * .16, y: () => dGeo.small ? dGeo.H * .5 : dGeo.H * .3 },
+  // la entrada (plato que gira, titular y texto) ocurre mientras la sección sube por la pantalla: al fijarse ya
+  // está todo, sin una pantalla de fondo vacío entre «La cocina» y «El plato»
+  const pIn = gsap.timeline({ scrollTrigger: { trigger: plato, start: 'top 85%', end: 'top top', scrub: 1, invalidateOnRefresh: true } });
+  const pTl = gsap.timeline({ scrollTrigger: { trigger: plato, start: 'top top', end: '+=380%', scrub: 1, pin: true, anticipatePin: 1, invalidateOnRefresh: true } });
+  pTl.fromTo('[data-dish]', { clipPath: () => circleR(dGeo.R) }, { clipPath: () => circleR(dGeo.R), duration: .01 }, 0);
+  pIn.fromTo(dishBoth, { scale: .4, opacity: 0, x: () => dGeo.small ? 0 : dGeo.W * .16, y: () => dGeo.small ? dGeo.H * .5 : dGeo.H * .3 },
                       { scale: () => dGeo.small ? .62 : .6, opacity: 1, x: () => dGeo.small ? 0 : dGeo.W * .16, y: () => dGeo.small ? dGeo.H * .1 : 0, duration: 1, ease: 'power3.out' }, 0)
     .fromTo('[data-dish-rot]', { rotate: -75 }, { rotate: 0, duration: 1.2, ease: 'power3.out' }, 0)
     .fromTo('[data-plate-glow]', { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: 1 }, 0)
     .fromTo('[data-plate-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .02, duration: .5, ease: 'power3.out' }, .1)
-    .fromTo('[data-plate-copy]', { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: .1, duration: .4 }, .3)
-    .fromTo('.plato-copy', { opacity: 1, x: 0 }, { opacity: 0, x: -40, duration: .35, immediateRender: false }, 1.25)
+    .fromTo('[data-plate-copy]', { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: .1, duration: .4 }, .3);
+  pTl.fromTo('.plato-copy', { opacity: 1, x: 0 }, { opacity: 0, x: -40, duration: .35, immediateRender: false }, 1.25)
     .to(dishBoth, { scale: dishScale, x: 0, y: 0, duration: .5, ease: 'power2.inOut' }, 1.25);
   // los ingredientes aparecen uno a uno
   callouts.forEach((c, i) => {
@@ -1808,24 +1954,28 @@ const CONFIG = {
      .fromTo('[data-cap="detalle"]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .4 }, 6.0)
      .to('[data-macro]', { scale: 1, duration: .8, ease: 'none' }, 6.3)
      .to({}, { duration: .2 });
+  // la entrada ya no va dentro de la parte fijada: lo demás se adelanta (queda un rato para leer el titular)
+  pTl.shiftChildren(-.6, false, 1);
 
   /* ---------- 05 · el encuentro: Parallax Gallery infinita (scroll + arrastre + inercia) ---------- */
   const pg = $('[data-pg]'), track = $('[data-track]'), gN = $('[data-g-n]'), gBar = $('[data-g-bar]');
   const base = $$('.gcard', track), nBase = base.length;
+  // cada foto es un botón: con el teclado se llega a ella, y Intro o Espacio la amplían (antes que los clones)
+  base.forEach(c => { c.tabIndex = 0; c.setAttribute('role', 'button'); c.setAttribute('aria-label', 'Ampliar la foto: ' + $('figcaption', c).textContent); });
   // se clona la tira hasta cubrir de sobra la pantalla: nunca quedan huecos
   let setW = 0, geo = [];
   const buildLoop = () => {
     $$('.gcard.clone', track).forEach(c => c.remove());
     const last = base[nBase - 1];
     setW = last.offsetLeft + last.offsetWidth + parseFloat(getComputedStyle(last).marginRight) - base[0].offsetLeft;   // un periodo de la tira
-    for (let k = 0; track.scrollWidth < setW + innerWidth * 1.5 && k < 6; k++) base.forEach(c => { const d = c.cloneNode(true); d.classList.add('clone'); d.setAttribute('aria-hidden', 'true'); track.append(d); });
+    for (let k = 0; track.scrollWidth < setW + innerWidth * 1.5 && k < 6; k++) base.forEach(c => { const d = c.cloneNode(true); d.classList.add('clone'); d.setAttribute('aria-hidden', 'true'); d.tabIndex = -1; track.append(d); });
     geo = $$('.gcard', track).map((c, i) => ({ img: $('img', c), l: c.offsetLeft, w: c.offsetWidth, n: i % nBase }));
   };
   buildLoop();
   // Movimiento medido en el ejemplo: deriva constante de 35 px/s hacia la izquierda; cada golpe de rueda
   // da un empujón inmediato en su sentido (≈0,95 px de galería por px de rueda) que se apaga en ~1 s
   // (caída exponencial, τ = 0,2 s) y vuelve a la deriva.
-  const G2 = { pos: 0, boost: 0, auto: 35, k: .95, tau: .2, drag: null, inView: false, lastY: scrollY, wheelAt: -1e9 };
+  const G2 = { pos: 0, boost: 0, auto: 35, k: .95, tau: .2, drag: null, inView: false, lastY: scrollY, wheelAt: -1e9, focus: false };
   addEventListener('resize', () => { clearTimeout(G2.rt); G2.rt = setTimeout(buildLoop, 200); });
   // la banda se queda fija una pantalla mientras el scroll empuja la galería
   // (se fija centrada en la pantalla)
@@ -1853,7 +2003,7 @@ const CONFIG = {
     if (!G2.drag) {
       // scroll táctil o de teclado: abajo → izquierda, arriba → derecha (el de la rueda ya empujó al instante)
       if (dy && performance.now() - G2.wheelAt > 1200) kick(Math.max(-120, Math.min(120, dy)) * 1.05);
-      G2.pos += (G2.auto + G2.boost) * dt;
+      G2.pos += ((G2.focus ? 0 : G2.auto) + G2.boost) * dt;      // con una foto enfocada, la tira se queda quieta
       G2.boost *= Math.exp(-dt / G2.tau);
     }
     const x = -loopX(G2.pos);
@@ -1873,9 +2023,24 @@ const CONFIG = {
   gsap.from(base, { clipPath: 'inset(100% 0% 0% 0%)', duration: 1.5, stagger: .08, ease: 'expo.inOut', clearProps: 'clipPath', scrollTrigger: { trigger: '[data-pgw]', start: 'top 75%' } });
   // visor a pantalla completa
   const lb = $('[data-lightbox]'), lbImg = $('[data-lb-img]'), lbCap = $('[data-lb-cap]');
-  const openLb = c => { const im = $('img', c); lbImg.src = im.currentSrc || im.src; lbImg.alt = im.alt; lbCap.textContent = $('figcaption', c).textContent; lb.classList.add('on'); lenis.stop(); };
-  const closeLb = () => { lb.classList.remove('on'); lenis.start(); };
-  lb.addEventListener('click', closeLb); addEventListener('keydown', e => { if (e.key === 'Escape' && lb.classList.contains('on')) closeLb(); });
+  const openLb = c => { const im = $('img', c); lbImg.src = im.currentSrc || im.src; lbImg.alt = im.alt; lbCap.textContent = $('figcaption', c).textContent;
+    lbFrom = c.classList.contains('clone') ? null : c; lb.hidden = false; requestAnimationFrame(() => lb.classList.add('on')); lenis.stop(); setTimeout(() => lbX.focus(), 60); };
+  // con el foco en una foto, la tira la deja centrada y se para (el navegador no puede desplazarla: va por transform)
+  base.forEach(c => {
+    c.addEventListener('focus', () => { G2.focus = true; G2.boost = 0; pg.scrollLeft = 0; G2.pos = c.offsetLeft + c.offsetWidth / 2 - innerWidth / 2; });
+    c.addEventListener('blur', () => { G2.focus = false; });
+    c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLb(c); } });
+  });
+  // el visor: diálogo con su botón de cerrar; el foco entra al abrir y vuelve a la foto al cerrar
+  const lbX = $('[data-lb-close]'); let lbFrom = null;
+  const closeLb = () => { if (!lb.classList.contains('on')) return; lb.classList.remove('on'); lenis.start();
+    setTimeout(() => { if (!lb.classList.contains('on')) lb.hidden = true; }, 500); lbFrom?.focus?.({ preventScroll: true }); };
+  lb.addEventListener('click', closeLb);
+  addEventListener('keydown', e => {
+    if (!lb.classList.contains('on')) return;
+    if (e.key === 'Escape') closeLb();
+    else if (e.key === 'Tab') { e.preventDefault(); lbX.focus(); }          // un único control: el foco no sale
+  });
   gsap.fromTo('[data-enc-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .03, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: '[data-encuentro]', start: 'top 70%' } });
 
   /* ---------- 06 · eventos + 07 · reserva ----------
@@ -1910,12 +2075,17 @@ const CONFIG = {
   // la tarjeta de reserva: entra sobre el vídeo ya quieto, con una sombra que lo oscurece un poco
   const cardTL = gsap.timeline({ paused: true })
     .to(evShade, { opacity: 1, duration: .8, ease: 'power2.out' }, 0)
-    .fromTo('[data-rcard]', { autoAlpha: 0, y: 50, scale: .96 }, { autoAlpha: 1, y: 0, scale: 1, duration: 1.1, ease: 'expo.out' }, .1)
+    .fromTo('[data-rcard]', { opacity: 0, y: 50, scale: .96 }, { opacity: 1, y: 0, scale: 1, duration: 1.1, ease: 'expo.out' }, .1)
     .fromTo('[data-res-title] .ch', { yPercent: 115 }, { yPercent: 0, stagger: .02, duration: .9, ease: 'expo.out' }, .3)
     .fromTo('[data-hours] li', { x: 24, opacity: 0 }, { x: 0, opacity: 1, stagger: .06, duration: .8, ease: 'expo.out' }, .35)
     .fromTo('.rcard .sub, .rcard .btns > *, .rcard .contact > *', { y: 18, opacity: 0 }, { y: 0, opacity: 1, stagger: .05, duration: .8, ease: 'expo.out' }, .4);
-  const showCard = () => { if (EV.card) return; EV.card = true; evVid.pause(); cardTL.timeScale(1).play(); };
-  const hideCard = () => { if (!EV.card) return; EV.card = false; cardTL.timeScale(1.8).reverse(); };
+  const rcard = $('[data-rcard]');
+  const showCard = () => { if (EV.card) return; EV.card = true; rcard.classList.add('on'); evVid.pause(); cardTL.timeScale(1).play(); };
+  const hideCard = () => { if (!EV.card) return; EV.card = false; rcard.classList.remove('on'); cardTL.timeScale(1.8).reverse(); };
+  // con el tabulador se llega a la tarjeta aunque aún no haya salido: la página baja a donde se ve y sale
+  // (en el fotograma siguiente: el navegador desplaza antes la página para enseñar el elemento enfocado)
+  rcard.addEventListener('focusin', () => { if (EV.card) return;
+    requestAnimationFrame(() => { lenis.scrollTo(window.ozioReserveY(), { immediate: true, force: true }); ScrollTrigger.update(); showCard(); }); });
   // sin saltos: a pantalla completa el vídeo sigue por donde iba (antes se reiniciaba a 0 en plena apertura)
   const startFull = () => { if (EV.full) return; EV.full = true; if (!EV.card) evVid.play().catch(() => {}); };
   const resetFull = () => { if (!EV.full) return; EV.full = false; hideCard(); evVid.play().catch(() => {}); };
@@ -1961,8 +2131,13 @@ const CONFIG = {
   /* ---------- testimonios ---------- */
   if (qNav) {
     const qAuto = gsap.fromTo(qBar, { '--p': 0 }, { '--p': 1, duration: 7, ease: 'none', repeat: -1, paused: true, onRepeat: () => showQ(tI + 1, true) });
-    $('[data-q-next]').addEventListener('click', () => { showQ(tI + 1, true); qAuto.restart(); });
-    $('[data-q-prev]').addEventListener('click', () => { showQ(tI - 1, true); qAuto.restart(); });
+    // al cambiarla a mano, la reseña nueva se anuncia; en el pase automático, no (interrumpiría cada 7 s)
+    const qLive = $('[data-q-live]'), byHand = d => { qLive.setAttribute('aria-live', 'polite'); showQ(tI + d, true); qAuto.restart(); };
+    $('[data-q-next]').addEventListener('click', () => byHand(1));
+    $('[data-q-prev]').addEventListener('click', () => byHand(-1));
+    // con el foco dentro de las reseñas, el pase automático espera
+    $('[data-voces]').addEventListener('focusin', () => qAuto.pause());
+    $('[data-voces]').addEventListener('focusout', e => { if (!e.currentTarget.contains(e.relatedTarget)) { qLive.setAttribute('aria-live', 'off'); qAuto.play(); } });
     ScrollTrigger.create({ trigger: '[data-voces]', start: 'top 70%', end: 'bottom top', onToggle: st => st.isActive ? qAuto.play() : qAuto.pause() });
   }
   gsap.fromTo('[data-q-ph]', { clipPath: 'inset(0 0 100% 0 round 24px)' }, { clipPath: 'inset(0 0 0% 0 round 24px)', duration: 1.6, ease: 'expo.inOut', scrollTrigger: { trigger: '[data-voces]', start: 'top 70%' } });
@@ -1998,8 +2173,7 @@ const CONFIG = {
 
   /* ---------- modo presentación (solo con ?demo: la barra de atajos y las teclas D, R y H) ---------- */
   let demo;
-  if (!qs.has('demo')) $('[data-hud]').remove();
-  else addEventListener('keydown', e => {
+  if (qs.has('demo')) addEventListener('keydown', e => {
     if (e.target.closest('input,textarea') || e.metaKey || e.ctrlKey || cartaOpen) return;
     const k = e.key.toLowerCase();
     if (k === 'd') { // auto-scroll cinematográfico (~80 s) para grabar o proyectar
@@ -2011,14 +2185,21 @@ const CONFIG = {
     if (k === 'h') document.body.classList.toggle('clean');
   });
   addEventListener('wheel', () => { if (demo?.isActive()) { demo.kill(); document.body.classList.remove('demo'); } }, { passive: true });
-  addEventListener('load', () => ScrollTrigger.refresh());
-})();
+  if (document.readyState === 'complete') ScrollTrigger.refresh(); else addEventListener('load', () => ScrollTrigger.refresh());
+}).catch(err => {
+  // si algo falla al montar la web, nunca se queda en el cargador: se quita y se puede bajar y reservar
+  console.error(err);
+  document.querySelector('[data-loader]')?.remove();
+  document.body.classList.remove('is-loading');
+  document.documentElement.classList.add('quieta');
+});
 </script>
 <script>
   /* Agente de voz (ng-agent): backend y cliente del restaurante. */
   window.OZIO_VOZ = {
     agentUrl: 'https://ng-agent-eu.onrender.com',
     tenant:   'ozio-gastronomico',
+    phone:    '917 129 170',          // lo que se ofrece si la llamada no conecta
   };
 
   /* ---------- MEDICIÓN: visitas y clics que importan, al panel de Ozio ----------

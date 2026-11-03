@@ -133,8 +133,11 @@ function open(e) {
   // Si viene de la llamada (sin micro, error…), se cierra la llamada primero.
   const voz = $('[data-voz]');
   if (voz && !voz.hidden) $('[data-voz-close]')?.click();
-  returnFocus = (e && e.currentTarget instanceof HTMLElement && !e.currentTarget.closest('[data-voz]')) ? e.currentTarget : $('.chat-fab');
+  // al cerrar, el foco vuelve a quien abrió el chat (salvo si venía de la llamada o del selector de reserva, que ya no están)
+  returnFocus = (e && e.currentTarget instanceof HTMLElement && !e.currentTarget.closest('[data-voz],[data-book-sheet]')) ? e.currentTarget : $('.chat-fab');
   if (isOpen()) { input.focus(); return; }
+  // a pantalla completa (móvil) es un diálogo modal de verdad; en escritorio, un panel al lado de la página
+  panel.setAttribute('aria-modal', String(matchMedia('(max-width: 560px)').matches));
   panel.hidden = false;
   document.documentElement.classList.add('chat-open');
   requestAnimationFrame(() => {
@@ -209,7 +212,11 @@ async function send(text, { again = false } = {}) {
 log = loadLog();
 render();
 
-document.querySelectorAll('[data-chat-open]').forEach(b => b.addEventListener('click', open));
+// delegado en el documento: sirve también para los botones que la web crea después (el pie, por ejemplo)
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-chat-open]');
+  if (b) { e.preventDefault(); open({ currentTarget: b }); }
+});
 closeBtn.addEventListener('click', close);
 
 chips.addEventListener('click', e => {

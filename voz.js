@@ -312,7 +312,10 @@ async function submitEmail(e) {
 }
 
 /* ---------- cableado ---------- */
-document.querySelectorAll('[data-voz-open]').forEach(b => b.addEventListener('click', start));
+// delegado en el documento: sirve también para los botones que la web crea después (el pie, por ejemplo)
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-voz-open]')) { e.preventDefault(); start(); }
+});
 hangBtn.addEventListener('click', hangup);
 retryBtn.addEventListener('click', start);
 acceptBtn.addEventListener('click', accept);

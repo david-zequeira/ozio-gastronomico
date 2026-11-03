@@ -15,6 +15,28 @@
 <meta property="og:image" content="https://david-zequeira.github.io/ozio-gastronomico/og.jpg">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta property="og:url" content="https://david-zequeira.github.io/ozio-gastronomico/">
+<link rel="canonical" href="https://david-zequeira.github.io/ozio-gastronomico/">
+<!-- ficha del restaurante para buscadores (dirección, horario, contacto). Sin valoraciones: las de la web son de ejemplo -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Ozio Gastronomico",
+  "url": "https://david-zequeira.github.io/ozio-gastronomico/",
+  "image": "https://david-zequeira.github.io/ozio-gastronomico/og.jpg",
+  "logo": "https://david-zequeira.github.io/ozio-gastronomico/media/logo-ozio.png",
+  "description": "Cocina mediterránea con alma siciliana. Un espacio para compartir.",
+  "servesCuisine": ["Italiana", "Siciliana", "Mediterránea"],
+  "telephone": "+34917129170",
+  "email": "info@oziogastronomico.es",
+  "acceptsReservations": true,
+  "address": { "@type": "PostalAddress", "streetAddress": "Calle Aviador Zorita, 37", "postalCode": "28020", "addressLocality": "Madrid", "addressCountry": "ES" },
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], "opens": "13:00", "closes": "15:30" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], "opens": "20:00", "closes": "22:30" }
+  ]
+}
+</script>
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" as="font" type="font/woff2" href="fonts/Manrope-normal-300_800.woff2" crossorigin>
 <link rel="preload" as="image" href="media/f/opt/hero-poster.webp">
@@ -1105,18 +1127,20 @@
      movimiento»), pero siempre se ve y se puede reservar. -->
 <script>
   window.ozioLibs = (() => {
-    const add = (src, ms) => new Promise((ok, ko) => {
+    // sri: huella del archivo (la misma que la copia de vendor/); si el CDN sirviera otra cosa, no se ejecuta
+    const add = (src, ms, sri) => new Promise((ok, ko) => {
       const s = document.createElement('script'); s.src = src; s.async = false;
+      if (sri) { s.integrity = 'sha384-' + sri; s.crossOrigin = 'anonymous'; }
       const t = setTimeout(() => ko(new Error('tiempo: ' + src)), ms);
       s.onload = () => { clearTimeout(t); ok(); }; s.onerror = () => { clearTimeout(t); ko(new Error('fallo: ' + src)); };
       document.head.append(s);
     });
-    const lib = (local, cdn, has) => add(local, 5000).catch(() => has() || add(cdn, 6000)).catch(() => {});
+    const lib = (local, cdn, has, sri) => add(local, 5000).catch(() => has() || add(cdn, 6000, sri)).catch(() => {});
     const gs = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/';
-    const gsap = lib('vendor/gsap.min.js', gs + 'gsap.min.js', () => window.gsap)
-      .then(() => Promise.all([lib('vendor/ScrollTrigger.min.js', gs + 'ScrollTrigger.min.js', () => window.ScrollTrigger),
-                               lib('vendor/ScrollToPlugin.min.js', gs + 'ScrollToPlugin.min.js', () => window.ScrollToPlugin)]));
-    const lenis = lib('vendor/lenis.min.js', 'https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js', () => window.Lenis);
+    const gsap = lib('vendor/gsap.min.js', gs + 'gsap.min.js', () => window.gsap, 'g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt')
+      .then(() => Promise.all([lib('vendor/ScrollTrigger.min.js', gs + 'ScrollTrigger.min.js', () => window.ScrollTrigger, 'Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d'),
+                               lib('vendor/ScrollToPlugin.min.js', gs + 'ScrollToPlugin.min.js', () => window.ScrollToPlugin, 'RVPQwTb0fPz9kI8s5GwAq1Qioto9fnEQt1aKGSQSm8xV6+DIdBSgcCShoHqfKnhv')]));
+    const lenis = lib('vendor/lenis.min.js', 'https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js', () => window.Lenis, 'B2WBjDzEjJpYvhmi2UyEn7rektqkf5suS6sNoyyrf0EBAwBHdkiXxIlU0V5Ru2ed');
     const all = Promise.all([gsap, lenis]);
     return Promise.race([all, new Promise(ok => setTimeout(ok, 8000))])
       .then(() => !!(window.gsap && window.ScrollTrigger && window.ScrollToPlugin && window.Lenis));

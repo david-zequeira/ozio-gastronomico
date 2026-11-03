@@ -18,9 +18,10 @@ const cfg = window.OZIO_VOZ || {};
 const AGENT_URL = (cfg.agentUrl || '').replace(/\/$/, '');
 const TENANT = cfg.tenant || '';
 const TOKEN_TIMEOUT_MS = 60_000; // cold start de Render
+// versión exacta: una publicación nueva del SDK no cambia la llamada sin probarla antes
 const SDK_URLS = [
-  'https://cdn.jsdelivr.net/npm/retell-client-js-sdk@2/+esm',
-  'https://esm.sh/retell-client-js-sdk@2',
+  'https://cdn.jsdelivr.net/npm/retell-client-js-sdk@2.0.8/+esm',
+  'https://esm.sh/retell-client-js-sdk@2.0.8',
 ];
 const PHONE = cfg.phone || '';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;

@@ -243,6 +243,35 @@
   .c-th[aria-pressed="true"]{background:rgba(243,241,239,.1);border-color:rgba(243,241,239,.18);transform:translateX(-6px)}
   .c-th[aria-pressed="true"] img{opacity:1;transform:scale(1.06)}
   .c-th[aria-pressed="true"] span{opacity:1}
+  /* la carta al día: lo que lee el agente (precios, alérgenos, agotado hoy, sugerencias), en texto */
+  .cs-th.live .ic{width:clamp(44px,calc(var(--u)*56),62px);aspect-ratio:56/77;border-radius:2px;display:grid;place-items:center;border:1px dashed rgba(243,241,239,.4);font:600 8px/1.2 var(--label);letter-spacing:.12em;text-transform:uppercase;text-align:center;color:var(--gold)}
+  @media (max-width:760px){.cs-th.live .ic{width:28px;font-size:0}.cs-th.live .ic::before{content:"€";font-size:12px}}
+  .c-th.live .ic{width:48px;aspect-ratio:1414/2000;border-radius:4px;display:grid;place-items:center;border:1px dashed rgba(243,241,239,.35);font:600 9px/1.2 var(--label);letter-spacing:.14em;text-transform:uppercase;text-align:center;color:var(--gold)}
+  .c-live{position:absolute;inset:0 0 0 auto;width:min(560px,100%);z-index:6;background:rgba(27,26,23,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-left:1px solid rgba(243,241,239,.1);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .7s var(--ease);visibility:hidden}
+  .c-live.on{transform:none;visibility:visible}
+  .c-live header{padding:26px 28px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+  .c-live h2{font:400 34px/1.05 var(--dm);margin:6px 0 0}
+  .c-live .eb{font:500 10px/1 var(--label);letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+  .c-live .upd{display:block;margin-top:8px;font-size:12px;opacity:.55}
+  .c-live .back{flex:none;background:none;border:1px solid rgba(243,241,239,.3);color:var(--ivory);border-radius:999px;padding:10px 14px;font:600 10px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+  .c-live .back:hover{background:var(--ivory);color:var(--charcoal)}
+  .c-live .flt{padding:0 28px 12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px}
+  .c-live .flt b{font-weight:500;opacity:.6;margin-right:4px}
+  .c-live .flt button{background:none;border:1px solid rgba(243,241,239,.22);color:var(--ivory);border-radius:999px;padding:6px 11px;font:500 12px/1 var(--sans);cursor:pointer}
+  .c-live .flt button[aria-pressed="true"]{background:var(--ivory);color:var(--charcoal);border-color:var(--ivory)}
+  .c-live .lst{flex:1;overflow:auto;overscroll-behavior:contain;padding:4px 28px 28px}
+  .c-live h3{font:500 10px/1 var(--label);letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin:22px 0 6px}
+  .c-live .it{padding:12px 0;border-bottom:1px solid rgba(243,241,239,.08)}
+  .c-live .it .t{display:flex;justify-content:space-between;gap:14px;align-items:baseline}
+  .c-live .it .n{font-size:16px;font-weight:600}
+  .c-live .it .p{flex:none;font-variant-numeric:tabular-nums;opacity:.9}
+  .c-live .it p{margin:4px 0 0;font-size:13.5px;line-height:1.45;opacity:.7}
+  .c-live .it .al{margin-top:6px;font-size:11.5px;opacity:.55}
+  .c-live .it.off .n,.c-live .it.off p,.c-live .it.off .p{opacity:.4;text-decoration:line-through}
+  .c-live .tag{display:inline-block;margin-left:8px;padding:3px 7px;border-radius:999px;font:600 9px/1 var(--label);letter-spacing:.12em;text-transform:uppercase;vertical-align:2px;background:rgba(201,169,106,.18);color:var(--gold);text-decoration:none}
+  .c-live .note{margin:18px 0 0;font-size:12px;line-height:1.5;opacity:.5}
+  .c-live .empty{padding:30px 0;opacity:.6;font-size:14px}
+  @media (max-width:760px){.c-live header{padding:20px 16px 10px}.c-live .flt,.c-live .lst{padding-left:16px;padding-right:16px}.c-live h2{font-size:28px}}
   /* modo lectura: se entra pulsando la hoja; la hoja crece a lo ancho y se lee con scroll */
   .carta.read .wrap{grid-template-columns:1fr minmax(0,780px) minmax(230px,300px);align-items:start;overflow:auto;overscroll-behavior:contain;padding-top:clamp(84px,11vh,112px)}
   .carta.read .c-stage{height:auto;aspect-ratio:auto;width:100%;justify-self:stretch}
@@ -1051,6 +1080,14 @@
     <div class="c-stage"><div class="c-page" data-c-page role="button" tabindex="0" aria-label="Ampliar la hoja para leerla"></div></div>
     <nav class="c-pages" data-c-pages aria-label="Hojas de la carta"></nav>
   </div>
+  <aside class="c-live" data-c-live aria-label="La carta al día: precios y alérgenos" aria-hidden="true">
+    <header>
+      <div><span class="eb">Al día</span><h2>La carta de hoy</h2><span class="upd" data-c-live-upd></span></div>
+      <button class="back" type="button" data-c-live-close>Volver a las hojas</button>
+    </header>
+    <div class="flt" data-c-live-flt></div>
+    <div class="lst" data-c-live-list></div>
+  </aside>
   <div class="hint">Pulsa la hoja para leerla · Desliza para pasar de hoja</div>
 </div>
 
@@ -1306,7 +1343,67 @@ window.ozioLibs.then(motion => {
     gsap.fromTo(cImgs[i], { clipPath: down ? 'inset(100% 0 0 0)' : 'inset(0 0 100% 0)' }, { clipPath: 'inset(0% 0 0% 0)', duration: .95, ease: 'expo.inOut', overwrite: true });
     gsap.fromTo(cImgs[i], { scale: 1.06 }, { scale: 1, duration: 1.5, ease: 'expo.out' });
   };
-  cPages.addEventListener('click', e => { const b = e.target.closest('.c-th'); if (b) setPage(+b.dataset.i); });
+  cPages.addEventListener('click', e => {
+    const b = e.target.closest('.c-th'); if (!b) return;
+    if (b.hasAttribute('data-live')) { showLive(true); return; }
+    showLive(false); setPage(+b.dataset.i);
+  });
+
+  /* ---------- la carta al día: la misma que consulta el agente (panel de Ozio → Carta) ----------
+     Las hojas son el diseño; esto es lo que cambia cada día: precios, alérgenos, «agotado hoy» y
+     las sugerencias. Solo aparece si la carta del panel tiene precios: mientras el panel no tenga
+     la carta buena, no se enseña una a medias. Si la llamada falla, la web sigue con las hojas. */
+  const live = $('[data-c-live]'), liveList = $('[data-c-live-list]'), liveFlt = $('[data-c-live-flt]');
+  let liveData = null; const sinAlg = new Set();
+  const showLive = on => {
+    if (!liveData && on) return;
+    live.classList.toggle('on', on); live.setAttribute('aria-hidden', String(!on));
+    const btn = $('[data-live]', cPages); btn?.setAttribute('aria-pressed', String(on));
+    if (on) { liveList.scrollTop = 0; $('[data-c-live-close]', live).focus({ preventScroll: true }); }
+  };
+  $('[data-c-live-close]', live).addEventListener('click', () => showLive(false));
+  const euros = c => c == null ? '' : (c / 100).toLocaleString('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: c % 100 ? 2 : 0 });
+  const renderLive = () => {
+    const d = liveData, A = d.alergenos;
+    const fits = it => !it.alergenos.some(a => sinAlg.has(a));
+    const row = it => `<div class="it${it.agotado ? ' off' : ''}"><div class="t"><span class="n">${esc(it.nombre)}${it.agotado ? '<span class="tag">Agotado hoy</span>' : ''}</span>`
+      + `<span class="p">${esc(euros(it.precio))}${it.tipo === 'set' && it.precio != null ? ' <small>p.p.</small>' : ''}</span></div>`
+      + (it.descripcion ? `<p>${esc(it.descripcion)}</p>` : '')
+      + (it.maridaje != null ? `<p>Maridaje: ${esc(euros(it.maridaje))} por persona</p>` : '')
+      + (it.tipo !== 'set' ? `<div class="al">${it.alergenos.length ? 'Alérgenos: ' + esc(it.alergenos.map(a => A[a]).join(', ')) : 'Alérgenos: pregúntanos'}</div>` : '') + '</div>';
+    const shown = d.carta.filter(it => it.tipo === 'set' || fits(it));
+    const groups = []; const by = new Map();
+    const push = (k, it) => { if (!by.has(k)) { by.set(k, []); groups.push(k); } by.get(k).push(it); };
+    shown.filter(it => it.tipo === 'special').forEach(it => push('Sugerencias de hoy', it));
+    shown.filter(it => it.tipo === 'set').forEach(it => push('Menús degustación', it));
+    shown.filter(it => it.tipo === 'dish').forEach(it => push(it.categoria || 'Carta', it));
+    liveList.innerHTML = (groups.length ? groups.map(g => `<h3>${esc(g)}</h3>` + by.get(g).map(row).join('')).join('') : '<div class="empty">Ningún plato cumple el filtro. Pregúntanos: la cocina adapta muchos.</div>')
+      + '<p class="note">Los alérgenos los declara la cocina. Si alguien de la mesa tiene una alergia o intolerancia, dínoslo al reservar y te confirmamos qué puede tomar. Los menús degustación pueden llevar varios alérgenos: consúltalos.</p>';
+  };
+  const loadLive = () => {
+    const cfg = window.OZIO_VOZ; if (!cfg?.agentUrl) return;
+    const ctl = new AbortController(); setTimeout(() => ctl.abort(), 6000);
+    fetch(`${cfg.agentUrl}/api/carta/${encodeURIComponent(cfg.tenant)}`, { signal: ctl.signal })
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(d => {
+        const platos = (d.carta || []).filter(it => it.tipo === 'dish');
+        if (!platos.length || platos.filter(it => it.precio != null).length / platos.length < .8) return;
+        liveData = d;
+        const used = [...new Set(platos.flatMap(it => it.alergenos))].sort((a, b) => a - b);
+        liveFlt.innerHTML = used.length ? '<b>Sin:</b>' + used.map(a => `<button type="button" data-alg="${a}" aria-pressed="false">${esc(d.alergenos[a])}</button>`).join('') : '';
+        liveFlt.addEventListener('click', e => {
+          const b = e.target.closest('[data-alg]'); if (!b) return;
+          const a = +b.dataset.alg; sinAlg.has(a) ? sinAlg.delete(a) : sinAlg.add(a);
+          b.setAttribute('aria-pressed', String(sinAlg.has(a))); renderLive();
+        });
+        $('[data-c-live-upd]', live).textContent = 'Actualizada hoy, ' + new Date(d.fecha + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+        renderLive();
+        cPages.insertAdjacentHTML('beforeend', '<button class="c-th live" type="button" data-live aria-pressed="false"><span class="ic">Al día</span><span>Precios y alérgenos<small>La carta de hoy</small></span></button>');
+        $('[data-cs-thumbs]').insertAdjacentHTML('beforeend', '<button class="cs-th live" type="button" data-live><span class="ic">Al día</span><span>Precios y alérgenos</span></button>');
+      })
+      .catch(() => {});
+  };
+  (window.requestIdleCallback || (f => setTimeout(f, 1500)))(loadLive);
   setPage(0);
   // "dándole click a cada hoja se pueda leer": la hoja crece y se lee con scroll; otro clic la devuelve a su sitio
   const setRead = on => { carta.classList.toggle('read', on); wrap.scrollTop = 0; cPage.setAttribute('aria-label', on ? 'Volver a la vista de la carta' : 'Ampliar la hoja para leerla'); };
@@ -1318,7 +1415,7 @@ window.ozioLibs.then(motion => {
     if (cartaOpen) return; cartaOpen = true;
     const x = e?.clientX ?? innerWidth / 2, y = e?.clientY ?? innerHeight / 2;
     carta.style.setProperty('--cx', x + 'px'); carta.style.setProperty('--cy', y + 'px');
-    setRead(false);
+    setRead(false); showLive(false);
     carta.classList.add('open'); document.documentElement.classList.add('carta-open'); lenis?.stop();
     const R = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
     if (!window.gsap || reduce) { carta.style.clipPath = 'none'; return; }
@@ -1360,7 +1457,7 @@ window.ozioLibs.then(motion => {
     const atEnd = !scrollable || wrap.scrollTop + wrap.clientHeight >= wrap.scrollHeight - 2, atTop = !scrollable || wrap.scrollTop <= 2;
     if (dy > 80 && atEnd) flip(1); else if (dy < -80 && atTop) flip(-1);
   }, { passive: true });
-  addEventListener('keydown', e => { if (!cartaOpen) return; if (e.key === 'Escape') { carta.classList.contains('read') ? setRead(false) : closeCarta(); } if (e.key === 'ArrowRight' || e.key === 'ArrowDown') setPage(cI + 1); if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') setPage(cI - 1); });
+  addEventListener('keydown', e => { if (!cartaOpen) return; if (e.key === 'Escape') { live.classList.contains('on') ? showLive(false) : carta.classList.contains('read') ? setRead(false) : closeCarta(); } if (e.key === 'ArrowRight' || e.key === 'ArrowDown') setPage(cI + 1); if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') setPage(cI - 1); });
 
   /* ---------- la carta en la página (diseño Framer): hoja central, índice a la derecha y flechas ---------- */
   const csPage = $('[data-cs-page]'), csThumbs = $('[data-cs-thumbs]');
@@ -1379,7 +1476,12 @@ window.ozioLibs.then(motion => {
     gsap.fromTo(csImgs[i], { scale: 1.06 }, { scale: 1, duration: 1.4, ease: 'expo.out' });
   };
   csGo(0);
-  csThumbs.addEventListener('click', e => { const b = e.target.closest('.cs-th'); if (b) csGo(+b.dataset.i); });
+  csThumbs.addEventListener('click', e => {
+    const b = e.target.closest('.cs-th'); if (!b) return;
+    // «Al día» abre la carta a pantalla completa directamente en la versión en texto
+    if (b.hasAttribute('data-live')) { openCarta(e); showLive(true); return; }
+    csGo(+b.dataset.i);
+  });
   $('[data-cs-prev]').addEventListener('click', () => csGo(csI - 1));
   $('[data-cs-next]').addEventListener('click', () => csGo(csI + 1));
   // pulsar la hoja abre la carta a pantalla completa, en esa misma hoja y lista para leer

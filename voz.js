@@ -7,8 +7,14 @@
    de Retell. El navegador nunca ve la API key de Retell.
 
    El agente puede pedir el correo en pantalla (herramienta
-   pedir_contacto_en_pantalla → metadata {state:"tool", tool:...}); se envía a
-   POST /api/voice/web-call/:callId/contact.
+   pedir_contacto_en_pantalla); se envía a POST /api/voice/web-call/:callId/contact.
+
+   Retell v3 (18/10/2026): la llamada se crea con /v3/create-web-call en el
+   backend y el navegador entra con el SDK 3.x pasando callId, transport e
+   iceServers a startCall(). Por el transporte nuevo el SDK ya no reenvía los
+   eventos `metadata` ni `update`: el estado de herramienta, el correo
+   recibido y el subtítulo llegan por el canal de interfaz del backend
+   (GET /api/voice/web-call/:callId/events, Server-Sent Events).
 
    Antes de la primera llamada de la visita se informa de que se graba y se
    pide aceptación; sin ella no se pide el micrófono ni se conecta nada.
@@ -20,9 +26,15 @@ const TENANT = cfg.tenant || '';
 const TOKEN_TIMEOUT_MS = 60_000; // cold start de Render
 // versión exacta: una publicación nueva del SDK no cambia la llamada sin probarla antes
 const SDK_URLS = [
-  'https://cdn.jsdelivr.net/npm/retell-client-js-sdk@2.0.8/+esm',
-  'https://esm.sh/retell-client-js-sdk@2.0.8',
+  'https://cdn.jsdelivr.net/npm/retell-client-js-sdk@3.0.4/+esm',
+  'https://esm.sh/retell-client-js-sdk@3.0.4',
 ];
+// "hablando" → "te escucho" se infiere del nivel de audio del agente (el SDK ya
+// no emite agent_stop_talking): este silencio seguido, tras el margen que se
+// concede a cada frase para que el TTS empiece a sonar.
+const AGENT_SILENCE_MS = 600;
+const AGENT_TEXT_GRACE_MS = 1500;
+const AGENT_LOUD_LEVEL = 0.06;
 const PHONE = cfg.phone || '';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -83,6 +95,9 @@ const accepted = () => { try { return sessionStorage.getItem(CONSENT_KEY) === '1
 let state = 'idle';
 let client = null;
 let callId = null;
+let events = null;      // EventSource del canal de interfaz
+let agentTurn = null;   // { turn, text } de la respuesta en curso (subtítulo)
+let loudUntil = 0;      // último instante en que el agente sonó (o margen concedido)
 let gen = 0;
 let muted = false;
 let abort = null;
@@ -134,6 +149,9 @@ const pushSamples = (samples) => {
 const loop = () => {
   level *= 0.94;
   orb.style.setProperty('--lv', level.toFixed(3));
+  const now = Date.now();
+  if (level > AGENT_LOUD_LEVEL) loudUntil = Math.max(loudUntil, now);
+  if (state === 'speaking' && now - loudUntil > AGENT_SILENCE_MS) setState('listening');
   raf = requestAnimationFrame(loop);
 };
 const startOrb = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(loop); };
@@ -158,13 +176,46 @@ const readMeta = (payload) => {
   return inner;
 };
 
-const lastAgentLine = (payload) => {
-  const turns = payload && Array.isArray(payload.transcript) ? payload.transcript : [];
-  for (let i = turns.length - 1; i >= 0; i--) {
-    const t = turns[i];
-    if (t && (t.role === 'agent' || t.role === 'assistant') && typeof t.content === 'string' && t.content.trim()) return t.content.trim();
-  }
-  return null;
+const closeEvents = () => { if (events) { events.close(); events = null; } };
+
+/* Canal de interfaz del backend (SSE). Best-effort: si falla, la llamada sigue
+   y solo se pierden subtítulo, etiqueta de herramienta y apertura del correo. */
+const openEvents = (id, cancelled) => {
+  if (typeof EventSource === 'undefined') return;
+  closeEvents();
+  agentTurn = null; loudUntil = 0;
+  const es = new EventSource(`${AGENT_URL}/api/voice/web-call/${encodeURIComponent(id)}/events?sessionId=${encodeURIComponent(sessionId)}&tenant=${encodeURIComponent(TENANT)}`);
+  events = es;
+  const onUi = (raw) => {
+    if (cancelled()) return;
+    let ev; try { ev = JSON.parse(raw.data); } catch { return; }
+    if (!ev || typeof ev !== 'object') return;
+    if (ev.type === 'state') {
+      const m = readMeta(ev);
+      if (m.state === 'contact_received') { formNote.textContent = 'Recibido ✓'; setTimeout(() => showForm(false), 1200); return; }
+      if (m.state === 'tool') {
+        const label = TOOL_LABELS[m.tool];
+        setState('tool', label ? MSG[label] : MSG.thinking);
+        if (label === 'contacto') showForm(true);
+      } else if (m.state === 'answering' && state === 'tool') {
+        setState('thinking');
+      }
+    } else if (ev.type === 'agent_text') {
+      if (typeof ev.text !== 'string' || !ev.text.trim()) return;
+      const text = agentTurn && agentTurn.turn === ev.turn ? `${agentTurn.text} ${ev.text.trim()}` : ev.text.trim();
+      agentTurn = { turn: ev.turn, text };
+      lineEl.textContent = text;
+      loudUntil = Math.max(loudUntil, Date.now() + AGENT_TEXT_GRACE_MS);
+      setState('speaking');
+    } else if (ev.type === 'user_text') {
+      // Retell ya pidió respuesta: el cliente ha terminado de hablar.
+      if (ev.final && state === 'listening') setState('thinking');
+    } else if (ev.type === 'end') {
+      es.close(); if (events === es) events = null;
+    }
+  };
+  for (const t of ['state', 'agent_text', 'user_text', 'end']) es.addEventListener(t, onUi);
+  es.onerror = () => {}; // EventSource reintenta solo
 };
 
 function start() {
@@ -229,35 +280,22 @@ async function call() {
       return fail(MSG.err.unavailable);
     }
 
+    // Canal de interfaz ANTES de entrar: el saludo sale nada más conectar.
+    if (callId) openEvents(callId, cancelled);
+
     const { RetellWebClient } = await sdkP;
     if (cancelled()) return;
     const c = new RetellWebClient();
     client = c;
 
-    c.on('call_ready', () => { if (!cancelled()) { startOrb(); setState('listening'); } });
+    // Solo desde "conectando": el saludo puede haber llegado ya por el canal.
+    c.on('call_ready', () => { if (!cancelled()) { startOrb(); if (state === 'connecting') setState('listening'); } });
     c.on('agent_start_talking', () => { if (!cancelled()) setState('speaking'); });
     c.on('agent_stop_talking', () => { if (!cancelled() && state === 'speaking') setState('listening'); });
     c.on('audio', (samples) => { if (!cancelled()) pushSamples(samples); });
-    c.on('update', (payload) => {
-      if (cancelled()) return;
-      const line = lastAgentLine(payload);
-      if (line) lineEl.textContent = line;
-    });
-    c.on('metadata', (payload) => {
-      if (cancelled()) return;
-      const m = readMeta(payload);
-      if (!m) return;
-      if (m.state === 'contact_received') { formNote.textContent = 'Recibido ✓'; setTimeout(() => showForm(false), 1200); return; }
-      if (m.state === 'tool') {
-        const label = TOOL_LABELS[m.tool];
-        setState('tool', label ? MSG[label] : MSG.thinking);
-        if (label === 'contacto') showForm(true);
-      } else if (m.state === 'answering' && state === 'tool') {
-        setState('thinking');
-      }
-    });
+    // `update` y `metadata` ya no llegan por el SDK (transporte v3): ver openEvents.
     c.on('call_ended', () => {
-      stopOrb();
+      stopOrb(); closeEvents();
       if (cancelled()) return;
       client = null;
       setState('ended');
@@ -265,17 +303,26 @@ async function call() {
     c.on('error', () => {
       c.removeAllListeners();
       try { c.stopCall(); } catch {}
+      stopOrb(); closeEvents();
       if (cancelled()) return;
       client = null;
       fail(MSG.err.generic);
     });
 
-    await c.startCall({ accessToken: data.accessToken, emitRawAudioSamples: true });
+    // callId, transport e iceServers: la respuesta v3 que startCall() necesita
+    // para conectar por el gateway (sin ellos intentaría el transporte antiguo).
+    await c.startCall({
+      accessToken: data.accessToken,
+      callId: data.callId,
+      transport: data.transport === 'gateway' || data.transport === 'livekit' ? data.transport : undefined,
+      iceServers: data.iceServers,
+      emitRawAudioSamples: true,
+    });
     if (cancelled()) { try { c.stopCall(); } catch {} return; }
     try { await c.startAudioPlayback(); } catch {}
   } catch (err) {
     if (cancelled()) return;
-    client = null;
+    client = null; closeEvents();
     fail(err && err.name === 'AbortError' ? MSG.err.unavailable : MSG.err.unavailable);
   } finally {
     clearTimeout(timer);
@@ -288,6 +335,7 @@ function hangup() {
   if (abort) { abort.abort(); abort = null; }
   const c = client; client = null;
   if (c) { c.removeAllListeners(); try { c.stopCall(); } catch {} }
+  closeEvents();
   stopOrb();
   showForm(false);
   if (state !== 'idle' && state !== 'error') setState('ended');

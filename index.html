@@ -689,6 +689,30 @@
   /* Subtítulo de la llamada: como mucho tres líneas, las ÚLTIMAS (lo que suena ahora). Sin esto una respuesta larga empujaba los botones fuera de la pantalla. */
   .voz:not([data-state="consent"]):not([data-state="error"]) .voz-line{display:flex;flex-direction:column;justify-content:flex-end;max-height:3.9em;overflow:hidden}
   /* lo que va diciendo el cliente, según lo transcribe el servidor: pequeño y apagado, sobre la frase de la asistente */
+  /* Palabra a palabra: lo ya dicho se apaga y lo que suena ahora queda encendido. */
+  .voz-line .said{color:rgba(243,241,239,.5);transition:color .5s ease}
+  /* Horas que la asistente acaba de ofrecer: se pueden tocar en vez de decirlas. */
+  .voz-slots{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+  .voz-slots[hidden],.voz-card[hidden]{display:none}
+  .voz-slots button{border:1px solid rgba(192,164,130,.6);border-radius:999px;padding:13px 22px;background:rgba(192,164,130,.12);color:var(--ivory);font:600 17px/1 var(--sans);letter-spacing:.02em;font-variant-numeric:tabular-nums;transition:background .25s,transform .25s,opacity .25s;animation:vozIn .45s var(--ease) both}
+  .voz-slots button:nth-child(2){animation-delay:.06s}.voz-slots button:nth-child(3){animation-delay:.12s}.voz-slots button:nth-child(4){animation-delay:.18s}
+  .voz-slots button:hover{background:rgba(192,164,130,.28);transform:translateY(-2px)}
+  .voz-slots button:disabled{opacity:.45;transform:none}
+  .voz-slots button[aria-pressed="true"]{background:var(--ivory);border-color:var(--ivory);color:var(--charcoal);opacity:1}
+  /* La reserva, por escrito: se queda en pantalla también al colgar. */
+  .voz-card{width:100%;display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 22px;border-radius:20px;border:1px solid rgba(192,164,130,.45);background:rgba(192,164,130,.1);animation:vozIn .6s var(--ease) both}
+  .voz-card small{font:600 10px/1 var(--label);letter-spacing:.32em;text-transform:uppercase;color:var(--champagne)}
+  .voz-card small::before{content:"✓ "}
+  .voz-card b{font:400 clamp(20px,4vw,24px)/1.25 var(--sans);letter-spacing:-.01em;color:var(--ivory)}
+  .voz-card b::first-letter{text-transform:uppercase}
+  .voz-card span{font-size:14px;color:rgba(243,241,239,.7)}
+  .voz-card span:empty{display:none}
+  .voz-card a{margin-top:6px;font:600 11px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ivory);text-decoration:underline;text-underline-offset:5px;text-decoration-color:var(--champagne)}
+  @keyframes vozIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.voz-slots button,.voz-card{animation:none}}
+  /* Con la tarjeta delante, el orbe cede sitio para que quepan los botones. */
+  .voz.has-card .voz-orb{width:110px;height:110px;margin:0}
+  .voz.has-card .voz-brand b{display:none}
   .voz-you{font:400 15px/1.4 var(--sans);color:rgba(243,241,239,.62);min-height:1.4em;max-width:34ch;margin:0}
   .voz-you:not(:empty)::before{content:"Tú: ";color:var(--champagne)}
   .voz[data-state="consent"] .voz-you,.voz[data-state="error"] .voz-you{display:none}
@@ -1106,6 +1130,13 @@
     <div class="voz-status" data-voz-status aria-live="polite"></div>
     <p class="voz-you" data-voz-you aria-live="off"></p>
     <p class="voz-line" data-voz-line aria-live="polite"></p>
+    <div class="voz-slots" data-voz-slots role="group" aria-label="Horas libres: toca una" hidden></div>
+    <div class="voz-card" data-voz-card hidden>
+      <small>Reserva confirmada</small>
+      <b data-voz-card-when></b>
+      <span data-voz-card-who></span>
+      <a data-voz-card-ics download="reserva-ozio.ics">Añadir al calendario</a>
+    </div>
     <form class="voz-form" data-voz-form hidden>
       <div class="row">
         <input type="email" inputmode="email" autocomplete="email" placeholder="tu@correo.com" aria-label="Tu correo" data-voz-email required>

@@ -16,6 +16,11 @@
    recibido y el subtítulo llegan por el canal de interfaz del backend
    (GET /api/voice/web-call/:callId/events, Server-Sent Events).
 
+   Además del subtítulo, por ese canal llegan (11/11/2026) las horas que la
+   asistente acaba de ofrecer —se pintan como botones y tocar una vale lo
+   mismo que decirla: POST /api/voice/web-call/:callId/choice— y la reserva
+   recién creada, que se queda en una tarjeta con su enlace al calendario.
+
    Antes de la primera llamada de la visita se informa de que se graba y se
    pide aceptación; sin ella no se pide el micrófono ni se conecta nada.
    ===================================================================== */
@@ -83,6 +88,8 @@ const statusEl = $('[data-voz-status]');
 const lineEl = $('[data-voz-line]');
 const youEl = $('[data-voz-you]'); // opcional: lo que dice el cliente, en vivo
 const setYou = (t) => { if (youEl) youEl.textContent = t || ''; };
+const slotsEl = $('[data-voz-slots]');
+const cardEl = $('[data-voz-card]');
 const form = $('[data-voz-form]');
 const emailIn = $('[data-voz-email]');
 const formNote = $('[data-voz-form-note]');
@@ -99,6 +106,11 @@ let client = null;
 let callId = null;
 let events = null;      // EventSource del canal de interfaz
 let agentTurn = null;   // { turn, text } de la respuesta en curso (subtítulo)
+let spoken = '';        // lo que la asistente lleva dicho (para apagar lo ya oído)
+let booking = null;     // la reserva hecha en esta llamada (tarjeta)
+let icsUrl = '';
+let wake = null;        // bloqueo de pantalla mientras dura la llamada
+let actx = null;
 let loudUntil = 0;      // último instante en que el agente sonó (o margen concedido)
 let gen = 0;
 let muted = false;
@@ -139,6 +151,115 @@ const fail = (text) => {
 const showForm = (on) => {
   form.hidden = !on;
   if (on) { formNote.textContent = ''; emailIn.value = ''; setTimeout(() => emailIn.focus(), 60); }
+};
+
+/* ---------- subtítulo palabra a palabra ---------- */
+const paintSpoken = (text) => {
+  const prev = text.startsWith(spoken) ? spoken : '';
+  spoken = text;
+  const wrap = document.createElement('span');
+  if (prev) { const s = document.createElement('span'); s.className = 'said'; s.textContent = prev; wrap.append(s); }
+  wrap.append(text.slice(prev.length));
+  lineEl.replaceChildren(wrap);
+};
+
+/* ---------- horas tocables ---------- */
+const showSlots = (slots) => {
+  if (!slotsEl) return;
+  slotsEl.replaceChildren();
+  const list = Array.isArray(slots) ? slots.filter(s => s && typeof s.startUtc === 'string' && typeof s.label === 'string').slice(0, 4) : [];
+  for (const s of list) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = s.label; b.dataset.start = s.startUtc;
+    b.setAttribute('aria-label', `A las ${s.label}`);
+    slotsEl.append(b);
+  }
+  slotsEl.hidden = list.length === 0;
+};
+async function pickSlot(e) {
+  const b = e.target.closest('button[data-start]');
+  if (!b || !callId || b.disabled) return;
+  for (const x of slotsEl.children) x.disabled = true;
+  b.setAttribute('aria-pressed', 'true');
+  try {
+    const res = await fetch(`${AGENT_URL}/api/voice/web-call/${encodeURIComponent(callId)}/choice`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ sessionId, startUtc: b.dataset.start, tenant: TENANT }),
+    });
+    if (!res.ok) throw new Error(String(res.status));
+    setYou(`a las ${b.textContent}`);
+    setTimeout(() => showSlots([]), 500);
+  } catch {
+    // No ha entrado: se quitan y la hora se dice de viva voz, como siempre.
+    showSlots([]);
+  }
+}
+
+/* ---------- tarjeta de la reserva ---------- */
+const icsDate = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+const showBooking = (b) => {
+  booking = b;
+  if (icsUrl) { URL.revokeObjectURL(icsUrl); icsUrl = ''; }
+  overlay.classList.toggle('has-card', !!b);
+  if (!cardEl) return;
+  cardEl.hidden = !b;
+  if (!b) return;
+  $('[data-voz-card-when]', cardEl).textContent = b.when;
+  const who = [];
+  if (b.people) who.push(b.people === 1 ? '1 persona' : `${b.people} personas`);
+  if (b.name) who.push(`a nombre de ${b.name}`);
+  $('[data-voz-card-who]', cardEl).textContent = who.join(' · ');
+  const a = $('[data-voz-card-ics]', cardEl);
+  const start = new Date(b.startUtc);
+  if (Number.isNaN(start.getTime())) { a.hidden = true; return; }
+  const end = new Date(start.getTime() + 2 * 3600_000);
+  const ics = [
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Ozio Gastronomico//Reserva//ES', 'BEGIN:VEVENT',
+    `UID:${icsDate(start)}-${Math.random().toString(36).slice(2)}@ozio`,
+    `DTSTAMP:${icsDate(new Date())}`, `DTSTART:${icsDate(start)}`, `DTEND:${icsDate(end)}`,
+    `SUMMARY:Mesa en Ozio Gastronomico${b.people ? ` (${b.people})` : ''}`,
+    'LOCATION:Ozio Gastronomico\\, Calle Aviador Zorita\\, 37\\, 28020 Madrid',
+    'END:VEVENT', 'END:VCALENDAR',
+  ].join('\r\n');
+  icsUrl = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
+  a.href = icsUrl; a.hidden = false;
+};
+
+/* ---------- tonos de entrada y de salida ---------- */
+const chime = (up) => {
+  try {
+    actx ??= new (window.AudioContext || window.webkitAudioContext)();
+    const t0 = actx.currentTime;
+    (up ? [523.25, 783.99] : [659.25, 440]).forEach((f, i) => {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      const t = t0 + i * 0.13;
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.07, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.38);
+      o.connect(g).connect(actx.destination);
+      o.start(t); o.stop(t + 0.4);
+    });
+  } catch {}
+};
+
+/* ---------- pantalla encendida durante la llamada ---------- */
+const liveNow = () => state === 'connecting' || state === 'listening' || state === 'thinking' || state === 'speaking' || state === 'tool';
+const keepAwake = async () => {
+  try { if (!wake && navigator.wakeLock && document.visibilityState === 'visible') { wake = await navigator.wakeLock.request('screen'); wake.addEventListener('release', () => { wake = null; }); } } catch {}
+};
+const letSleep = () => { try { wake && wake.release(); } catch {} wake = null; };
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && liveNow()) keepAwake(); });
+
+/* Cierre de la llamada: los botones de hora se van; la tarjeta, si la hay, se queda. */
+const finish = () => {
+  const wasLive = liveNow();
+  letSleep(); showSlots([]);
+  if (!wasLive) return;
+  chime(false);
+  spoken = ''; setYou('');
+  lineEl.textContent = booking ? 'Te esperamos. Gracias por reservar.' : 'Gracias por llamar.';
 };
 
 /* ---------- orbe: nivel del agente ---------- */
@@ -185,7 +306,7 @@ const closeEvents = () => { if (events) { events.close(); events = null; } };
 const openEvents = (id, cancelled) => {
   if (typeof EventSource === 'undefined') return;
   closeEvents();
-  agentTurn = null; loudUntil = 0; setYou('');
+  agentTurn = null; loudUntil = 0; setYou(''); spoken = '';
   const es = new EventSource(`${AGENT_URL}/api/voice/web-call/${encodeURIComponent(id)}/events?sessionId=${encodeURIComponent(sessionId)}&tenant=${encodeURIComponent(TENANT)}`);
   events = es;
   const onUi = (raw) => {
@@ -212,19 +333,23 @@ const openEvents = (id, cancelled) => {
       setState('speaking');
     } else if (ev.type === 'agent_spoken') {
       if (typeof ev.text !== 'string' || !ev.text.trim()) return;
-      lineEl.textContent = ev.text.trim();
+      paintSpoken(ev.text.trim());
+    } else if (ev.type === 'slots') {
+      showSlots(ev.slots);
+    } else if (ev.type === 'booking') {
+      if (typeof ev.startUtc === 'string' && typeof ev.when === 'string') { showSlots([]); showBooking(ev); }
     } else if (ev.type === 'user_text') {
       // Lo que el cliente va diciendo, según lo transcribe Retell (parciales y final).
       if (typeof ev.text === 'string' && ev.text.trim()) setYou(ev.text.trim());
       // Habla el cliente: la frase anterior de la asistente ya no pinta nada.
-      if (!ev.final && state === 'listening') lineEl.textContent = '';
+      if (!ev.final && state === 'listening') { lineEl.textContent = ''; spoken = ''; }
       // Retell ya pidió respuesta: el cliente ha terminado de hablar.
       if (ev.final && state === 'listening') setState('thinking');
     } else if (ev.type === 'end') {
       es.close(); if (events === es) events = null;
     }
   };
-  for (const t of ['state', 'agent_text', 'agent_spoken', 'user_text', 'end']) es.addEventListener(t, onUi);
+  for (const t of ['state', 'agent_text', 'agent_spoken', 'slots', 'booking', 'user_text', 'end']) es.addEventListener(t, onUi);
   es.onerror = () => {}; // EventSource reintenta solo
 };
 
@@ -246,7 +371,8 @@ function accept() {
 
 async function call() {
   open();
-  lineEl.textContent = ''; setYou('');
+  lineEl.textContent = ''; setYou(''); spoken = '';
+  showSlots([]); showBooking(null);
   showForm(false);
   muted = false; muteBtn.setAttribute('aria-pressed', 'false');
   callId = null;
@@ -257,6 +383,7 @@ async function call() {
   const my = ++gen;
   const cancelled = () => my !== gen;
   setState('connecting');
+  keepAwake();
 
   const sdkP = loadSdk();
   sdkP.catch(() => {}); // se espera más abajo
@@ -299,7 +426,7 @@ async function call() {
     client = c;
 
     // Solo desde "conectando": el saludo puede haber llegado ya por el canal.
-    c.on('call_ready', () => { if (!cancelled()) { startOrb(); if (state === 'connecting') setState('listening'); } });
+    c.on('call_ready', () => { if (!cancelled()) { startOrb(); chime(true); if (state === 'connecting') setState('listening'); } });
     c.on('agent_start_talking', () => { if (!cancelled()) setState('speaking'); });
     c.on('agent_stop_talking', () => { if (!cancelled() && state === 'speaking') setState('listening'); });
     c.on('audio', (samples) => { if (!cancelled()) pushSamples(samples); });
@@ -308,6 +435,7 @@ async function call() {
       stopOrb(); closeEvents();
       if (cancelled()) return;
       client = null;
+      finish();
       setState('ended');
     });
     c.on('error', () => {
@@ -316,6 +444,7 @@ async function call() {
       stopOrb(); closeEvents();
       if (cancelled()) return;
       client = null;
+      letSleep(); showSlots([]);
       fail(MSG.err.generic);
     });
 
@@ -348,6 +477,7 @@ function hangup() {
   closeEvents();
   stopOrb();
   showForm(false);
+  finish();
   if (state !== 'idle' && state !== 'error') setState('ended');
 }
 
@@ -380,6 +510,7 @@ retryBtn.addEventListener('click', start);
 acceptBtn.addEventListener('click', accept);
 closeBtn.addEventListener('click', close);
 form.addEventListener('submit', submitEmail);
+if (slotsEl) slotsEl.addEventListener('click', pickSlot);
 muteBtn.addEventListener('click', () => {
   if (!client) return;
   muted = !muted;

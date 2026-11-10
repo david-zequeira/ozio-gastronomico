@@ -34,7 +34,6 @@ const SDK_URLS = [
 // concede a cada frase para que el TTS empiece a sonar.
 const AGENT_SILENCE_MS = 600;
 const AGENT_TEXT_GRACE_MS = 1500;
-const AGENT_TEXT_FALLBACK_MS = 1500;
 const AGENT_LOUD_LEVEL = 0.06;
 const PHONE = cfg.phone || '';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -100,8 +99,6 @@ let client = null;
 let callId = null;
 let events = null;      // EventSource del canal de interfaz
 let agentTurn = null;   // { turn, text } de la respuesta en curso (subtítulo)
-let spokenSeen = false; // ya llegó un agent_spoken: el subtítulo lo lleva él
-let textTimer = 0;      // espera antes de pintar agent_text por si llega agent_spoken
 let loudUntil = 0;      // último instante en que el agente sonó (o margen concedido)
 let gen = 0;
 let muted = false;
@@ -181,7 +178,7 @@ const readMeta = (payload) => {
   return inner;
 };
 
-const closeEvents = () => { clearTimeout(textTimer); if (events) { events.close(); events = null; } };
+const closeEvents = () => { if (events) { events.close(); events = null; } };
 
 /* Canal de interfaz del backend (SSE). Best-effort: si falla, la llamada sigue
    y solo se pierden subtítulo, etiqueta de herramienta y apertura del correo. */
@@ -189,7 +186,6 @@ const openEvents = (id, cancelled) => {
   if (typeof EventSource === 'undefined') return;
   closeEvents();
   agentTurn = null; loudUntil = 0; setYou('');
-  spokenSeen = false; clearTimeout(textTimer);
   const es = new EventSource(`${AGENT_URL}/api/voice/web-call/${encodeURIComponent(id)}/events?sessionId=${encodeURIComponent(sessionId)}&tenant=${encodeURIComponent(TENANT)}`);
   events = es;
   const onUi = (raw) => {
@@ -210,22 +206,18 @@ const openEvents = (id, cancelled) => {
       if (typeof ev.text !== 'string' || !ev.text.trim()) return;
       const text = agentTurn && agentTurn.turn === ev.turn ? `${agentTurn.text} ${ev.text.trim()}` : ev.text.trim();
       agentTurn = { turn: ev.turn, text };
-      // La frase llega entera y antes de sonar. El subtítulo de verdad es
-      // agent_spoken (palabra a palabra, al ritmo de la voz); esto solo se
-      // pinta si el backend no lo manda.
-      if (!spokenSeen) {
-        clearTimeout(textTimer);
-        textTimer = setTimeout(() => { if (!spokenSeen && !cancelled() && agentTurn) lineEl.textContent = agentTurn.text; }, AGENT_TEXT_FALLBACK_MS);
-      }
+      // La frase llega entera y antes de sonar: no se pinta. El subtítulo es
+      // agent_spoken, palabra a palabra, al ritmo de la voz.
       loudUntil = Math.max(loudUntil, Date.now() + AGENT_TEXT_GRACE_MS);
       setState('speaking');
     } else if (ev.type === 'agent_spoken') {
       if (typeof ev.text !== 'string' || !ev.text.trim()) return;
-      spokenSeen = true; clearTimeout(textTimer);
       lineEl.textContent = ev.text.trim();
     } else if (ev.type === 'user_text') {
       // Lo que el cliente va diciendo, según lo transcribe Retell (parciales y final).
       if (typeof ev.text === 'string' && ev.text.trim()) setYou(ev.text.trim());
+      // Habla el cliente: la frase anterior de la asistente ya no pinta nada.
+      if (!ev.final && state === 'listening') lineEl.textContent = '';
       // Retell ya pidió respuesta: el cliente ha terminado de hablar.
       if (ev.final && state === 'listening') setState('thinking');
     } else if (ev.type === 'end') {

@@ -81,6 +81,8 @@ const overlay = $('[data-voz]');
 const orb = $('[data-voz-orb]');
 const statusEl = $('[data-voz-status]');
 const lineEl = $('[data-voz-line]');
+const youEl = $('[data-voz-you]'); // opcional: lo que dice el cliente, en vivo
+const setYou = (t) => { if (youEl) youEl.textContent = t || ''; };
 const form = $('[data-voz-form]');
 const emailIn = $('[data-voz-email]');
 const formNote = $('[data-voz-form-note]');
@@ -183,7 +185,7 @@ const closeEvents = () => { if (events) { events.close(); events = null; } };
 const openEvents = (id, cancelled) => {
   if (typeof EventSource === 'undefined') return;
   closeEvents();
-  agentTurn = null; loudUntil = 0;
+  agentTurn = null; loudUntil = 0; setYou('');
   const es = new EventSource(`${AGENT_URL}/api/voice/web-call/${encodeURIComponent(id)}/events?sessionId=${encodeURIComponent(sessionId)}&tenant=${encodeURIComponent(TENANT)}`);
   events = es;
   const onUi = (raw) => {
@@ -208,6 +210,8 @@ const openEvents = (id, cancelled) => {
       loudUntil = Math.max(loudUntil, Date.now() + AGENT_TEXT_GRACE_MS);
       setState('speaking');
     } else if (ev.type === 'user_text') {
+      // Lo que el cliente va diciendo, según lo transcribe Retell (parciales y final).
+      if (typeof ev.text === 'string' && ev.text.trim()) setYou(ev.text.trim());
       // Retell ya pidió respuesta: el cliente ha terminado de hablar.
       if (ev.final && state === 'listening') setState('thinking');
     } else if (ev.type === 'end') {
@@ -236,7 +240,7 @@ function accept() {
 
 async function call() {
   open();
-  lineEl.textContent = '';
+  lineEl.textContent = ''; setYou('');
   showForm(false);
   muted = false; muteBtn.setAttribute('aria-pressed', 'false');
   callId = null;
